@@ -1,0 +1,34 @@
+\section{Audit}
+\label{sec:audit}
+
+\paragraph{Checks that passed (script-computed, \fpath{scripts/make_numbers.py}).}
+\begin{itemize}
+\item Jobs: \JobsOk/\JobsN{} condor jobs printed ``OK'' with three non-empty outputs (\fpath{logs/joblines.txt}): \ChkJobs.
+\item Reproducibility: in all \ReproN{} segments the KFP-mass histograms of this production (\fcmd{hKs_qa}, \fcmd{hKs_loose},
+  \La+$\bar\Lambda$ QA) are bin-by-bin identical to the earlier covariance-free production 480608 (\ReproSame/\ReproN;
+  \fpath{run3pp/output/v0mass_kappa_validate/cmpKfpRepro.C}): \ChkRepro.
+\item Fill macro: the cluster macro \fpath{fill_v0_mass_kappa.C}, run on the stored run 79509 segment 0--30 ntuples, gives
+  bin-by-bin the same \ChkFillN{} histograms (3 versions $\times$ 6) as the independent local implementation
+  \fpath{macros/fillV0MassCorr.C} (\fpath{macros/cmpKappaFill.C}): \ChkFill.
+\item $\kappa$ table complete (\TabRows{} = \TabNq$\times$\TabNpt$\times$\TabNeta$\times$\TabNphi{} nodes, none missing):
+  \ChkTable; interpolation at table nodes returns the node value ($q=\pm1$, $\pt=1$\gevc, $\eta=\varphi=0$): \ChkInterp.
+\item Tight-\La{} production 481293: all v1 histograms of the \ReproTwoN{} segments bin-by-bin identical to 480714: \ChkReproTwo;
+  \Ks{} fit results identical with and without the tight \La{} option: \ChkKsSame; no tight-fit best point on the grid edge:
+  \ChkEdgeTight.
+\item No \Ks{} or joint best point on the grid boundary in the fits of Table~\ref{tab:fits}: \ChkEdge.
+\end{itemize}
+
+\paragraph{Not verified (assumptions).}
+\begin{itemize}
+\item That the KFParticle secondary-vertex-constrained daughter momenta are the kinematics the $\kappa$ table was trained on.
+\item That the table holds outside runs 79509--79516 (period B); the improvement there is the only evidence.
+\item The effect of keeping the uncorrected DIRA, $L_{xy}$ and DCA values in the selection (the correction changes the V0
+  direction slightly).
+\item Double counting of the proton scale: the templates contain the full-simulation proton bias $\delta_p$, and $\kappa$ corrects
+  the measured proton momentum as well.
+\item The DCA$_{12}$ cut of the templates (0.2~cm unconstrained) vs the effective data cut (Sec.~\ref{sec:selection}).
+\item That all V0 daughters are silicon-matched (seen in the earlier run3pp topology study through the crossing requirement; not
+  rechecked on this production, which keeps only histograms).
+\item Background shape: quadratic in every bin; no variation in this note (the DDSim calibration found the \La{} result
+  sensitive to it).
+\end{itemize}

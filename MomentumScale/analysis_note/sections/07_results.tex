@@ -1,0 +1,242 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Summary}
+
+\begin{table}[H]
+\centering\small
+\caption{Best $(a,b,s)$ of the \Ks{} fit per run period and mass version (the joint \Ks+\La{} fit gives the same point where
+the last column says ``yes''), \Ks{} Baker--Cousins $\chi^2$/ndf, and the \La{} $\chi^2$ at the \Ks{} best point minus the \La{}
+minimum ($\Delta\chi^2_\Lambda$). Uncertainties and the \La-only and joint fits: Table~\ref{tab:fits}.}
+\label{tab:summary}
+\begin{tabular}{llcccccc}
+\toprule
+period & mass & $a$ (\%/(GeV/$c$)) & $b$ (\%) & $s$ & $\chi^2_{K}$/ndf & $\Delta\chi^2_\Lambda$ & joint = \Ks \\
+\midrule
+\input{tables/tab_summary.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Effect of the correction} (``no $\kappa$'' $\to$ ``with $\kappa$'', same candidates):
+\begin{itemize}
+\item \textbf{Scale.} $s=\PerARawKsS\to\PerAKapKsS$ (A) and $\PerBRawKsS\to\PerBKapKsS$ (B). The \La-only fits agree with
+  $\kappa$ ($s=\PerAKapLaS$ and \PerBKapLaS). The \pt-integrated \Ks{} Gaussian peak moves from
+  $\PerARawKsGM\pm\PerARawKsGMe$ to $\PerAKapKsGM\pm\PerAKapKsGMe$\mevcc{} (A; $\PerARawKsGPull\sigma$ and
+  $\PerAKapKsGPull\sigma$ from PDG) and from $\PerBRawKsGM\pm\PerBRawKsGMe$ to $\PerBKapKsGM\pm\PerBKapKsGMe$\mevcc{} (B;
+  $\PerBRawKsGPull\sigma$, $\PerBKapKsGPull\sigma$). With $\kappa$ the \Ks{} peak is still \PerAKapKsBelow{} (A) and \PerBKapKsBelow\mevcc{} (B) below PDG; the fitted
+  $s<1$ reflects the same residual.
+\item \textbf{Resolution.} $a$ is reduced to \PerAARatio{} (A) and \PerBARatio{} (B) of its value without $\kappa$; $b$ changes from
+  \PerARawKsB{} to \PerAKapKsB\% (A) and from \PerBRawKsB{} to \PerBKapKsB\% (B). The \Ks{} Gaussian width at V0 $\pt=1.6$--2.2\gevc{} drops from \PerARawKsWidHigh{} to
+  \PerAKapKsWidHigh\mevcc{} (A) and from \PerBRawKsWidHigh{} to \PerBKapKsWidHigh\mevcc{} (B) (Table~\ref{tab:peaksks}).
+  Interpretation: without the correction the charge-odd and $\varphi$/$\eta$-dependent scale distortion that $\kappa$ removes
+  broadens the mass peak ($\pi^+$ and $\pi^-$ are shifted in opposite directions, more at high \pt), and the fit absorbs this into
+  $a$. This interpretation is not tested separately.
+\item \textbf{\Ks/\La{} consistency.} $\Delta\chi^2_\Lambda$ = \PerARawDchiLa{} $\to$ \PerAKapDchiLa{} (A) and \PerBRawDchiLa{}
+  $\to$ \PerBKapDchiLa{} (B). The \Ks/\La{} difference stays small in period A and largely disappears in period B with the correction.
+\item \textbf{Periods.} After the correction period B still has a larger curvature term than period A
+  ($a=\PerBKapKsA^{+\PerBKapKsAUp}_{-\PerBKapKsADn}$ vs $\PerAKapKsA^{+\PerAKapKsAUp}_{-\PerAKapKsADn}$\%/(GeV/$c$)), as it had
+  before (Sec.~\ref{sec:rundep}).
+\item \textbf{Fit quality.} With $\kappa$ the \Ks{} $\chi^2$ is \PerAKapKsChi/\PerAKapKsNdf{} (A) and \PerBKapKsChi/\PerBKapKsNdf{}
+  (B), against \PerARawKsChi{} and \PerBRawKsChi{} without. In period B the KFP-mass fit has a clearly lower $\chi^2$
+  (\PerBKfpKsChi) than both recomputed versions (KFP best point $a=\PerBKfpKsA$\%/(GeV/$c$), $b=\PerBKfpKsB$\%, $s=\PerBKfpKsS$; open issue).
+\end{itemize}
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{All fits: \Ks, \La+$\bar\Lambda$ and joint, per period and mass version. Profile $\Delta\chi^2=1$ intervals on
+the grid (statistical only); $\Delta\chi^2_\Lambda$ as in Table~\ref{tab:summary}; ``edge'' = best point on the grid boundary.
+From \fpath{logs/fitMomRes_k287_<period>_<version>.txt}.}
+\label{tab:fits}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lllcccccc}
+\toprule
+ & mass & fit & $a$ (\%/(GeV/$c$)) & $b$ (\%) & $s$ & $\chi^2$/ndf & $\Delta\chi^2_\Lambda$ & edge \\
+\midrule
+\input{tables/tab_fits.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\La-only fits on the grid edge: \LaEdgeList. \Ks{} and joint fits: none (check \ChkEdge).
+
+\subsection{Single-track resolution}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_res}
+\caption{Fitted $\sigma(\pt)/\pt$ at $\eta=0$ (Eq.~\ref{eq:model}) for pions (left) and protons (right): period A (blue) and B
+(red), without (dashed) and with (solid) $\kappa$; lines at the \Ks{} best point (Table~\ref{tab:summary}), bands = envelope of the $(a,b)$ grid nodes with
+\Ks{} $\Delta\chi^2<2.3$ (profiled over $s$; \ResBandNote). Grey: full-simulation
+response of the DDSim input. Script \fpath{scripts/plot_res.C}.}
+\label{fig:res}
+\end{figure}
+
+For pions at 1, 2, 3\gevc: period A \PerARawResPiOne, \PerARawResPiTwo, \PerARawResPiThree\% without and \PerAKapResPiOne,
+\PerAKapResPiTwo, \PerAKapResPiThree\% with $\kappa$; period B \PerBRawResPiOne, \PerBRawResPiTwo, \PerBRawResPiThree\% and
+\PerBKapResPiOne, \PerBKapResPiTwo, \PerBKapResPiThree\%. Above $\approx1.5$\gevc{} the curves are constrained mainly by the two
+highest \Ks{} bins (Table~\ref{tab:entries}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{fig_chi2}
+\caption{$\Delta\chi^2$ of the \Ks{} fit in the $(a,b)$ plane, minimised over $s$, on the grid nodes (cells; colour scale
+capped at 25): period A (top) and B (bottom), without (left) and with (right) $\kappa$. Red star: best node. The $\Delta\chi^2<2.3$ region is only a few nodes wide, so the
+grid step (0.0025 in $a$, 0.002 in $b$) limits the resolution of the intervals. Each panel shows $\pm0.016$~(GeV/$c$)$^{-1}$ in $a$ and $\pm0.009$ in $b$ around its best node.}
+\label{fig:chi2}
+\end{figure}
+
+\subsection{Invariant-mass distributions before and after the correction}
+\label{sec:massdist}
+
+Figure~\ref{fig:massdist} compares the \pt-integrated mass distributions of the same QA-selected candidates, recomputed from the
+daughter momenta without $\kappa$ (blue) and with $\kappa$ (red); the KFParticle mass is shown for reference (grey). Only the
+daughter \pt{} changes; $\eta$, $\varphi$ and the selection are the same. Figures~\ref{fig:massdistKsA}--\ref{fig:massdistLaB}
+show the same per V0-\pt{} bin of the momentum fit (the V0 \pt{} is that of each version, so a candidate can change bin).
+
+\begin{itemize}
+\item \Ks: with $\kappa$ the peak moves up towards the PDG mass and becomes narrower and higher in both periods (Gaussian fit,
+  Table~\ref{tab:peaksks}: mean \PerARawKsGM{} $\to$ \PerAKapKsGM, $\sigma$ \PerARawKsGS{} $\to$ \PerAKapKsGS\mevcc{} in A;
+  \PerBRawKsGM{} $\to$ \PerBKapKsGM, \PerBRawKsGS{} $\to$ \PerBKapKsGS\mevcc{} in B). The change is largest above
+  1.2\gevc, where the uncorrected peak is broad and the corrected one narrow.
+\item \La: mean \PerARawLaGM{} $\to$ \PerAKapLaGM, $\sigma$ \PerARawLaGS{} $\to$ \PerAKapLaGS\mevcc{} (A) and
+  \PerBRawLaGM{} $\to$ \PerBKapLaGM, \PerBRawLaGS{} $\to$ \PerBKapLaGS\mevcc{} (B), PDG \PdgLa\mevcc. The narrowing is smaller in
+  absolute terms than for \Ks, as expected from the small \La{} decay momentum (the mass is less sensitive to the daughter momenta).
+\item The background is the same in both recomputed versions. The number of entries in the plotted mass range differs by less than 1\%
+  between them (\Ks{} A \PerAKsMdRaw{} vs \PerAKsMdKap, B \PerBKsMdRaw{} vs \PerBKsMdKap), as expected since the correction
+  only moves masses by a few \mevcc.
+\item The KFParticle mass has more combinatorial background in the same mass window (the recomputed spectra contain
+  \PerAKsMdRatio{} (A) and \PerBKsMdRatio{} (B) of the KFP \Ks{} entries, \PerALaMdRatio{} and \PerBLaMdRatio{} for \La{}),
+  although the candidates are the same. The cause is not investigated (open issue~3).
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_massdist_int}
+\caption{Invariant-mass distributions, \pt-integrated (\Ks{} $0.2<\pt<4.0$, \La+$\bar\Lambda$ $0.5<\pt<4.0$\gevc), period A
+(left) and B (right): recomputed without $\kappa$ (blue), with $\kappa$ (red), KFParticle mass (grey dashed); dotted line: PDG
+mass. Same QA-selected candidates in all curves. Script \fpath{scripts/massdist.C}.}
+\label{fig:massdist}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_massdist_Ks_A}
+\caption{\Ks{} mass per V0-\pt{} bin, period A, without (blue) and with (red) $\kappa$, KFParticle mass (grey dashed). Bin width
+2, 4 or 8\mevcc{} depending on the statistics of the panel (axis title).}
+\label{fig:massdistKsA}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_massdist_Ks_B}
+\caption{As Fig.~\ref{fig:massdistKsA}, period B.}
+\label{fig:massdistKsB}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_massdist_La_A}
+\caption{\La+$\bar\Lambda$ mass per V0-\pt{} bin, period A, without (blue) and with (red) $\kappa$, KFParticle mass (grey dashed).
+Bin width 1, 2 or 4\mevcc{} depending on the statistics of the panel.}
+\label{fig:massdistLaA}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_massdist_La_B}
+\caption{As Fig.~\ref{fig:massdistLaA}, period B.}
+\label{fig:massdistLaB}
+\end{figure}
+
+\subsection{Mass peaks}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_peaks}
+\caption{Gaussian peak position (left) and width (right) per V0-\pt{} bin for \Ks{} (top; Gaussian + linear, 0.46--0.54~GeV/$c^2$)
+and \La+$\bar\Lambda$ (bottom; Gaussian + quadratic, 1.103--1.130~GeV/$c^2$): period A (blue) and B (red), without (open) and
+with (full) $\kappa$; points of the two periods are offset by $\pm0.03$\gevc{} for visibility. Dashed: PDG mass. Unconstrained fits
+(mean error $>2$\mevcc{} or width error $>60\%$) are not drawn. Display only; the calibration uses the template fit.
+Script \fpath{scripts/peaks.C}.}
+\label{fig:peaks}
+\end{figure}
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{\Ks{} Gaussian peak position $M$ and width $\sigma$ (MeV/$c^2$) per V0-\pt{} bin (GeV/$c$), fits of
+Fig.~\ref{fig:peaks}; ``--'' unconstrained. PDG \PdgKs\mevcc.}
+\label{tab:peaksks}
+\setlength{\tabcolsep}{2.4pt}
+\begin{tabular}{lcccccccc}
+\toprule
+ & \multicolumn{4}{c}{period A} & \multicolumn{4}{c}{period B} \\
+\pt & $M$, no $\kappa$ & $\sigma$, no $\kappa$ & $M$, $\kappa$ & $\sigma$, $\kappa$ & $M$, no $\kappa$ & $\sigma$, no $\kappa$ & $M$, $\kappa$ & $\sigma$, $\kappa$ \\
+\midrule
+\input{tables/tab_peaks_ks.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{As Table~\ref{tab:peaksks} for \La+$\bar\Lambda$. PDG \PdgLa\mevcc.}
+\label{tab:peaksla}
+\setlength{\tabcolsep}{2.4pt}
+\begin{tabular}{lcccccccc}
+\toprule
+ & \multicolumn{4}{c}{period A} & \multicolumn{4}{c}{period B} \\
+\pt & $M$, no $\kappa$ & $\sigma$, no $\kappa$ & $M$, $\kappa$ & $\sigma$, $\kappa$ & $M$, no $\kappa$ & $\sigma$, no $\kappa$ & $M$, $\kappa$ & $\sigma$, $\kappa$ \\
+\midrule
+\input{tables/tab_peaks_la.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Template fits per V0-\pt{} bin}
+
+Figures~\ref{fig:massksA}--\ref{fig:masslaB} show the data with the template fit at the \Ks{} best point of the $\kappa$-corrected
+fits (the \La{} panels are therefore a prediction from the \Ks{} parameters, not a \La{} fit). The uncorrected versions are in
+Appendix~\ref{app:raw}. Per-bin $\chi^2$: Table~\ref{tab:binchi}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_mass_Ks_A_kappa}
+\caption{\Ks{} mass per V0-\pt{} bin, period A, with $\kappa$ (points), and $N\times$DDSim template + quadratic background at the
+\Ks{} best point (red); per-panel Baker--Cousins $\chi^2$/ndf.}
+\label{fig:massksA}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_mass_Ks_B_kappa}
+\caption{As Fig.~\ref{fig:massksA}, period B.}
+\label{fig:massksB}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_mass_Lambda_A_kappa}
+\caption{\La+$\bar\Lambda$ mass, period A, with $\kappa$; template at the \Ks{} best point (prediction).}
+\label{fig:masslaA}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_mass_Lambda_B_kappa}
+\caption{As Fig.~\ref{fig:masslaA}, period B.}
+\label{fig:masslaB}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\caption{Per-bin Baker--Cousins $\chi^2$/ndf of the template fit at the \Ks{} best point of each fit, without and with $\kappa$.}
+\label{tab:binchi}
+\begin{tabular}{lllcc}
+\toprule
+period & & V0 \pt{} (GeV/$c$) & no $\kappa$ & with $\kappa$ \\
+\midrule
+\input{tables/tab_binchi.tex}
+\bottomrule
+\end{tabular}
+\end{table}

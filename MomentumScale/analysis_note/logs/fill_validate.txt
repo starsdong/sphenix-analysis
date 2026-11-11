@@ -1,0 +1,10 @@
+In file included from input_line_11:1:
+/Users/starsdong/Work/work/C/draw.C:55:178: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+void drawArrow(double x1=0., double y1=0., double x2=0., double y2=1., double arrowSize=0.05, double angle=45, int lineWidth=1, int lineStyle=1, int lineColor=1, char *option = "|>")
+                                                                                                                                                                                 ^
+
+Processing macros/fillV0MassCorr.C+("data/loosecov/KFP_Ks_run79509_seg000-030_loosecov.root","data/loosecov/KFP_Lambda_run79509_seg000-030_loosecov.root","../MomentumScaleMap/run79509to79516_20261102/kappa_lookup.csv","data/kappa/V0mass_79509seg000-030_mode2.root",2)...
+kappa table: 72800 rows, nodes pT 112 [0.1,20] eta 13 [-1.5,1.5] phi 25 [-3.14159,3.14159], missing 0
+kappa(q=-1,pT=1,eta=0,phi=0) = 0.972462, kappa(q=+1,pT=1,eta=0,phi=0) = 1.037830
+mode 2: Ks QA candidates 7199, Lambda QA candidates 14050
+All done

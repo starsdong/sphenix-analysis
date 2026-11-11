@@ -1,0 +1,53 @@
+\section{Momentum scale and resolution fit}
+\label{sec:method}
+
+The method is that of the DDSim main calibration (\fpath{macros/fitMomRes.C}); it is summarised here with every setting.
+
+\paragraph{Response model.} Each DDSim daughter momentum is rescaled as
+\begin{equation}
+p^{\rm rec}=s\,p\,\bigl[1+\delta_{sp}(\pt)+\sigma(\pt)\,G\bigr],\qquad
+\frac{\sigma(\pt)}{\pt}=\sqrt{(a\,\pt)^2+(b/\beta)^2},\qquad \beta=p/E,\quad G\sim\mathcal N(0,1),
+\label{eq:model}
+\end{equation}
+direction unchanged. $s$ is a global momentum scale, $a$ the curvature (point-resolution) term, $b$ the multiple-scattering term;
+the $1/\beta$ factor lets one $(a,b)$ describe pions and protons. $\delta_{sp}$ is the mean momentum bias of the full simulation,
+non-zero only for protons (\fcmd{hMomShift_p} of the DDSim input, energy-loss correction with the pion mass), and is applied in the
+templates of all three mass versions. The $\kappa$ correction acts on the data only; the templates are the same for all versions.
+
+\paragraph{Templates.} DDSim (\fpath{output/momfit/{Ks,Lambda}_nosmear_v2.root}, 6M decays each, generated once):
+\begin{itemize}
+\item input \fpath{input/ddsim_input_run3pp_v2.root}: PV distribution, DCA maps and silicon-matching efficiencies from the run3pp
+  TrackQA ntuples (356 segments); TPC efficiency and $\delta_{sp}$ from the full simulation (sPHENIX\_202611, ana.582);
+\item generation: V0 \pt{} flat in 0--5\gevc{} and weighted to the STAR p+p 200~GeV \Ks, \La, $\bar\Lambda$ L\'evy spectra
+  (\fcmd{wLevy}), $|y|<1$, $|z_{\rm PV}|<10$~cm, PDG $c\tau$, \La{} 50\% $\bar\Lambda$, decays isotropic in the rest frame;
+\item reconstruction: daughter positions smeared with the data DCA maps, momenta \emph{not} smeared (\fcmd{--no-mom-smear}),
+  helix propagation in 1.4~T, secondary vertex at the closest approach of the two helices, true PV ($\sigma_{\rm PV}=0$);
+\item selection: \fcmd{passAll} = acceptance + TPC efficiency + MVTX$\geq2$ for both daughters + the topology cuts of
+  Table~\ref{tab:sel}; \TmplKs{} \Ks{} and \TmplLa{} \La{} candidates pass;
+\item the daughter momenta at the reconstructed secondary vertex are stored, and for each candidate two Gaussian numbers $G_1$,
+  $G_2$ are drawn once (fixed seeds) and reused at every grid point, so the $\chi^2$ surface is smooth.
+\end{itemize}
+For a parameter point $(a,b,s)$ the stored momenta are rescaled with Eq.~\ref{eq:model}, the mass and V0 \pt{} recomputed, and
+the weighted candidates filled into one mass template per V0-\pt{} bin. The selection is applied before the rescaling.
+
+\paragraph{Fit in V0-\pt{} bins.}
+\begin{itemize}
+\item \Ks: V0 \pt{} bins 0.2, 0.5, 0.7, 0.9, 1.2, 1.6, 2.2, 4.0\gevc; mass 0.44--0.56~GeV/$c^2$ in 2\mevcc{} bins.
+\item \La+$\bar\Lambda$: V0 \pt{} bins 0.5, 0.9, 1.2, 1.6, 2.4, 4.0\gevc; mass 1.103--1.130~GeV/$c^2$ in 0.5\mevcc{} bins
+  (narrow window; the background under the \La{} peak is large and curved at low \pt{}).
+\item Model per bin: $N\times$template + quadratic polynomial in $M$ (4 free parameters), Poisson maximum likelihood by
+  iteratively re-weighted least squares (variance = model); goodness of fit = Baker--Cousins likelihood-ratio $\chi^2$, summed over
+  the \pt{} bins. Template statistical errors are neglected (\TmplKs{} \Ks{} template candidates against \AllFitKs{} data entries in the fit range of the full sample, \TmplLa{} against \AllFitLa{} for \La).
+\item Grid: $a=0$--0.08 (step 0.0025)~(GeV/$c$)$^{-1}$, $b=0.004$--0.040 (step 0.002), $s=0.975$--1.015 (step 0.001;
+  widened from 0.984--1.000 of the main calibration because the correction moves $s$ to $\approx1$). Best point = grid minimum.
+\item Uncertainties: profile $\Delta\chi^2=1$ in each parameter (minimum over the other two), interpolated linearly between grid
+  points; statistical only. A grid-edge flag is printed per fit.
+\item \Ks{} and \La{} are fitted separately and jointly (sum of the two $\chi^2$); the \La{} $\chi^2$ at the \Ks{} best point
+  measures their compatibility.
+\end{itemize}
+Each fit (one per period and mass version) is one call of \fpath{scripts/run_momfit_kappa.sh}.
+
+\caveat{The parameters are effective: $(a,b)$ absorb every source of mass width that DDSim does not model separately, in
+particular the daughter angular resolution (directions are not smeared), residual misalignment and TPC distortions, and differences
+between the KFParticle vertex-fit mass and the recomputed mass. Below $\approx1$\gevc{} daughter \pt{} the two terms are strongly
+anti-correlated.}

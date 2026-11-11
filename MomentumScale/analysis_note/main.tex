@@ -1,0 +1,85 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-\do_\do.}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+\DeclareGraphicsExtensions{.pdf,.png}
+\graphicspath{{figures/}}
+\sloppy
+\emergencystretch=2em
+\captionsetup{font=small,labelfont=bf}
+
+% ---------------------------------------------------------------- macros
+\newcommand{\fpath}[1]{\nolinkurl{#1}}
+\newcommand{\fcmd}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\pt}{\ensuremath{p_T}}
+\newcommand{\Ks}{\ensuremath{K^0_S}}
+\newcommand{\La}{\ensuremath{\Lambda}}
+\newcommand{\gevc}{\ensuremath{\,\mathrm{GeV}/c}}
+\newcommand{\mevcc}{\ensuremath{\,\mathrm{MeV}/c^2}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\hd}[2]{\begin{tabular}[b]{@{}c@{}}#1\\[-2pt]\scriptsize #2\end{tabular}}
+\newtcolorbox{choicebox}{colback=blue!5,colframe=blue!60!black,fonttitle=\bfseries,title=Choice,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newtcolorbox{caveatbox}{colback=red!5,colframe=red!60!black,fonttitle=\bfseries,title=Caveat,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newtcolorbox{decisionbox}{colback=orange!7,colframe=orange!80!black,fonttitle=\bfseries,title=Decision needed,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newcommand{\choice}[1]{\begin{choicebox}\small #1\end{choicebox}}
+\newcommand{\caveat}[1]{\begin{caveatbox}\small #1\end{caveatbox}}
+\newcommand{\decision}[1]{\begin{decisionbox}\small #1\end{decisionbox}}
+
+% script-generated numbers (scripts/make_numbers.py)
+\input{tables/numbers.tex}
+
+\title{Per-track momentum re-calibration ($\kappa$ look-up table) tested with\\
+\Ks{} and \La{} mass peaks in sPHENIX run3pp p+p data}
+\author{X.~Dong (dongxs) \quad -- \quad draft prepared with Hermes}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+A per-track transverse-momentum re-calibration, given as a look-up table $\kappa(q,\pt,\eta,\varphi)$ derived on runs
+79509--79516 (\fpath{MomentumScaleMap/run79509to79516_20261102}), is applied to the daughters of \Ks$\to\pi^+\pi^-$ and
+\La$\to p\pi^-$ (+c.c.) candidates reconstructed with KFParticle in \PerAllSeg{} run3pp segments (\NRuns{} runs,
+\PerAllEv{} events). The invariant masses are recomputed with and without the correction from the same candidates,
+and the momentum scale $s$ and resolution $\sigma(\pt)/\pt=\sqrt{(a\pt)^2+(b/\beta)^2}$ are fitted to the mass peaks in
+V0-\pt{} bins with templates from the data-driven fast simulation (DDSim). The sample is split into period A (runs
+79509--79516, the range of the table; \PerASeg{} segments) and period B (the other \NRunsB{} runs, \PerBSeg{} segments,
+where the table is applied as is). \textbf{Results} (\Ks{} fit; the joint \Ks+\La{} fit gives the same points):
+period A $a=\PerARawKsA\to\PerAKapKsA$\%/(GeV/$c$), $b=\PerARawKsB\to\PerAKapKsB$\%, $s=\PerARawKsS\to\PerAKapKsS$;
+period B $a=\PerBRawKsA\to\PerBKapKsA$\%/(GeV/$c$), $b=\PerBRawKsB\to\PerBKapKsB$\%, $s=\PerBRawKsS\to\PerBKapKsS$
+(without $\to$ with $\kappa$); all segments combined $a=\PerAllRawKsA\to\PerAllKapKsA$\%/(GeV/$c$), $s=\PerAllRawKsS\to\PerAllKapKsS$. The \pt-integrated \Ks{} peak moves from \PerARawKsGM{} to \PerAKapKsGM\mevcc{} in period A
+(PDG \PdgKs). The correction removes nearly all of the 0.9\% momentum-scale offset and halves the curvature term in both
+periods; period B keeps a larger curvature term. A tighter \La{} selection (DIRA$>$0.9995 and larger daughter DCAs) raises the \La{} S/B from \PerAllKapLpQaSB{} to \PerAllKapLpTiSB{} and reduces the error of the \La{} peak position by a quarter; it is used for the \La{} scale ($s_\Lambda=\PerAllKapTiLaS$ with $\kappa$), while the resolution stays determined by \Ks. Statistical uncertainties only; the DDSim defaults are not changed. \SampleStatus{}
+Boxes: blue = choice made (with reason), red = caveat, orange = needs a decision.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\input{sections/01_overview}
+\input{sections/02_dataset}
+\input{sections/03_reco}
+\input{sections/04_selection}
+\input{sections/05_kappa}
+\input{sections/06_method}
+\input{sections/07_results}
+\input{sections/07b_tight}
+\input{sections/08_rundep}
+\input{sections/09_audit}
+\input{sections/10_open}
+\input{sections/11_glossary}
+
+\end{document}

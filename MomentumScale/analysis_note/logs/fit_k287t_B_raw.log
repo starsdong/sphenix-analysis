@@ -1,0 +1,65 @@
+In file included from input_line_11:1:
+/Users/starsdong/Work/work/C/draw.C:55:178: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+void drawArrow(double x1=0., double y1=0., double x2=0., double y2=1., double arrowSize=0.05, double angle=45, int lineWidth=1, int lineStyle=1, int lineColor=1, char *option = "|>")
+                                                                                                                                                                                 ^
+
+Processing macros/fitMomRes.C+("data/kappa_v2/V0mass_B_raw.root","output/momfit/Ks_nosmear_v2.root","output/momfit/Lambda_nosmear_v2.root","input/ddsim_input_run3pp_v2.root","output/momfit_kappa/k287t_B_raw","k287t_B_raw",2000000,2,1.103,1.130,0.975,1.015,1)...
+TIGHT Lambda: DIRA > 0.9995, |DCAxy(pi)| > 0.1, |DCAxy(p)| > 0.03
+Ks: 561400 DDSim candidates (passAll) from output/momfit/Ks_nosmear_v2.root
+Lambda: 194550 DDSim candidates (passAll + tight Lambda cuts) from output/momfit/Lambda_nosmear_v2.root
+Ks data entries per pT bin (fit range): 13692 12326 9123 7026 3944 1910 747
+Lambda data entries per pT bin (fit range): 4061 1228 684 328 69
+  grid a = 0 done
+  grid a = 0.0025 done
+  grid a = 0.005 done
+  grid a = 0.0075 done
+  grid a = 0.01 done
+  grid a = 0.0125 done
+  grid a = 0.015 done
+  grid a = 0.0175 done
+  grid a = 0.02 done
+  grid a = 0.0225 done
+  grid a = 0.025 done
+  grid a = 0.0275 done
+  grid a = 0.03 done
+  grid a = 0.0325 done
+  grid a = 0.035 done
+  grid a = 0.0375 done
+  grid a = 0.04 done
+  grid a = 0.0425 done
+  grid a = 0.045 done
+  grid a = 0.0475 done
+  grid a = 0.05 done
+  grid a = 0.0525 done
+  grid a = 0.055 done
+  grid a = 0.0575 done
+  grid a = 0.06 done
+  grid a = 0.0625 done
+  grid a = 0.065 done
+  grid a = 0.0675 done
+  grid a = 0.07 done
+  grid a = 0.0725 done
+  grid a = 0.075 done
+  grid a = 0.0775 done
+  grid a = 0.08 done
+FIT Ks a 0.0400 0.0393 0.0405 b 0.0120 0.0116 0.0126 s 0.9910 0.9908 0.9911 chi2 473.1 ndf 389 edge_a 0 edge_b 0 edge_s 0
+FIT Lambda a 0.0725 0.0709 0.0800 b 0.0140 0.0089 0.0170 s 0.9970 0.9949 0.9991 chi2 288.1 ndf 247 edge_a 0 edge_b 0 edge_s 0
+FIT joint a 0.0375 0.0367 0.0402 b 0.0140 0.0120 0.0143 s 0.9910 0.9908 0.9911 chi2 798.7 ndf 639 edge_a 0 edge_b 0 edge_s 0
+CROSS chi2(Lambda | Ks best) 326.4 / 250 ; chi2(Lambda | own best) 288.1 ; chi2(Ks | joint) 476.6 ; chi2(Lambda | joint) 322.1
+BIN Ks 0.20 0.50 chi2 75.9 ndf 56 N 0.613 gaus_data 4.426 0.209 gaus_sim 4.197
+BIN Ks 0.50 0.70 chi2 58.6 ndf 56 N 0.632 gaus_data 4.567 0.198 gaus_sim 4.698
+BIN Ks 0.70 0.90 chi2 57.0 ndf 56 N 0.636 gaus_data 5.625 0.262 gaus_sim 5.393
+BIN Ks 0.90 1.20 chi2 66.7 ndf 56 N 0.602 gaus_data 6.446 0.291 gaus_sim 6.500
+BIN Ks 1.20 1.60 chi2 58.2 ndf 56 N 0.756 gaus_data 8.132 0.470 gaus_sim 8.216
+BIN Ks 1.60 2.20 chi2 96.4 ndf 56 N 0.597 gaus_data 12.486 2.352 gaus_sim 10.652
+BIN Ks 2.20 4.00 chi2 60.4 ndf 56 N 0.929 gaus_data 15.997 3.057 gaus_sim 14.816
+Info in <TCanvas::Print>: png file output/momfit_kappa/k287t_B_raw/fitMomRes_mass_Ks_k287t_B_raw.png has been created
+Info in <TCanvas::Print>: pdf file output/momfit_kappa/k287t_B_raw/fitMomRes_mass_Ks_k287t_B_raw.pdf has been created
+BIN Lambda 0.50 0.90 chi2 51.2 ndf 50 N 1.14 gaus_data 2.090 0.211 gaus_sim 1.736
+BIN Lambda 0.90 1.20 chi2 66.0 ndf 50 N 1.11 gaus_data 2.334 0.201 gaus_sim 1.685
+BIN Lambda 1.20 1.60 chi2 79.9 ndf 50 N 0.877 gaus_data 2.995 0.233 gaus_sim 1.975
+BIN Lambda 1.60 2.40 chi2 57.7 ndf 50 N 0.602 gaus_data 3.151 0.457 gaus_sim 2.531
+BIN Lambda 2.40 4.00 chi2 71.5 ndf 50 N -0.045 gaus_data 0.370 5.255 gaus_sim 3.596
+Info in <TCanvas::Print>: png file output/momfit_kappa/k287t_B_raw/fitMomRes_mass_Lambda_k287t_B_raw.png has been created
+Info in <TCanvas::Print>: pdf file output/momfit_kappa/k287t_B_raw/fitMomRes_mass_Lambda_k287t_B_raw.pdf has been created
+All done

@@ -1,0 +1,63 @@
+\section{V0 reconstruction (KFParticle)}
+\label{sec:reco}
+
+\Ks{} and \La{} candidates are built by \fcmd{KFParticle_sPHENIX} from the \fcmd{SvtxTrackMap} tracks and the
+\fcmd{SvtxVertexMap} vertices of each event, one module per channel, with the settings of Table~\ref{tab:kfp}
+(\fpath{run3pp/macro/loosecov/Fun4All_run3pp_KFP.C}, cut set ``loose'', the two covariance cuts removed). Decay descriptors:
+\fcmd{K_S0 -> pi^+ pi^-} and \fcmd{[Lambda0 -> proton^+ pi^-]cc}. All other topological requirements are switched off in
+KFParticle and applied offline (Sec.~\ref{sec:selection}).
+
+\begin{table}[H]
+\centering\small
+\caption{KFParticle reconstruction settings (pre-cuts) for \Ks{} and \La{}, identical for both channels except the mass
+window. ``off'' = set to $\pm$\fcmd{FLT_MAX} or $-1$ in the macro.}
+\label{tab:kfp}
+\begin{tabular}{L{2.2cm}L{5.4cm}L{7.6cm}}
+\toprule
+level & setting & value \\
+\midrule
+event / vertex & primary vertices & \fcmd{SvtxVertexMap} (\fcmd{dontUseGlobalVertex(true)}) \\
+ & PV choice & \fcmd{constrainToPrimaryVertex(true)}: candidate kept if at least one PV of the matching crossing passes the
+   PV-dependent cuts; the PV is stored \\
+ & crossing (streaming readout) & both daughters from the same crossing (\fcmd{requireBunchCrossingMatch(true)}); PV from
+   that crossing (\texttt{requireTrackVertex}\-\texttt{BunchCrossingMatch(true)}) \\
+\midrule
+track & transverse momentum & $\pt>0.1$\gevc{} \\
+ & TPC & $\geq20$ TPC hits (\fcmd{setMinTPChits(20)}) \\
+ & MVTX, INTT & no requirement (\fcmd{setMinMVTXhits(0)}, \fcmd{setMinINTThits(0)}) \\
+ & track $\chi^2$/ndf & off \\
+ & track--PV DCA, DCA significance & off (\fcmd{setMinimumTrackPV_DCA(-1)}, \fcmd{..._StdDev(-1)}) \\
+ & PID & none (\fcmd{usePID(false)}; dE/dx stored only) \\
+\midrule
+pair / vertex & daughter--daughter DCA & $<0.5$~cm (\fcmd{setMaximumDaughterDCA}); DCA$_{xy}$ off \\
+ & SV $\chi^2$/ndf & off (\fcmd{FLT_MAX}; was $<20$ in the original production) \\
+ & SV error-ellipsoid volume & off (\fcmd{FLT_MAX}; was $<0.1$~cm$^3$) \\
+\midrule
+mother & pointing (DIRA = $\cos\theta$) & $>0.8$ \\
+ & mass window & \Ks{} 0.40--0.60, \La{} 1.05--1.20~GeV/$c^2$ \\
+ & mother \pt{} & $>0$ \\
+ & flight distance $\chi^2$, decay length (3D, $xy$), decay time, their significances, mother--PV DCA (and significance) & off \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Implicit behaviour (from the ana.581 KFParticle source, read for the earlier run3pp studies).}
+\begin{itemize}
+\item The track--PV DCA requirement, even at $-1$, needs a vertex in the track's own crossing: a silicon-matched track whose
+  crossing has no vertex gets a NaN DCA and is dropped. TPC-only tracks carry crossing 0 by default.
+\item The daughter--daughter DCA used by \fcmd{setMaximumDaughterDCA} is computed after both tracks are constrained to a common
+  production point, so the 0.5~cm requirement rarely rejects a pair.
+\item With \fcmd{[...]cc} one mass hypothesis is kept per track pair (\La{} or $\bar\Lambda$).
+\end{itemize}
+
+\paragraph{Stored quantities used here (\fcmd{DecayTree}).} Mother: \fcmd{<M>_mass}, \fcmd{<M>_pT} (unconstrained
+secondary-vertex fit; mass not constrained), \fcmd{<M>_DIRA}, \fcmd{<M>_decayLength_xy} (with respect to the chosen PV).
+Daughters: \fcmd{track_N_px,py,pz} (momentum after transport to the fitted secondary vertex), \fcmd{track_N_charge},
+\fcmd{track_N_pseudorapidity}, \fcmd{track_N_PV_DCA_xy}; pair: \fcmd{track_1_track_2_DCA} (after both daughters are
+constrained to the secondary vertex; about 20~$\mu$m, so the offline cut on it is ineffective); event:
+\fcmd{primary_vertex_z}. Daughter order in all run3pp candidates: \Ks{} \fcmd{track_1} $=\pi^-$, \fcmd{track_2} $=\pi^+$;
+\La{} \fcmd{track_2} = (anti)proton (\fcmd{|track_2_PDG_ID| = 2212}). The stored \fcmd{track_N_mass} is the fitted KF
+mass and is not used for species assignment.
+
+\caveat{The sign of \fcmd{Lambda0_PDG_ID} does not separate \La{} and $\bar\Lambda$ in these ntuples. In this note \La{} and
+$\bar\Lambda$ are separated by the charge of \fcmd{track_2} (the proton), in all three mass versions, and fitted together.}

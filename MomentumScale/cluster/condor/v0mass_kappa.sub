@@ -1,0 +1,13 @@
+# KFP Ks+Lambda without covariance cuts -> mass-vs-pT histograms with and without the kappa pT re-calibration
+# (same 287 segments as condor 480608 / output/v0mass_loosecov)
+universe       = vanilla
+executable     = /gpfs02/sphenix/user/dongxs/run3pp/macro/run_v0mass_kappa.sh
+arguments      = $(dst) /gpfs02/sphenix/user/dongxs/run3pp/output/v0mass_kappa
+output         = /gpfs02/sphenix/user/dongxs/run3pp/output/v0mass_kappa/logs/condor_$Fn(dst).out
+error          = /gpfs02/sphenix/user/dongxs/run3pp/output/v0mass_kappa/logs/condor_$Fn(dst).err
+log            = /tmp/dongxs/condor_logs/v0mass_kappa.log
+request_memory = 3GB
+getenv         = False
+priority       = 10
+PeriodicHold   = (NumJobStarts>=2 && JobStatus == 1)
+queue dst from /gpfs02/sphenix/user/dongxs/run3pp/output/v0mass_kappa/dst_list.txt

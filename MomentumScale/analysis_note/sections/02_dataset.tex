@@ -1,0 +1,43 @@
+\section{Data sample, software and processing}
+\label{sec:dataset}
+
+\paragraph{Data.} sPHENIX run3pp (p+p, $\sqrt{s}=200$~GeV, streaming readout), production \fcmd{ana581_2026p005_v001},
+\fcmd{DST_TRKR_TRACKS} (tracks, track seeds, vertices; one DST per segment of about 990 events), from
+\fpath{/sphenix/lustre01/sphnxpro/production/run3pp/physics/ana581_2026p005_v001/DST_TRKR_TRACKS/}. \PerAllSeg{} segments
+from \NRuns{} runs (\RunFirst--\RunLast):
+\begin{itemize}
+\item run 79509 segments 0--30 (the sample of the first calibration);
+\item the segments of the TrackQA single-track scan: 8 segments per run for all \NRuns{} runs (run 79509:
+  segments \SegsScanAnine).
+\end{itemize}
+The same segment list was used for the covariance-free production of the DDSim main calibration (condor cluster 480608).
+
+\paragraph{Run periods.}
+\begin{itemize}
+\item \textbf{Period A}: runs 79509--79516 (\NRunsA{} runs, \PerASeg{} segments, \PerAEv{} events) = the run range from which
+  the $\kappa$ table was derived (directory name \fpath{run79509to79516_20261102}).
+\item \textbf{Period B}: runs \RunBFirst--\RunBLast{} (\NRunsB{} runs, \PerBSeg{} segments, \PerBEv{} events). The table is
+  applied unchanged, assuming it holds there (user decision).
+\end{itemize}
+Per-run counts are listed in Table~\ref{tab:runs} (Sec.~\ref{sec:rundep}). \SampleStatus{}
+
+\paragraph{Software.} Release \fcmd{ana.581} (\fcmd{sphenix_setup.sh -n ana.581} via \fpath{run3pp/setup_env.sh}),
+reconstruction macro derived from \fpath{macros/TrackingProduction/Fun4All_KShortReco.C} at macros commit \fcmd{87f5cb5e}
+(the commit of ana.581): \fpath{run3pp/macro/loosecov/Fun4All_run3pp_KFP.C}. Conditions: CDB global tag \fcmd{newcdbtag},
+timestamp = run number, Acts tracking geometry from the CDB, MVTX misalignment applied, \fcmd{TRACKING::streaming_mode = true},
+TPC readout configuration per run (\fcmd{TpcReadoutInit}). Mass-histogram step: \fpath{run3pp/macro/kappa/fill_v0_mass_kappa.C}
+(ROOT, interpreted). Fit and figures: DataDrivenSim (\fpath{macros/fitMomRes.C}, this note's \fpath{scripts/}).
+
+\paragraph{Processing (condor cluster 480714).} One job per segment (\fpath{run3pp/macro/run_v0mass_kappa.sh},
+\fpath{run3pp/condor/v0mass_kappa.sub}, 3~GB, scratch on the worker):
+\begin{enumerate}
+\item KFParticle \Ks{} and \La{} reconstruction over all events of the segment (\fpath{macro/run_kfp_loosecov.sh}, cut set
+  ``loose'' without covariance cuts, Sec.~\ref{sec:reco}); the ntuples stay in the job scratch directory;
+\item \fpath{fill_v0_mass_kappa.C}: event/track/candidate selection (Sec.~\ref{sec:selection}) and three sets of mass-vs-\pt{}
+  histograms, \fpath{V0mass_<base>_{kfp,raw,kappa}.root} (Sec.~\ref{sec:kappa}); a job is accepted only if both steps print
+  ``All done'' and all three files are non-empty;
+\item only the histograms ($\approx$80~kB per job) and the gzipped logs are copied to
+  \fpath{run3pp/output/v0mass_kappa}; the ntuples are deleted.
+\end{enumerate}
+Result: \JobsOk/\JobsN{} jobs OK, 0 failed, 0 resubmitted. A second pass over the same segments (condor 481293) added the tight \La{} histograms and slim candidate trees (Sec.~\ref{sec:tight}). Merging per period: \fpath{scripts/merge_kappa287.sh}
+$\to$ \fpath{data/kappa287/V0mass_{A,B,all}_{kfp,raw,kappa}.root}.

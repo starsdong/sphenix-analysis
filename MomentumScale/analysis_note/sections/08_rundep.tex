@@ -1,0 +1,44 @@
+\section{Run dependence}
+\label{sec:rundep}
+
+The period split was motivated by the observation that the fitted curvature term differs between subsets of the sample. Fits with
+the KFP mass (no $\kappa$) on run groups (Table~\ref{tab:groups}) and per-run counts (Table~\ref{tab:runs}) show:
+\begin{itemize}
+\item $a$ grows with the run period: \GrpThirtyOne\%/(GeV/$c$) on run 79509 segments 0--30, \PerAKfpKsA{} on period A,
+  \GrpNine{} on runs 80904--80915 and \GrpEightOne{} on runs 81556--81609;
+\item the number of \Ks{} QA candidates per event (signal plus combinatorial background) grows in the same order:
+  \PerAKsEvMin--\PerAKsEvMax{} per run in period A and \PerBKsEvMin--\PerBKsEvMax{} in period B. This points to higher
+  luminosity or pile-up in the later runs; the luminosity itself is not checked here.
+\end{itemize}
+A luminosity-dependent effect such as TPC space-charge distortions would produce this pattern, but this note does not test the
+hypothesis. The $\kappa$ table, derived in period A, removes the same fraction of $a$ in both periods (Sec.~\ref{sec:results}).
+
+\begin{table}[H]
+\centering\small
+\caption{\Ks{} fit with the KFP mass on run groups (same method; $s$ grid 0.975--1.015). Statistical intervals only. Logs
+\fpath{logs/fitMomRes_{kfp31,g7951x,g809xx,g81xxx,k287_*_kfp}.txt}.}
+\label{tab:groups}
+\begin{tabular}{lcccc}
+\toprule
+runs & $a$ (\%/(GeV/$c$)) & $b$ (\%) & $s$ & $\chi^2$/ndf \\
+\midrule
+\input{tables/tab_groups.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Per run: period, segments, processed events, \Ks{} QA candidates (all masses in 0.40--0.60~GeV/$c^2$, signal + background)
+and per event, \La+$\bar\Lambda$ QA candidates, and mean $\kappa$ of the QA candidates (\Ks{} $\pi^-$, $\pi^+$; \La{} pion,
+proton). From the condor job logs (\fpath{logs/joblines.txt}).}
+\label{tab:runs}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{rcrrrcrcccc}
+\toprule
+run & per. & seg. & events & \Ks{} cand. & \Ks/ev & \La{} cand. & $\kappa_{\pi^-}$ & $\kappa_{\pi^+}$ & $\kappa_{\pi}^{\Lambda}$ & $\kappa_{p}^{\Lambda}$ \\
+\midrule
+\input{tables/tab_runs.tex}
+\bottomrule
+\end{tabular}
+\end{table}

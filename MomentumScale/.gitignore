@@ -1,0 +1,10 @@
+*.root
+*.so
+*.d
+*.pcm
+*_ACLiC_dict*
+.DS_Store
+analysis_note/build/
+analysis_note/fits/
+analysis_note/sections_bak_*
+slides/r/

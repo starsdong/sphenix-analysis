@@ -1,0 +1,16 @@
+FIT Ks a 0.0300 0.0287 0.0312 b 0.0160 0.0150 0.0161 s 0.9910 0.9909 0.9912 chi2 464.5 ndf 389 edge_a 0 edge_b 0 edge_s 0
+FIT Lambda a 0.0425 0.0407 0.0455 b 0.0160 0.0138 0.0170 s 0.9910 0.9901 0.9917 chi2 293.2 ndf 247 edge_a 0 edge_b 0 edge_s 0
+FIT joint a 0.0300 0.0292 0.0305 b 0.0160 0.0156 0.0162 s 0.9910 0.9909 0.9912 chi2 761.1 ndf 639 edge_a 0 edge_b 0 edge_s 0
+CROSS chi2(Lambda | Ks best) 296.6 / 250 ; chi2(Lambda | own best) 293.2 ; chi2(Ks | joint) 464.5 ; chi2(Lambda | joint) 296.6
+BIN Ks 0.20 0.50 chi2 45.3 ndf 56 N 0.483 gaus_data 4.813 0.159 gaus_sim 4.684
+BIN Ks 0.50 0.70 chi2 62.4 ndf 56 N 0.408 gaus_data 4.760 0.168 gaus_sim 4.826
+BIN Ks 0.70 0.90 chi2 59.8 ndf 56 N 0.383 gaus_data 4.959 0.174 gaus_sim 5.155
+BIN Ks 0.90 1.20 chi2 53.4 ndf 56 N 0.357 gaus_data 6.104 0.267 gaus_sim 5.791
+BIN Ks 1.20 1.60 chi2 80.6 ndf 56 N 0.355 gaus_data 7.129 0.374 gaus_sim 6.903
+BIN Ks 1.60 2.20 chi2 79.0 ndf 56 N 0.445 gaus_data 9.497 1.001 gaus_sim 8.587
+BIN Ks 2.20 4.00 chi2 84.1 ndf 56 N 0.557 gaus_data 18.252 3.367 gaus_sim 11.680
+BIN Lambda 0.50 0.90 chi2 55.0 ndf 50 N 0.967 gaus_data 2.361 0.281 gaus_sim 1.992
+BIN Lambda 0.90 1.20 chi2 53.6 ndf 50 N 0.885 gaus_data 1.715 0.140 gaus_sim 1.838
+BIN Lambda 1.20 1.60 chi2 54.2 ndf 50 N 0.826 gaus_data 2.422 0.243 gaus_sim 1.959
+BIN Lambda 1.60 2.40 chi2 70.5 ndf 50 N 0.583 gaus_data 3.395 0.432 gaus_sim 2.333
+BIN Lambda 2.40 4.00 chi2 63.2 ndf 50 N 0.183 gaus_data 1.034 0.605 gaus_sim 3.126

@@ -1,0 +1,79 @@
+\section{The $\kappa$ correction and the three mass versions}
+\label{sec:kappa}
+
+\paragraph{Table.} \fpath{MomentumScaleMap/run79509to79516_20261102/kappa_lookup.csv}, frozen on the cluster as
+\fpath{run3pp/macro/kappa/kappa_lookup_run79509to79516_20261102.csv} (md5 \fcmd{38e0a20c...}). Columns
+\fcmd{q, pT, curv, eta, phi, kappa, kappa_curv, eps, delta}; \TabRows{} nodes = \TabNq{} charges $\times$ \TabNpt{} \pt{} values
+(\TabPtMin--\TabPtMax\gevc, 0.05\gevc{} steps up to 5\gevc, coarser above) $\times$ \TabNeta{} $\eta$ values (\TabEtaMin{} to
+\TabEtaMax, step 0.25) $\times$ \TabNphi{} $\varphi$ values ($-\pi$ to $\pi$, step $\pi/12$; both ends present and equal).
+Convention (file header): $(1/\pt)^{\rm corr}=(1/\pt)\,\kappa_{\rm curv}$ with $\kappa_{\rm curv}=1+\epsilon+q\,\delta$, and
+$\kappa=1/\kappa_{\rm curv}$ is the multiplier of the transverse momentum, $\pt^{\rm corr}=\kappa\,\pt$. According to the file header the
+correction is parametrised in $x=\ln\pt$ (reference \TabXref, scale \TabXscale, clamp \TabXclamp; $\kappa$ constant in $x$ outside
+the clamp).
+$\epsilon$ is charge-even (a scale), $q\delta$ charge-odd (a curvature offset, i.e.\ a sagitta-like distortion).
+
+\begin{table}[H]
+\centering\small
+\caption{Table values $\kappa$ at $\eta=0$, $\varphi=0$ (nodes, no interpolation). Over the whole table $\kappa$ ranges from
+\TabKMin{} to \TabKMax{} (extremes at large \pt{} and $|\eta|$).}
+\label{tab:knodes}
+\begin{tabular}{lcc}
+\toprule
+\pt{} (GeV/$c$) & $\kappa(q=-1)$ & $\kappa(q=+1)$ \\
+\midrule
+\input{tables/tab_kappa_nodes.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+The charge-odd part dominates above $\approx0.5$\gevc: at $\eta=\varphi=0$, $\kappa(q=-1)$ falls and $\kappa(q=+1)$ rises with
+\pt{}. The table also varies with $\varphi$ (at $\pt=0.5$\gevc, $\eta=0$: \TabPhiLoMinus--\TabPhiHiMinus{} for $q=-1$,
+\TabPhiLoPlus--\TabPhiHiPlus{} for $q=+1$) and with $\eta$ (\TabEtaLoMinus--\TabEtaHiMinus{} and \TabEtaLoPlus--\TabEtaHiPlus{}
+at $\varphi=0$).
+
+\paragraph{Application.} For each daughter of each candidate, with the stored momentum (at the fitted secondary vertex) and charge:
+\begin{enumerate}
+\item $\kappa$ is looked up by linear interpolation in $(\ln\pt,\eta,\varphi)$ between the eight surrounding nodes, separately
+  for $q=\pm1$; outside the node range the value is clamped to the edge ($\pt<0.1$ or $>20$\gevc, $|\eta|>1.5$);
+\item all three momentum components are multiplied by $\kappa$ (\pt{} scaled, $\eta$ and $\varphi$ unchanged);
+\item the V0 mass is recomputed from the two daughter four-vectors with PDG masses ($m_\pi=139.570$, $m_p=938.272$\mevcc),
+  and the V0 \pt{} from the sum of the daughter momenta.
+\end{enumerate}
+
+\paragraph{Mass versions.} From the same candidates and the same selection, each job writes
+\begin{itemize}
+\item \textbf{KFP}: the KFParticle mass and \pt{} (identical to the earlier production 480608, Sec.~\ref{sec:audit});
+\item \textbf{no $\kappa$} (``raw''): mass and \pt{} recomputed from the stored daughter momenta, $\kappa\equiv1$;
+\item \textbf{with $\kappa$}: as ``raw'' after the correction.
+\end{itemize}
+
+\choice{The effect of the correction is measured as ``with $\kappa$'' vs ``no $\kappa$'': same candidates, same mass formula, only
+the daughter momenta differ. On run 79509 segments 0--30, recomputed minus KFP mass is \DmKsMean{} (RMS \DmKsRms)\mevcc{} for \Ks{} and
+\DmLaMean{} (RMS \DmLaRms)\mevcc{} for \La{}, all candidates; the origin of the difference (KFParticle vertex fit vs stored
+momenta) is not investigated.}
+
+\paragraph{Mean correction applied.} QA-selected candidates, averaged over all masses in the histogram range (job logs):
+\begin{itemize}
+\item period A: \Ks{} $\pi^-$ \PerAKapKsOne, $\pi^+$ \PerAKapKsTwo; \La{} pion \PerAKapLaOne, proton \PerAKapLaTwo;
+\item period B: \Ks{} $\pi^-$ \PerBKapKsOne, $\pi^+$ \PerBKapKsTwo; \La{} pion \PerBKapLaOne, proton \PerBKapLaTwo.
+\end{itemize}
+The \pt{} dependence on run 79509 segments 0--30 is in Table~\ref{tab:kprof}.
+
+\begin{table}[H]
+\centering\small
+\caption{Mean $\kappa$ applied per daughter in 0.1\gevc{} bins of daughter \pt{} (bin containing the quoted value), all
+candidates of run 79509 segments 0--30 before the QA rows (local study, \fpath{macros/fillV0MassCorr.C}); ``--'' fewer than 50
+daughters. For \La{} the pion and proton columns mix both charges (\La{} and $\bar\Lambda$).}
+\label{tab:kprof}
+\begin{tabular}{lccccccc}
+\toprule
+daughter & \KprofPts \\
+\midrule
+\input{tables/tab_kprof.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\caveat{The table header states that $\kappa$ was trained on vertex-constrained daughter kinematics and deployed on raw
+\fcmd{SvtxTrackMap} tracks. Here it is applied to KFParticle daughter momenta constrained to the secondary vertex. Whether this is the
+same constraint as in the training is not verified.}

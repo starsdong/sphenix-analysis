@@ -1,0 +1,44 @@
+\section{Overview}
+\label{sec:overview}
+
+\paragraph{Purpose.} The run3pp \Ks{} mass peak sits about 3\mevcc{} below the PDG value, and its width grows with \pt{}
+much faster than the full simulation predicts. In the DDSim momentum calibration (DDSim analysis note, Sec.~``Main result'')
+this was absorbed into a global scale $s=0.991$ and a large curvature term $a$. A per-track correction table
+$\kappa(q,\pt,\eta,\varphi)$ has since been derived for runs 79509--79516. This note applies it to the V0 daughters,
+recomputes the masses and repeats the $(a,b,s)$ fit, to answer three questions:
+\begin{enumerate}
+\item Does the correction remove the momentum-scale offset ($s\to1$)?
+\item How much of the fitted resolution was a charge-, $\eta$- and $\varphi$-dependent scale distortion?
+\item Does a table derived on runs 79509--79516 also work for later runs (period B)?
+\end{enumerate}
+
+\paragraph{Findings.}
+\begin{itemize}
+\item Scale: $s$ moves from \PerARawKsS{} to \PerAKapKsS{} (period A) and from \PerBRawKsS{} to \PerBKapKsS{} (period B). The
+  \pt-integrated \Ks{} Gaussian peak moves from \PerARawKsGM{} to \PerAKapKsGM\mevcc{} (A) and from \PerBRawKsGM{} to
+  \PerBKapKsGM\mevcc{} (B); PDG \PdgKs\mevcc.
+\item Resolution: the curvature term falls to \PerAARatio{} (A) and \PerBARatio{} (B) of its uncorrected value:
+  $a=\PerARawKsA\to\PerAKapKsA$ and $\PerBRawKsA\to\PerBKapKsA$\%/(GeV/$c$). The constant term $b$ changes little
+  ($\PerARawKsB\to\PerAKapKsB$, $\PerBRawKsB\to\PerBKapKsB$\%). For pions at 2\gevc{} the fitted $\sigma/\pt$ is
+  \PerARawResPiTwo$\to$\PerAKapResPiTwo\% (A) and \PerBRawResPiTwo$\to$\PerBKapResPiTwo\% (B).
+\item Period B, outside the range of the table, improves as much as period A, but keeps a larger curvature term after the
+  correction (\PerBKapKsA{} vs \PerAKapKsA\%/(GeV/$c$)). Without the correction the curvature term already grows with the
+  run period (Sec.~\ref{sec:rundep}).
+\item \Ks{} and \La{} agree after the correction: the \La{} $\chi^2$ at the \Ks{} best point is \PerAKapDchiLa{} (A) and
+  \PerBKapDchiLa{} (B) above the \La{} minimum (\PerARawDchiLa{} and \PerBRawDchiLa{} without $\kappa$).
+\item A tighter \La{} selection (Sec.~\ref{sec:tight}) raises the \La{} S/B from \PerAllKapLpQaSB{} to \PerAllKapLpTiSB{} and reduces
+  the error of the \La{} peak position from \PerAllKapLpQaMe{} to \PerAllKapLpTiMe\mevcc; the \La-only scale with $\kappa$ is
+  \PerAKapTiLaS{} (A) and \PerBKapTiLaS{} (B), consistent with \Ks. Its \La{} resolution agrees with \Ks{} in period A but not in
+  period B, so it is used for the scale only.
+\item Reproducibility and validation checks all pass (Sec.~\ref{sec:audit}).
+\end{itemize}
+
+\paragraph{Choices (one line each).}
+\begin{itemize}
+\item Same candidates, three mass versions (KFP fitted mass; recomputed without $\kappa$; recomputed with $\kappa$): the
+  effect of the correction is ``no $\kappa$'' vs ``with $\kappa$''.
+\item Two run periods fitted separately: A = range of the table, B = all other runs (table applied as is, per user decision).
+\item No covariance- or significance-based cut anywhere (DDSim cannot reproduce covariance correlations).
+\item Fit model, templates, bins and background as in the DDSim main calibration; only the scale grid is widened.
+\item \La{} scale from a tighter \La{} selection, applied identically to data and templates; resolution from \Ks.
+\end{itemize}

@@ -1,0 +1,60 @@
+\section{Offline selection}
+\label{sec:selection}
+
+The offline selection is the run3pp V0 QA selection used in the DDSim calibration. It is applied in
+\fpath{fill_v0_mass_kappa.C} with the stored KFParticle values, identically for the three mass versions (the cut variables are
+not recomputed after the momentum correction). Table~\ref{tab:sel} lists every level, including the requirements that are
+deliberately absent, and the corresponding DDSim template selection (Sec.~\ref{sec:method}).
+
+\begin{table}[H]
+\centering\small
+\caption{Offline selection of the calibration sample (data) and of the DDSim templates. ``--'' = deliberately no cut.
+The ``loose'' histograms (\fcmd{h*_loose}) contain the event and track rows only; all fits use the QA histograms (all rows). The tight \La{} selection of Sec.~\ref{sec:tight} adds DIRA$>$0.9995, $|{\rm DCA}_{xy}(\pi)|>0.10$~cm and $|{\rm DCA}_{xy}(p)|>0.03$~cm, in data and templates.}
+\label{tab:sel}
+\begin{tabular}{L{2.0cm}L{6.8cm}L{6.4cm}}
+\toprule
+level & data (offline, on the KFParticle candidates) & DDSim templates \\
+\midrule
+event & $|z_{\rm PV}|<10$~cm (chosen PV); no trigger selection; no multiplicity or pile-up cut; no event de-duplication
+  across overlapping streaming events (\fcmd{Collision_BCO}) & generated PV $|z|<10$~cm, $(x,y)$ and $z$ from data \\
+track & $|\eta|<1.1$ for both daughters; $|{\rm DCA}_{xy}|>0.02$~cm to the chosen PV for both daughters;
+  KFP pre-cuts of Table~\ref{tab:kfp} (\pt$>0.1$\gevc, TPC$\geq20$) & $\pt^{\rm rec}>0.1$\gevc, $|\eta|<1.1$, $|{\rm DCA}_{xy}|>0.02$~cm;
+  TPC efficiency (full sim); MVTX$\geq2$ drawn from the data matching efficiency; no silicon beyond $R_{xy}=3.2$~cm \\
+pair / vertex & DCA$_{12}<0.2$~cm (SV-constrained, ineffective); no vertex-$\chi^2$ or volume cut & DCA$_{12}<0.2$~cm (unconstrained
+  helices); no covariance \\
+mother & DIRA$>0.995$; $L_{xy}>0.5$~cm; no upper $L_{xy}$ cut; no mother-DCA or significance cut & $\cos\theta>0.995$, $L_{xy}>0.5$~cm \\
+species & \Ks: $\pi^+\pi^-$; \La: \fcmd{track_2} = (anti)proton, $\bar\Lambda$ if its charge is negative & \Ks, \La{} (50\% $\bar\Lambda$) \\
+candidates & all candidates kept (no best-candidate choice; a track can enter several candidates) & one candidate per decay \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Histograms.} Per mass version: \fcmd{hKs_qa} ($\pt$ 0--5\gevc{} in 100 bins $\times$ $M$ 0.40--0.60~GeV/$c^2$ in
+200 bins of 1\mevcc), \fcmd{hLa_qa}, \fcmd{hLaBar_qa} ($M$ 1.08--1.16~GeV/$c^2$ in 320 bins of 0.25\mevcc), the same without
+the QA rows (\fcmd{*_loose}), and the number of processed events (\fcmd{nEventsProcessed} from the KFParticle \fcmd{EventInfo}
+tree). The V0 \pt{} on the horizontal axis is the KFParticle \pt{} (KFP version) or the recomputed \pt{} (other versions).
+
+\paragraph{Statistics.} QA candidates (all masses in the histogram range, signal plus background):
+\PerANKs{} \Ks{} and \PerANLa{} \La+$\bar\Lambda$ in period A, \PerBNKs{} and \PerBNLa{} in period B.
+Table~\ref{tab:entries} gives the entries in the fit range per V0-\pt{} bin.
+
+\begin{table}[H]
+\centering\small
+\caption{Data entries (signal plus background) in the fit range per V0-\pt{} bin, KFP mass and $\kappa$-corrected versions
+(the recomputed \pt{} moves candidates between bins). From the fit logs. The recomputed versions have fewer entries in the fit
+window than the KFP version although the candidates are the same; the origin of this difference is part of open issue~3
+(Sec.~\ref{sec:open}).}
+\label{tab:entries}
+\begin{tabular}{llrrrr}
+\toprule
+ & V0 \pt{} (GeV/$c$) & \hd{A}{KFP} & \hd{A}{with $\kappa$} & \hd{B}{KFP} & \hd{B}{with $\kappa$} \\
+\midrule
+\input{tables/tab_entries.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\caveat{The DDSim templates were generated with DCA$_{12}<0.2$~cm on unconstrained helices, while the effective data pair cut is
+KFParticle's 0.5~cm on constrained tracks (Sec.~\ref{sec:reco}). The DDSim defaults have since been changed to 0.5~cm; the
+templates of this note (and of the DDSim main calibration) predate that change. The cut changes which decays enter the template,
+not the momentum response; its effect on $(a,b,s)$ is not evaluated.}

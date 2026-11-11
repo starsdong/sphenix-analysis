@@ -1,0 +1,160 @@
+\section{Tighter \La{} selection}
+\label{sec:tight}
+
+The \La{} peak sits on a large combinatorial background (S/B $\approx$ 0.3 within $\pm2\sigma$ with the QA selection), which limits
+the precision of its position and makes the \La{} template fits sensitive to the background model. This section tests a tighter
+\La{} topological selection, applied identically to data and DDSim templates. \Ks{} is not changed.
+
+\subsection{Choice of the cuts}
+
+\paragraph{Scan.} On run 79509 segments 0--30 (full KFParticle ntuple, KFP mass, $0.5<\pt<4$\gevc;
+\fpath{macros/scanLambdaCuts.C}) \ScanNCuts{} combinations of DIRA (0.995--0.9999), $L_{xy}$ (0.5--3~cm), pion and proton
+$|{\rm DCA}_{xy}|$ (0.02--0.3 and 0.02--0.1~cm) were evaluated on top of the QA selection. Signal $S$ = counts in
+$\pm6$\mevcc{} around the PDG mass minus a linear side-band estimate (1.095--1.104 and 1.128--1.137~GeV/$c^2$), $B$ = that estimate;
+figure of merit $S^2/(S+B)$, the effective signal count that sets the error of the peak position. Only cuts that DDSim models are
+scanned (no covariance, $\chi^2$ or significance cuts, Sec.~\ref{sec:selection}).
+\begin{itemize}
+\item QA selection: $S=\ScanBaseS$, $B=\ScanBaseB$, S/B \ScanBaseSB, $S^2/(S+B)=\ScanBaseSeff$.
+\item DIRA is the strongest handle: DIRA$>$0.9995 alone gives S/B \ScanDiraSB{} and $S^2/(S+B)=\ScanDiraSeff$ (\ScanDiraKeep\% of
+  the signal).
+\item A tighter decay length removes signal faster than background: $L_{xy}>2$~cm keeps \ScanLxyKeep\% of the signal
+  (S/B \ScanLxySB), because the V0 daughters need silicon hits and therefore decays at small radius.
+\item Chosen (\textbf{tight}): QA + DIRA$>$0.9995, $|{\rm DCA}_{xy}(\pi)|>0.10$~cm, $|{\rm DCA}_{xy}(p)|>0.03$~cm: $S=\ScanSelS$
+  (\ScanSelKeep\%), $B=\ScanSelB$, S/B \ScanSelSB, $S^2/(S+B)=\ScanSelSeff$ ($\times\ScanGain$). The scan maximum
+  (\ScanBestCut, $S^2/(S+B)=\ScanBestSeff$) is within the statistical fluctuation of the scan; the less aggressive DIRA cut was
+  preferred (user decision) because the pointing angle is the variable DDSim models least well (Sec.~\ref{sec:open}).
+\end{itemize}
+
+\paragraph{Can a tight cut bias the resolution fit?} DDSim applies the selection before the momentum smearing of the fit
+(Sec.~\ref{sec:method}). If a tight cut preferentially removed badly measured candidates in data, the data peak would narrow
+while the templates would not, and $(a,b)$ would come out too small. Test on the same 31 segments (\fpath{macros/cutBiasTest.C}):
+Gaussian width with the QA and the tight selection in data (KFP mass) and in DDSim (templates smeared at the DDSim main point
+$a=3.75$\%/(GeV/$c$), $b=1.4$\%, $s=0.991$), for \Ks{} with the same DIRA and pion cuts on both pions and for \La{} with the tight
+selection (Table~\ref{tab:tightbias}). The width ratio tight/QA agrees between data and DDSim within the statistics (\Ks{}
+\pt-integrated: data $\BiasKsRatD\pm\BiasKsRatDe$, DDSim \BiasKsRatS; \La: $\BiasLaRatD\pm\BiasLaRatDe$ vs \BiasLaRatS). The test
+is limited to $\approx$5\% by the 31-segment sample. The DDSim \La{} templates keep \TmplLaTight{} of the candidates
+(\TmplLaTightFrac{} of the QA templates).
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{Cut-bias test on run 79509 segments 0--30: Gaussian width (MeV/$c^2$) with the QA and the tight selection in data
+(KFP mass; error of the ratio = quadrature of the two errors, conservative since the tight sample is a subset) and in DDSim at
+the main point.}
+\label{tab:tightbias}
+\begin{tabular}{llcccccc}
+\toprule
+ & \pt{} (GeV/$c$) & data QA & data tight & data ratio & DDSim QA & DDSim tight & DDSim ratio \\
+\midrule
+\input{tables/tab_tight_bias.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Production}
+
+The data ntuples of 256 of the 287 segments are not kept (Sec.~\ref{sec:dataset}), so all segments were reprocessed (condor
+cluster 481293, \fpath{run3pp/macro/kappa/fill_v0_mass_kappa_v2.C}, \fpath{macro/run_v0mass_kappa_v2.sh}). The v2 fill macro writes,
+from the same candidates, all histograms of the first production unchanged, the tight histograms \fcmd{hLa_tight},
+\fcmd{hLaBar_tight} in all three mass versions, and a slim candidate tree per segment (pre-selection DIRA$>$0.99,
+$L_{xy}>0.2$~cm, $|{\rm DCA}_{xy}|>0.01$~cm; 84~MB for all segments, kept locally in \fpath{data/kappa_v2/v0tree}) so that further
+cut variations need no reprocessing. Checks: the v2 macro reproduces the 18 histograms of the first production bin by bin on run
+79509 segments 0--30 before submission, and after the production all v1 histograms of all \ReproTwoN{} segments are bin-by-bin
+identical to production 480714 (\ChkReproTwo). In \fpath{fitMomRes.C} the option \fcmd{laTight=1} reads the tight data
+histograms and applies the same three cuts to the DDSim \La{} templates (\fcmd{rcCosTheta}, \fcmd{rcPiDcaXY}, \fcmd{rcPDcaXY});
+the \Ks{} part of the fit is unchanged (identical \Ks{} results: \ChkKsSame).
+
+\subsection{Mass peak}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_latight_mass}
+\caption{\La+$\bar\Lambda$ mass, recomputed with $\kappa$, $0.5<\pt<4$\gevc, with the QA (blue) and the tight (red) selection;
+period A (left) and B (right). Script \fpath{scripts/latight.C}.}
+\label{fig:latightmass}
+\end{figure}
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{\La+$\bar\Lambda$ Gaussian peak (gaus + quadratic, 1.103--1.130~GeV/$c^2$, 0.5\mevcc{} bins, likelihood fit),
+$0.5<\pt<4$\gevc, QA vs tight selection: mean and width (MeV/$c^2$), S/B within $\pm2\sigma$, and the fraction of the Gaussian
+signal kept by the tight cuts. PDG \PdgLa\mevcc. \fpath{macros/laTightPeaks.C}.}
+\label{tab:tightpeaks}
+\begin{tabular}{llccccccc}
+\toprule
+ & mass & $M$ QA & $M$ tight & $\sigma$ QA & $\sigma$ tight & S/B QA & S/B tight & kept (\%) \\
+\midrule
+\input{tables/tab_tight_peaks.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+With $\kappa$, the tight selection raises S/B from \PerAllKapLpQaSB{} to \PerAllKapLpTiSB{} (all segments), keeps \PerAllKapLpKeep\%
+of the signal (A \PerAKapLpKeep\%, B \PerBKapLpKeep\%) and reduces the error of the peak position from \PerAllKapLpQaMe{} to
+\PerAllKapLpTiMe\mevcc{} (A $\PerAKapLpQaMe\to\PerAKapLpTiMe$, B $\PerBKapLpQaMe\to\PerBKapLpTiMe$). The peak stays above the
+PDG mass: $\PerAllKapLpTiM\pm\PerAllKapLpTiMe$\mevcc{} (\PerAllKapLpTiAbove\mevcc, $\PerAllKapLpTiPull\sigma$ statistical).
+
+\subsection{Template fits}
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{\La-only template fit with the QA and the tight \La{} selection, per period and mass version: profile $\Delta\chi^2=1$
+intervals, $\chi^2$/ndf, $\Delta\chi^2_\Lambda$ (\La{} $\chi^2$ at the \Ks{} best point minus its minimum), and the joint
+\Ks+\La{} best point ($a$ in \%/(GeV/$c$), $b$ in \%, $s$). No best point on the grid edge (\ChkEdgeTight).}
+\label{tab:tightfits}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lllccccccc}
+\toprule
+ & mass & \La{} sel. & $a$ (\%/(GeV/$c$)) & $b$ (\%) & $s$ & $\chi^2$/ndf & $\Delta\chi^2_\Lambda$ & joint $a$, $b$, $s$ \\
+\midrule
+\input{tables/tab_tight_fits.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item \textbf{Scale.} With $\kappa$ and the tight selection the \La-only scale is $s=\PerAKapTiLaS$ (A), \PerBKapTiLaS{} (B)
+  and \PerAllKapTiLaS{} (all), consistent with the \Ks{} values (\PerAKapKsS, \PerBKapKsS, \PerAllKapKsS). The half-width of the
+  $\Delta\chi^2=1$ interval in $s$ changes from \PerAKapQaLaSW{} to \PerAKapTiLaSW{} (A), \PerBKapQaLaSW{} to \PerBKapTiLaSW{} (B)
+  and \PerAllKapQaLaSW{} to \PerAllKapTiLaSW{} (all), in units of $10^{-3}$.
+\item \textbf{Resolution, period A.} The tight \La-only curvature term moves towards the \Ks{} value
+  ($a=\PerAKapQaLaA\to\PerAKapTiLaA$ vs \Ks{} \PerAKapKsA\%/(GeV/$c$)); $\Delta\chi^2_\Lambda=\PerAKapQaDchi\to\PerAKapTiDchi$.
+\item \textbf{Resolution, period B.} The tight \La-only $a$ rises ($\PerBKapQaLaA\to\PerBKapTiLaA$) and the \La/\Ks{} tension grows
+  ($\Delta\chi^2_\Lambda=\PerBKapQaDchi\to\PerBKapTiDchi$; all segments $\PerAllKapQaDchi\to\PerAllKapTiDchi$); the \La{} $\chi^2$
+  worsens (\PerBKapQaLaChi{} $\to$ \PerBKapTiLaChi/247). Table~\ref{tab:tightwidths}: at 1.2--1.6 and 1.6--2.4\gevc{} the tight data peaks are wider than the tight
+  templates at the \Ks{} best point by \WidTiOne{} and \WidTiTwo{} standard deviations of the data width (QA selection:
+  \WidQaOne{} and \WidQaTwo).
+\item With $\kappa$ the joint \Ks+\La{} best points are unchanged by the tighter \La{} selection (\Ks{} dominates); without
+  $\kappa$ the period-B joint point moves by one grid step in $a$ and $b$.
+\end{itemize}
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{\La{} Gaussian width in data / in the template at the \Ks{} best point (MeV/$c^2$), per V0-\pt{} bin, with $\kappa$,
+QA vs tight selection (from the template-fit display fits, \fcmd{BIN} rows of the fit logs; ``--'' = data fit unconstrained or at its 0.3\mevcc{} lower limit).}
+\label{tab:tightwidths}
+\begin{tabular}{llccccc}
+\toprule
+ & sel. & 0.5--0.9 & 0.9--1.2 & 1.2--1.6 & 1.6--2.4 & 2.4--4.0 \\
+\midrule
+\input{tables/tab_tight_widths.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_mass_Lambda_B_tight}
+\caption{\La+$\bar\Lambda$ mass, period B, with $\kappa$ and the tight selection; template at the \Ks{} best point (prediction).
+Compare Fig.~\ref{fig:masslaB} (QA selection).}
+\label{fig:masslaBtight}
+\end{figure}
+
+\choice{\textbf{Use of the tight selection} (adopted): the tight \La{} selection is used for the \La{} peak position and the
+\La{} momentum scale ($s_\Lambda$ with $\kappa$: \PerAKapTiLaS, \PerBKapTiLaS, \PerAllKapTiLaS{} for A, B, all). The resolution
+$(a,b)$ stays determined by \Ks{} (Table~\ref{tab:summary}); the \La{} resolution with the tight selection is not used until the
+period-B width mismatch is understood (Sec.~\ref{sec:open}).}
+
+\caveat{Why the tight templates under-predict the period-B width above 1.2\gevc{} is not established. Candidates: the pointing
+angle is too good in DDSim (true PV, unsmeared directions; in the full-simulation closure study 5\% of the true \Ks{} have DIRA$<$0.995 against 0.1\% in DDSim), so a
+DIRA$>$0.9995 cut selects different decay topologies in data and DDSim; higher pile-up in period B; statistics (the 2.4--4\gevc{}
+bin has $\approx$10 tight signal candidates in B). The 31-segment bias test (period A only) shows no effect at the 5\% level.}

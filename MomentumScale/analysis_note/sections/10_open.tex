@@ -1,0 +1,29 @@
+\section{Open issues}
+\label{sec:open}
+
+\begin{enumerate}
+\item {[decision]} Adoption of the correction in DDSim. If the $\kappa$-corrected response is the target, DDSim needs
+  per-period $(a,b,s)$ (Table~\ref{tab:summary}, ``with $\kappa$'') and the analyses must apply $\kappa$ to their data tracks;
+  the current DDSim defaults ($a=3.75$\%/(GeV/$c$), $b=1.40$\%, $s=0.991$) describe uncorrected data averaged over all runs.
+\item Period B keeps a larger curvature term after the correction (\PerBKapKsA{} vs \PerAKapKsA\%/(GeV/$c$)). A table derived on
+  period-B runs, or a per-run fit, would show whether the remainder is a run-dependent distortion that $\kappa$ does not describe.
+\item KFP mass vs recomputed mass: in period B the \Ks{} $\chi^2$ is \PerBKfpKsChi{} with the KFP mass and \PerBRawKsChi{} with the
+  recomputed mass (best points $(a,b,s)$ = (\PerBKfpKsA\%/(GeV/$c$), \PerBKfpKsB\%, \PerBKfpKsS) and
+  (\PerBRawKsA, \PerBRawKsB, \PerBRawKsS)); in period A the two are similar (\PerAKfpKsChi{} vs \PerARawKsChi). The cause
+  (vertex-fit treatment, background shape of the recomputed spectrum) is not understood.
+\item Residual \Ks{} peak offset with $\kappa$: \PerAKapKsBelow{} (A) and \PerBKapKsBelow\mevcc{} (B) below PDG; fitted
+  $s=\PerAKapKsS$ and \PerBKapKsS.
+\item Proton scale: check whether $\delta_p$ in the templates should be removed when $\kappa$ is applied (\La-only $s$ with
+  $\kappa$: \PerAKapLaS{} and \PerBKapLaS).
+\item Tight \La{} selection in period B: the tight data peaks above 1.2\gevc{} are wider than the tight templates
+  ($\Delta\chi^2_\Lambda$ \PerBKapQaDchi{} $\to$ \PerBKapTiDchi). Next step (local, slim trees): refill with DIRA alone and with the DCA
+  cuts alone to locate the cause, and compare the DIRA distribution of side-band-subtracted \La{} in data and DDSim.
+\item \La{} peak position with $\kappa$ and tight selection \PerAllKapLpTiAbove\mevcc{} above PDG
+  ($\PerAllKapLpTiPull\sigma$ statistical) while \Ks{} is \PerAKapKsBelow{} (A) and \PerBKapKsBelow\mevcc{} (B) below: the proton scale (item~5) is the first
+  suspect.
+\item Background-model and window variations, as in the DDSim main calibration, have not been redone with the corrected masses.
+\item Regenerate the templates with the current DDSim defaults (DCA$_{12}<0.5$~cm, seeding factor) and refit.
+\end{enumerate}
+
+\decision{Which response should DDSim use? Options: (a) keep the uncorrected all-run defaults; (b) adopt the $\kappa$-corrected
+response per period (requires the analyses to correct their data with $\kappa$); (c) wait for a $\kappa$ table covering period B.}
