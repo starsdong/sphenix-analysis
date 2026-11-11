@@ -1,0 +1,37 @@
+\section{Ntuple content}
+\label{sec:ntuple}
+
+Output file \fpath{TrackQA_<run>_<seg>.root} with trees \fcmd{event} and \fcmd{track}
+(ZSTD level 5). A track is linked to its event through \fcmd{ievt} (entry number in
+\fcmd{event}) or through (\fcmd{run}, \fcmd{event}); e.g.\
+\fcmd{track->AddFriend} is not possible (different entry counts), use
+\fcmd{event->GetEntry(ievt)} or an index on (\fcmd{run},\fcmd{event}).
+Ntuple version~2 (used from Sec.~\ref{sec:ptres} on, 100-segment sample) adds the TPC-seed
+\fcmd{tpcSeedPt}, \fcmd{tpcSeedEta}, \fcmd{tpcSeedPhi} ($-999$ when the DST has no \fcmd{TpcTrackSeedContainer},
+e.g.\ the trimmed DST). Table~\ref{tab:branches} (version~1, test segment) lists every other branch with its ROOT leaf type and its share of the
+compressed size of its tree; the event tree is \evtTreekBPerEv\,kB/event and the track tree
+\trkTreekBPerEv\,kB/event.
+
+\choice{32-bit floats for all continuous variables, 8-bit unsigned integers for cluster counts
+and 16-bit integers for charge, ndf, crossing and class flags. Momentum components are not
+stored: $p_x = p_T\cos\phi$, $p_y = p_T\sin\phi$, $p_z = p_T\sinh\eta$.}
+
+{\small
+\begin{longtable}{>{\raggedright}p{0.17\textwidth}c>{\raggedright}p{0.58\textwidth}r}
+\caption{Branches of the ntuple. Type: ROOT leaf code (I int32, L int64, l uint64, F float,
+S int16, b uint8, O bool). Last column: share of the compressed size of the tree in \% (test
+segment). Source: \fpath{tables/tab_branches.tex} written by \fpath{scripts/make_qa.C}.}
+\label{tab:branches}\\
+\toprule
+branch & type & content & size (\%)\\
+\endfirsthead
+\toprule
+branch & type & content & size (\%)\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\csname @@input\endcsname tables/tab_branches.tex
+
+\end{longtable}
+}

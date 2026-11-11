@@ -1,0 +1,59 @@
+\section{Dataset, software and processing}
+\label{sec:dataset}
+
+\paragraph{Data.} sPHENIX Run-3 p+p track DSTs, production \texttt{ana581\_2026p005\_v001}, data type
+\texttt{DST\_TRKR\_TRACKS}, on \fpath{/sphenix/lustre01/sphnxpro/production/run3pp/physics/}. The 10\% sample uses the
+job lists of the earlier 10\% stock production (\fpath{output/prod10pct/lists/}): \nListsTen{} lists with
+\nSegsTen{} DST segments, \eventsTwo\,M events, \nRunsTen{} runs from \runFirst{} to \runLast:
+\begin{center}\small \runListTen \end{center}
+The remaining 90\% (63{,}302 job lists, same lists as the stock 90\% production) has been processed with the same
+software (cluster 480665, all jobs OK); it is not used here.
+
+\paragraph{Software.} Release \release{} (ROOT \rootVersion), with \texttt{KFParticle\_sPHENIX} rebuilt from the
+branch \texttt{d0-pvfix} of a local \texttt{coresoftware} clone (\fpath{src/coresoftware_kfp}). Table~\ref{tab:commits}
+lists the commits; each one is reproduced by a patch script in \fpath{tools/pvfix/patch_fix*.py}. The installed library
+(\fpath{install_pvfix_v2/}, md5 \texttt{\libMdfive\ldots}) is frozen for the production, and so is the macro
+(\fpath{macro/pvfix2/Fun4All_run3pp_KFP.C}). The run-time configuration is set by environment variables in
+\fpath{macro/run_kfp_pvfix2.sh} (Table~\ref{tab:config}).
+
+\begin{table}[H]
+\centering\small
+\caption{Commits on the branch \texttt{d0-pvfix} on top of the release (oldest first). Source: \fpath{logs/software.txt}.}
+\label{tab:commits}
+\begin{tabular}{@{}l l p{12cm}@{}}
+\toprule
+commit & & change \\
+\midrule
+\csname @@input\endcsname tables/commits.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\caption{Run-time configuration of the production (\fpath{macro/run_kfp_pvfix2.sh}).}
+\label{tab:config}
+\begin{tabular}{@{}l l p{9.2cm}@{}}
+\toprule
+variable & value & effect \\
+\midrule
+\fcmd{KFP_PVFIX_LOOSE} & 0.001,0.5 & in-job \Dzero{} cuts: track--PV DCA $\geq 10\um$, DIRA $\geq 0.5$ \\
+\fcmd{KFP_PVFIX_POSTCUT} & 0.003,0.9 & a candidate is written if it passes DCA $\geq 30\um$ (both daughters) and DIRA $\geq 0.9$ with the original OR the pair-refit OR the KF-fit PV \\
+\fcmd{KFP_PVFIX_PREFER_DIRA} & 0.9 & best combination chosen among those with DIRA $\geq 0.9$ when one exists \\
+\fcmd{KFP_PVKF_ERRSCALE} & 7 & KF fit: track covariance $\times 7^2$ \\
+\fcmd{KFP_PVKF_CHICUT} & 3.5 & KF fit: outlier $\chi^2$-deviation cut \\
+\fcmd{KFP_SLIM_DROP_ALLREFITS} & 1 & in-job slimming drops the candidate quantities w.r.t.\ the all-track refits (their vertex positions are kept) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Processing.} HTCondor on \texttt{sphnxuser01}, one job per list (\texttt{-1} events = all), D0 channel only,
+\texttt{prod} cut set. A job counts as OK if its log contains \texttt{All done}; the log is then gzipped. Cluster 480634
+(\fpath{output/pvfix2_10pct/}): \jobsOkTwo{} of \jobsTotalTwo{} jobs OK, \jobsFailTwo{} failed, \eventsTwo\,M events,
+\sizeTwo\,GB of output. The previous production of the same lists with fixes 1--2 only (cluster 480622,
+\fpath{output/pvfix10pct/}) processed the same \eventsOne\,M events and serves as the stock reference: its candidate set
+is the stock one (fixes 1--2 do not change the selection). Analysis outputs are in
+\fpath{output/pvfix2_10pct/analysis/full/}.
+
+\caveat{About 1\% of the jobs ran 10--12\,h at under 20\% CPU (input reads from a few runs, 81556--81601 and
+80895--80908); none failed. The slow jobs are a cluster I/O effect and do not affect the output.}

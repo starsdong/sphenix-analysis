@@ -1,0 +1,75 @@
+\section{The tool}
+\label{sec:tool}
+
+\paragraph{Files} (local mirror \fpath{~/Work/Hermes/sPHENIX/run3pp/trackqa/}, cluster
+\fpath{/gpfs02/sphenix/user/dongxs/run3pp/trackqa/}):
+\begin{itemize}\itemsep0pt
+\item \fpath{src/TrackQATree/} -- the SubsysReco module (autotools package, libraries
+  \fcmd{fun4all}, \fcmd{ffaobjects}, \fcmd{ffarawobjects}, \fcmd{trackbase_historic(_io)},
+  \fcmd{globalvertex_io}); built by \fpath{build.sh} into the project install area shared with
+  \fcmd{EventInfoTree}.
+\item \fpath{macro/Fun4All_TrackQA.C(nEvents, input, outdir, trimDST, minPt)} -- DST input
+  manager (single file or a text list of files of one run), the module, and optionally a
+  \fcmd{Fun4AllDstOutputManager} for the trimmed DST. Prints \fcmd{All done} only when all
+  outputs exist.
+\item \fpath{macro/run_trackqa.sh <nEvents> <input> <outdir> [trimDST 0/1] [minPt]} -- job wrapper:
+  clean environment, scratch directory, log with \fcmd{/usr/bin/time -v}, fails unless the log
+  contains \fcmd{All done}. Same conventions as \fcmd{run_kfp.sh}, so the existing condor
+  scripts can be adapted by changing the executable.
+\item \fpath{tools/check_vertex_id.C} -- diagnostic used to define the vertex association
+  (Sec.~\ref{sec:vtxassoc}).
+\item \fpath{analysis_note/scripts/make_qa.C} -- figures, numbers and checks of this note (runs
+  locally on the downloaded ntuple).
+\end{itemize}
+
+\choice{The job reads the DST nodes only: no CDB, geometry, field map or track refit. The DCA
+calculation (\fcmd{TrackAnalysisUtils::get_dca}) needs only the stored track state and
+covariance at the point of closest approach. This keeps the job at \cpuMsPerEv\,ms/event and
+independent of calibration tags. Quantities that need geometry or clusters (dE/dx, residuals)
+are therefore not in the ntuple.}
+
+\choice{No event or track selection is applied when writing: every DST event has an
+\fcmd{event} entry and every track of \fcmd{SvtxTrackMap} a \fcmd{track} entry
+(\fcmd{minPt}=0 by default). Selections are cheap to apply offline, and the
+counts can be checked against the DST (Sec.~\ref{sec:audit}). The \fcmd{minPt} argument exists
+to shrink the track tree if needed; tracks below it are still counted in the event tree.}
+
+\subsection{Track classes and crossing}
+Following the KFParticle study, tracks are classified by their cluster content
+(\fcmd{SvtxTrack_v5} cluster counters): \emph{INTT} ($\geq1$ INTT cluster, crossing measured by
+INTT timing), \emph{MVTX-only} (MVTX but no INTT clusters) and \emph{TPC-only} (no silicon
+cluster). The track beam crossing \fcmd{crossing} is relative to the GL1 BCO of the event; TPC-only
+tracks always carry crossing 0 because no silicon timing is available (verified for every track,
+check \fcmd{chkTpcOnlyXzero}).
+
+\subsection{Vertex association for the DCA}
+\label{sec:vtxassoc}
+\fcmd{SvtxTrack::get_vertex_id()} was checked on 200 events with \fpath{tools/check_vertex_id.C}:
+when set, it always points to an existing vertex of the track's own crossing; the vertex track
+lists are consistent with the ids (every listed track points back to the vertex), but many tracks
+carry the id of a vertex they were not used in. The ntuple therefore stores the class
+\fcmd{vtxMatch}:
+\begin{center}\small
+\begin{tabular}{clr}
+\toprule
+\fcmd{vtxMatch} & definition & tracks (\%)\\
+\midrule
+1 & vertex = stored vertex id, track in that vertex's track list (used in the fit) & \nMatchOne{} (\fracMatchOne)\\
+2 & vertex = stored vertex id, track not in the fit & \nMatchTwo{} (\fracMatchTwo)\\
+3 & no vertex id; vertex of the same crossing closest in $z$ to the track PCA & \nMatchThree{} (\fracMatchThree)\\
+0 & no vertex in the track's crossing; DCA and vertex branches $=-999$ & \nMatchZero{} (\fracMatchZero)\\
+\bottomrule
+\end{tabular}
+\end{center}
+In the test segment class 3 contains only TPC-only tracks and classes 1--2 only silicon tracks
+(check \fcmd{chkTpcVtxId}).
+
+\choice{DCA reference = the stored vertex id when present (the tracking's own assignment),
+otherwise the closest vertex in $z$ of the same crossing. The class is stored, so analyses can
+choose; e.g.\ \fcmd{vtxMatch==1} for primary-track QA.}
+
+\caveat{For \fcmd{vtxMatch==1} the track was used in the vertex fit, so its DCA is biased towards
+zero, strongly for vertices with few tracks (Sec.~\ref{sec:qa}). For TPC-only tracks (class 3) the
+vertex is a crossing-0 vertex by construction, while most TPC-only tracks come from other
+crossings (their $z$ is then shifted by the drift-time offset): their DCA is not a primary/secondary
+discriminator.}

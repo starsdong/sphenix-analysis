@@ -1,0 +1,63 @@
+\section{Momentum-scale correction}
+\label{sec:kappa}
+
+\paragraph{Map.} \fpath{MomentumScaleMap/run79509to79516_20261102/kappa_lookup.csv} (from the momentum-calibration
+study, file of 2026-11-02; md5 \texttt{\mapMdfive\ldots}; copied to \fpath{calib/kappa_run79509to79516_20261102/} on
+SDCC). Its header defines the convention $(1/\pt)_{\rm corr}=(1/\pt)\,\kappa_{\rm curv}$ with
+$\kappa_{\rm curv}=1+\varepsilon+q\,\delta$, and the column \texttt{kappa} $=1/\kappa_{\rm curv}$ as the \pt{} multiplier,
+$\pt^{\rm corr}=\kappa\,\pt$. The table (\mapRows{} rows) is a grid of \mapPtN{} \pt{} values (\mapPtMin--\mapPtMax\gevc) $\times$ \mapEtaN{} $\eta$
+values (\mapEtaMin{} to \mapEtaMax) $\times$ \mapPhiN{} $\varphi$ values ($-\pi$ to $\pi$) for each charge
+(\fpath{logs/kappa_map.txt}).
+
+\paragraph{Application} (\fpath{tools/pvfix/kappa_apply.C}). $\kappa$ is interpolated trilinearly in
+($\ln\pt$, $\eta$, $\varphi$) for the charge of the track, with \pt{} clamped to 0.1--20\gevc{} and $|\eta|$ to 1.5;
+the track direction is unchanged. The \Dzero{} mass is recomputed from the daughters' (\pt, $\eta$, $\varphi$) with the
+stored mass hypotheses, once without (\texttt{D0\_mass\_rc}) and once with the correction (\texttt{D0\_mass\_kc}); the
+pair \pt{} and the momentum asymmetry are recomputed as well. All stored quantities are kept, and the corrected ones are
+new branches in a copy of the skim (\fpath{D0skim_pvfix2_10pct_kc.root}, \kcN\,M candidates, \chkKcSameN).
+
+On the skim, $\langle\kappa\rangle=\kappaPlusMean$ (r.m.s.\ \kappaPlusRms) for positive and \kappaMinusMean{}
+(\kappaMinusRms) for negative tracks. For prompt candidates ($L<1$\,mm) the recomputed uncorrected mass agrees with the
+stored KFParticle mass: median difference \dmRcMed\mev, central 68\% half-width \dmRcHw\mev, \dmRcTail\% beyond 20\mev.
+The correction shifts the \Dzero{} mass by a median of \dmKcMed\mev{} (68\% half-width \dmKcHw\mev) and the pair \pt{} by
+a median of \ptRelMed\% (half-width \ptRelHw\%).
+
+\paragraph{Validation with \Ks{} and $\Lambda$.} 100 \Ks{} and 100 $\Lambda$ files of the stock 10\% production (25 each
+from runs 79513, 79515, 80908 and 81609) are refitted with a Gaussian plus a quadratic background (background first
+fitted to the sidebands), for the stored mass, the recomputed mass and the corrected mass
+(\fpath{tools/pvfix/kappa_v0check.C}).
+
+\begin{table}[H]
+\centering\small
+\caption{\Ks{} and $\Lambda$ peaks without (rc) and with (kc) the correction: Gaussian mean $\mu$ and width $\sigma$ in
+\mev, and $\sigma_{\rm kc}/\sigma_{\rm rc}$. ``--'': fit not reliable (width at a fit limit or error above 30\%).
+PDG: 497.61 and 1115.68\mev. Source: \fpath{logs/kappa_v0check.txt}.}
+\label{tab:v0}
+\begin{tabular}{@{}l c c c c c@{}}
+\toprule
+selection & $\mu_{\rm rc}$ & $\sigma_{\rm rc}$ & $\mu_{\rm kc}$ & $\sigma_{\rm kc}$ & ratio \\
+\midrule
+\csname @@input\endcsname tables/v0check.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+The correction narrows the \Ks{} peak from \vKsAllSigRc{} to \vKsAllSigKc\mev{} (\vKsAllRatio) and moves it from
+\vKsAllMuRc{} to \vKsAllMuKc\mev, closer to the PDG value; the gain is largest at \Ks{} \pt{} of 1--3\gevc. The
+$\Lambda$ peak narrows from \vLaAllSigRc{} to \vLaAllSigKc\mev{} (\vLaAllRatio). In the runs outside the map's training
+range the \Ks{} ratio is \vKsOtherRatio{} against \vKsTrainRatio{} in the training runs.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{v0check_K0S}\\
+\includegraphics[width=0.85\textwidth]{v0check_Lambda}
+\caption{\Ks{} (top) and $\Lambda$ (bottom) mass, uncorrected (black) and $\kappa$-corrected (red), in the
+training runs 79509--79516 and in the other runs (runs 80908, 81609). Copied from
+\fpath{output/kappa_check/v0check_*.png}; titles are in the source figures.}
+\label{fig:v0}
+\end{figure}
+
+\caveat{The map was derived from vertex-constrained daughter kinematics of runs 79509--79516 and is applied here to
+unconstrained tracks (noted in the map file itself). Runs 79509--79516 are part of the 10\% sample, and the \Ks{}/$\Lambda$
+check in those runs is not independent of the calibration; the other runs are. How well the map describes \Dzero{}
+daughters (higher \pt, different charge combination per mass) was not tested beyond \Ks{} and $\Lambda$.}

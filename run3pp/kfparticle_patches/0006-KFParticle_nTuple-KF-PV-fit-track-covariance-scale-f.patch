@@ -1,0 +1,39 @@
+From 3ba4ada8d356b9d28d49566913601c64fe6fe533 Mon Sep 17 00:00:00 2001
+From: dongxs <dongxs@bnl.gov>
+Date: Sun, 8 Nov 2026 22:24:46 -0500
+Subject: [PATCH 6/7] KFParticle_nTuple: KF PV fit track covariance scale from
+ KFP_PVKF_ERRSCALE (d0-pvfix fix 3c)
+
+---
+ offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
+index d40b3a122..76ab12e02 100644
+--- a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
++++ b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
+@@ -1106,6 +1106,12 @@ namespace
+       std::cout << "d0-pvfix: KFParticle PV fit chi2-deviation cut " << v << std::endl;
+       return v;
+     }();
++    static const float errScale2 = [] {
++      const char* e = std::getenv("KFP_PVKF_ERRSCALE");
++      float v = e ? std::atof(e) : 1.F;
++      std::cout << "d0-pvfix: KFParticle PV fit track covariance scaled by " << v << "^2" << std::endl;
++      return v * v;
++    }();
+     nUsed = 0;
+     if (t.size() < 2)
+     {
+@@ -1124,7 +1130,7 @@ namespace
+       {
+         for (int b = 0; b <= a; ++b)
+         {
+-          cov[k++] = s->get_error(a, b);
++          cov[k++] = s->get_error(a, b) * errScale2;
+         }
+       }
+       parts[i].Create(par, cov, (Int_t) s->get_charge(), -1);
+-- 
+2.52.0
+

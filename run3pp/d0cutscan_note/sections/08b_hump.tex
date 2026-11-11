@@ -1,0 +1,141 @@
+\section{Origin of the broad enhancement}
+\label{sec:hump}
+
+This section tests why the pointing selection produces the broad enhancement of Sec.~\ref{sec:ratio}. All tests use the
+full $\pt>1.5$ skim with the pointing selection b (DIRA$>0.995$, \Ls$>2$, \humpNsig{} candidates) and the non-pointing
+control (DIRA 0.95--0.98, \humpNctl{} candidates). Scripts: \fpath{scripts/hump.C}, \fpath{scripts/hump2.C},
+\fpath{scripts/hump3.C}; logs \fpath{logs/hump*.txt}.
+
+\paragraph{Variables.} $\theta_{12}$: 3D opening angle of the daughters. $A=(p_\pi-p_K)/(p_\pi+p_K)$: momentum asymmetry
+of the pion- and kaon-hypothesis daughters. ``Mass from daughters'': $m(K\pi)$ recomputed from the stored daughter \pt,
+$\eta$, $\varphi$, as opposed to the stored \fcmd{D0_mass} of the KFParticle vertex fit.
+
+\subsection*{Displaced vertices and the stored mass: not the cause}
+The pointing selection contains more far-displaced vertices than the control (decay length $L>1$\,cm: \hcompLlongS\% vs.\
+\hcompLlongC\%), and more identified \Ks{} (\hcompKsS\% vs.\ \hcompKsC\%, $|m_{\pi\pi}-m_{K^0_S}|<15$\,MeV), $\Lambda$
+(\hcompLamS\% vs.\ \hcompLamC\%, $|m_{p\pi}-m_\Lambda|<6$\,MeV for either assignment) and photon conversions
+(\hcompGamS\% vs.\ \hcompGamC\%, $m_{ee}<50$\,MeV). For far-displaced vertices the stored mass differs strongly from the
+mass recomputed from the stored daughters (mean $|\Delta m|$ = \hdmShort\,MeV at $L\approx0.3$\,mm and \hdmLong\,MeV at $L\approx3$\,cm; Fig.~\ref{fig:hump2disp}), presumably because the daughter parameters are
+stored at a different point than the fitted vertex (not checked in the source). None of this produces the enhancement
+(Table~\ref{tab:hump2}, Fig.~\ref{fig:hump2ratio}): it is present for $L<1$\,mm ($\Delta\chi^2=\hvShortDchi$) and absent for
+$L>1$\,mm ($\Delta\chi^2=\hvLongDchi$), it survives the \Ks/$\Lambda$/$\gamma$ veto ($\Delta\chi^2=\hvVetoDchi$), and it is
+the same with the mass recomputed from the daughters ($\Delta\chi^2=\hvReDchi$).
+
+\begin{table}[H]
+\centering\small
+\caption{Pointing / non-pointing ratio for sub-samples, full $\pt>1.5$ skim. $\chi^2$/ndf of a pol2 fit, its improvement
+$\Delta\chi^2$ with a free broad Gaussian, and $z$ of a 15\,MeV Gaussian fixed at $m_{\mathrm{D}^0}$ on top of pol2.
+Source: \fpath{logs/hump2.txt}.}
+\label{tab:hump2}
+\begin{tabular}{lrrrr}
+\toprule
+sub-sample & $N$ pointing & pol2 $\chi^2$/ndf & $\Delta\chi^2$ (broad) & $z$ (narrow, pol2) \\
+\midrule
+all, stored mass & \hvAllNs & \hvAllChi & \hvAllDchi & \hvAllZ \\
+all, mass from daughters & \hvReNs & \hvReChi & \hvReDchi & \hvReZ \\
+$L<1$\,mm & \hvShortNs & \hvShortChi & \hvShortDchi & \hvShortZ \\
+$L>1$\,mm & \hvLongNs & \hvLongChi & \hvLongDchi & \hvLongZ \\
+$|m_\mathrm{stored}-m_\mathrm{daughters}|<10$\,MeV & \hvAgreeNs & \hvAgreeChi & \hvAgreeDchi & \hvAgreeZ \\
+\Ks/$\Lambda$/$\gamma$ veto & \hvVetoNs & \hvVetoChi & \hvVetoDchi & \hvVetoZ \\
+$L<1$\,mm and $|\Delta m|<10$\,MeV & \hvShortAgreeNs & \hvShortAgreeChi & \hvShortAgreeDchi & \hvShortAgreeZ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hump2_displaced}
+\caption{Left: decay-length distribution of pointing (red) and non-pointing (black) candidates, normalised; dashed line
+at 1\,mm. Middle: mean $|m_\mathrm{stored}-m_\mathrm{daughters}|$ versus decay length (all candidates). Right: transverse
+vertex radius of pointing candidates with $L>1$\,mm. Full $\pt>1.5$ skim.}
+\label{fig:hump2disp}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hump2_ratios}
+\caption{Pointing / non-pointing ratio (normalised, 10\,MeV bins, statistical errors) for the sub-samples of
+Table~\ref{tab:hump2}; in each panel black is all candidates with the stored mass. Left: split by decay length at 1\,mm.
+Middle: mass recomputed from the daughters, and candidates whose two masses agree within 10\,MeV. Right: \Ks/$\Lambda$/$\gamma$
+veto, and $L<1$\,mm with agreeing masses. Dotted line: PDG \Dzero{} mass.}
+\label{fig:hump2ratio}
+\end{figure}
+
+\subsection*{Opening angle: not the cause}
+The pointing probability depends strongly on $\theta_{12}$ (ratio \humpPA{} at $\theta_{12}\approx0.15$\,rad, \humpPB{} at
+0.45, \humpPC{} at 0.9 and \humpPD{} at 1.4\,rad, normalised to the total), and $\langle\theta_{12}\rangle$ of the control
+rises with mass from \humpThLo{} to \humpThHi\,rad across the window. Weighting the control with the measured pointing
+probability in bins of ($\theta_{12}$, \pt) gives a predicted ratio without an enhancement (broad $\Delta\chi^2=\humpRpDchi$),
+and the enhancement remains in data / prediction ($\Delta\chi^2=\hthreeTDchi$ for $L<1$\,mm; Table~\ref{tab:hump3}).
+
+\subsection*{Momentum asymmetry: the cause}
+For $L<1$\,mm (\hthreeNs{} pointing candidates) the pointing probability depends on how the momentum is shared between the
+daughters: normalised to the total it is \hthreeRaMid{} for balanced pairs ($A\approx0$), \hthreeRaLo{} at $A=-0.85$ and
+\hthreeRaHi{} at $A=+0.85$ (Fig.~\ref{fig:hump3}, left). For fixed daughter momenta and opening angle the $K\pi$ mass depends
+on which track carries the kaon mass, so $A$ and mass are correlated: $\langle A\rangle$ of the control falls from
+\hthreeAmLo{} at 1.65\,GeV/$c^2$ to \hthreeAmHi{} at 2.0\,GeV/$c^2$ (middle). Weighting the control with the pointing
+probability in bins of ($A$, \pt) reproduces the shape of the measured ratio, including the rise around
+1.8--1.9\,GeV/$c^2$ (right). In the double ratio data / prediction the broad component is gone
+($\Delta\chi^2=\hthreeADchi$, from \hthreeRDchi{} before weighting), with the same result when $\theta_{12}$ is added to the
+weighting (Table~\ref{tab:hump3}, Fig.~\ref{fig:hump3double}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hump3_asym}
+\caption{Candidates with $L<1$\,mm, full $\pt>1.5$ skim. Left: pointing / non-pointing ratio versus momentum asymmetry $A$
+(normalised). Middle: mean $A$ of non-pointing candidates versus $m(K\pi)$. Right: measured mass ratio (points) and the
+ratio predicted by weighting the non-pointing candidates with the pointing probability measured in bins of
+($\theta_{12}$, \pt) (blue), ($A$, \pt) (green) and ($\theta_{12}$, $A$, \pt) (red). Dotted line: PDG \Dzero{} mass.}
+\label{fig:hump3}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{hump3_double}
+\caption{Data / predicted mass ratio for the four weightings of Table~\ref{tab:hump3} (normalised, 10\,MeV bins,
+statistical errors of data and prediction; the statistical uncertainty of the weight maps is not included). Dotted line:
+PDG \Dzero{} mass.}
+\label{fig:hump3double}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{Double ratio data / predicted for $L<1$\,mm. Weighting maps in ($\theta_{12}$: 30 bins in 0--1.8\,rad, $A$: 20
+bins, \pt: 5 bins; coarse: 10 $\times$ 8 $\times$ 5). $\chi^2$/ndf of a pol1 fit; $\Delta\chi^2$ for a broad Gaussian over
+pol2; $z$ of a 15\,MeV Gaussian at $m_{\mathrm{D}^0}$; excess = counts in 1.845--1.885\,GeV/$c^2$ above a pol2 fitted to the
+double ratio outside this window (error: $\sqrt{N}$ of the window); injection: \hthreeInj{} non-pointing candidates from
+1.855--1.875\,GeV/$c^2$ added to the pointing sample before the weights are built. Source: \fpath{logs/hump3.txt}.}
+\label{tab:hump3}
+\begin{tabular}{lrrrrrr}
+\toprule
+weighting & pol1 $\chi^2$/ndf & $\Delta\chi^2$ & $z$ & excess & injected recovered & $z$ with injection \\
+\midrule
+none (ratio) & \hthreeRChi & \hthreeRDchi & -- & -- & -- & -- \\
+$\theta_{12}$, \pt & \hthreeTChi & \hthreeTDchi & \hthreeTZ & $\hthreeTEx\pm\hthreeTeEx$ & \hthreeTRec\% & \hthreeTZi \\
+$A$, \pt & \hthreeAChi & \hthreeADchi & \hthreeAZ & $\hthreeAEx\pm\hthreeAeEx$ & \hthreeARec\% & \hthreeAZi \\
+$\theta_{12}$, $A$, \pt & \hthreeTAChi & \hthreeTADchi & \hthreeTAZ & $\hthreeTAEx\pm\hthreeTAeEx$ & \hthreeTARec\% & \hthreeTAZi \\
+$\theta_{12}$, $A$, \pt{} coarse & \hthreeTAcChi & \hthreeTAcDchi & \hthreeTAcZ & $\hthreeTAcEx\pm\hthreeTAceEx$ & \hthreeTAcRec\% & \hthreeTAcZi \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Does the weighting remove a real signal?} The mass is not a function of ($A$, \pt) alone, so a narrow peak is
+not absorbed: \hthreeInj{} injected candidates in 1.855--1.875\,GeV/$c^2$ are recovered at \hthreeARec\% in the window
+excess after the ($A$, \pt) weighting ($z=\hthreeAZi$), and equally for all weightings (Table~\ref{tab:hump3}). The injected
+candidates have the kinematics of random pairs, not of \Dzero{} decays; a \Dzero{} signal whose $A$ distribution differs is
+diluted in the weight map by the ratio of signal to background in each cell, which is small here.
+
+\paragraph{Wrong-assignment \Dzero{} decays.} The same ratio in the swapped mass (kaon mass on track~1) has no narrow peak at
+the \Dzero{} mass ($z=\humpRSZ$, all $L$; \fpath{logs/hump.txt}), so the enhancement is not explained by \Dzero{} decays
+stored with the wrong assignment, which would appear as a narrow peak there.
+
+\choice{Background model for the \Dzero{} search with a pointing selection: the non-pointing control weighted with the
+pointing probability measured in bins of ($A$, \pt). It removes the broad enhancement and keeps an injected narrow peak.}
+
+\paragraph{Result.} After the weighting there is no significant narrow excess at the \Dzero{} mass: $z=\hthreeAZ$, window
+excess $\hthreeAEx\pm\hthreeAeEx$ candidates ($L<1$\,mm, selection b, full $\pt>1.5$ skim).
+
+\caveat{The double ratio is still not flat (pol1 $\chi^2/\mathrm{ndf}=\hthreeAChi$); above about 1.95\,GeV/$c^2$ it falls
+by a few per cent (read by eye from Fig.~\ref{fig:hump3double}). Why random prompt pairs with balanced momenta pass the
+pointing selection more often is not derived here; the weighting uses the measured dependence without a model of it.}

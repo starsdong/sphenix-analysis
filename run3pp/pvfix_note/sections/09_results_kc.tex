@@ -1,0 +1,53 @@
+\section{Results with the momentum-scale correction}
+\label{sec:resultskc}
+The search of Sec.~\ref{sec:method} is repeated with the corrected mass, \Dzero{} \pt{} and momentum asymmetry
+(\fpath{pvfix10pct/pvfix_d0_v2_kc.C}, generated from \fpath{pvfix_d0_v2.C} by replacing these three quantities; window,
+binning and the 15\mev{} narrow-peak width unchanged). The all-\pt{} selections contain exactly the same candidates as
+without the correction (\chkAllPtSame); with $\pt>1.5\gevc$ the set changes slightly because the \Dzero{} \pt{} changes
+(original PV, pointing: \nsChangeHiP\%).
+
+\begin{table}[H]
+\centering\small
+\caption{As Table~\ref{tab:d0uncorr}, with $\kappa$-corrected momenta. Source: \fpath{logs/d0kc_*.txt}.}
+\label{tab:d0kc}
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+selection & original PV & pair refit w/o daughters & KF fit w/o daughters \\
+\midrule
+\csname @@input\endcsname tables/d0_kc.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+Without extra cuts, \zGtTwoKcNone{} of the 12 selections have $|z|>2$ (largest \zAbsMaxKcNone), \zPosKcNone{} of 12
+excesses are positive, the mean $z$ is \zMeanKcNone{} and the r.m.s.\ \zRmsKcNone{} (uncorrected: \zMeanNone{} and
+\zRmsNone). With both pair requirements: \zGtTwoKcBoth{} with $|z|>2$, largest \zAbsMaxKcBoth, r.m.s.\ \zRmsKcBoth. The
+injected peak is still recovered at \recMinKcNone--\recMaxKcNone\% (\chkInjKcNone, \chkInjKcBoth).
+
+The pattern over PV versions is not consistent: each version has a local excess (largest $z$ \zMaxOrigKcNone{} original,
+\zMaxPairKcNone{} pair refit, \zMaxKfKcNone{} KF fit), but in different selections -- e.g.\ \Dzero{} $\pt>1.5\gevc$ pointing has $z=\zOrigHiPKcNone$ with the original PV but
+\zPairHiPKcNone{} and \zKfHiPKcNone{} with the refits, although the refits select a largely overlapping sample. A real
+\Dzero{} signal would be expected at least as strongly with the refits, which remove the bias against displaced decays.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{d0kc_none_HiP}
+\caption{As Fig.~\ref{fig:uncorrP} with $\kappa$-corrected momenta and no extra pair cut ($\pt>1.5\gevc$, pointing).
+Window excesses: original \exOrigHiPKcNone{} $\pm$ \eexOrigHiPKcNone, pair refit \exPairHiPKcNone{} $\pm$
+\eexPairHiPKcNone, KF fit \exKfHiPKcNone{} $\pm$ \eexKfHiPKcNone{} candidates.}
+\label{fig:kcP}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{d0kc_none_AllT}
+\caption{As Fig.~\ref{fig:uncorrT} with $\kappa$-corrected momenta and no extra pair cut (all \pt, tight). The original-PV
+spectrum (left, black) is higher than its neighbours in the two bins 1.86--1.88\gevcc{} (read by eye). Window excesses:
+original \exOrigAllTKcNone{} $\pm$ \eexOrigAllTKcNone, pair refit \exPairAllTKcNone{} $\pm$ \eexPairAllTKcNone, KF fit
+\exKfAllTKcNone{} $\pm$ \eexKfAllTKcNone.}
+\label{fig:kcT}
+\end{figure}
+
+\caveat{These excesses are local, partly inconsistent between PV versions, and from 10\% of the data. With the full
+sample (Sec.~\ref{sec:full}) the loose-selection excesses disappeared; only the tight selections keep excesses. The
+selections were not fixed before the full-sample look.}

@@ -1,0 +1,31 @@
+\section{\Dzero{} candidates}
+\label{sec:d0}
+The \Dzero{} ntuple holds \nCandDzero{} candidates (\candPerEvDzero{} per event) with the pre-cuts of
+Tables~\ref{tab:trackcuts}--\ref{tab:precuts}; the stored variables are shown in
+Figure~\ref{fig:precutD0}. Because only one $K\pi$ assignment per pair is kept
+(Section~\ref{sec:reco}), Figure~\ref{fig:massD0} (left) also shows the mass recomputed with the
+kaon and pion masses swapped. A tighter illustrative selection (DIRA$>0.95$, decay-length
+significance $>3$, DCA$_{12}<100\,\mu$m, both daughters DCA$_{xy}>50\,\mu$m and with INTT clusters)
+leaves \nDzeroSel{} candidates and no visible peak (Figure~\ref{fig:massD0}, right).
+
+\caveat{No \Dzero{} signal is seen in \nEvents{} events. This is not unexpected for an unoptimised
+selection on one run, and it does not test the \Dzero{} configuration. A meaningful check needs a
+much larger sample and an optimised selection (e.g.\ using simulation).}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_precut_D0}
+\caption{\Dzero{} candidates as stored (\nCandDzero{} candidates): DIRA, DCA$_{12}$, SV $\chi^2$/ndf,
+decay length, smaller daughter DCA$_{xy}$, \pt. Red dashed lines: pre-cuts (DIRA$>0$,
+DCA$_{12}<0.05$\,cm, $\chi^2$/ndf$<20$).}
+\label{fig:precutD0}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_mass_D0}
+\caption{$K\pi$ mass. Left: all stored candidates with the stored mass assignment (black) and with
+$K\leftrightarrow\pi$ swapped (red). Right: illustrative tighter selection given in the panel
+(\nDzeroSel{} candidates). The \Dzero{} mass is 1.865\,GeV/$c^2$; no peak is visible.}
+\label{fig:massD0}
+\end{figure}

@@ -1,0 +1,32 @@
+\section{Audit}
+\label{sec:audit}
+
+\subsection*{Checks that passed (script, sample)}
+\begin{itemize}
+\item 10\% skim input files = 10\% production \Dzero{} files: \chkTenFiles{} (\fpath{scripts/make_numbers.py} on
+  \fpath{logs/provenance_cluster.txt}).
+\item Sum of the inputs of the $\pt$ skim = output of the full skim: \chkFullSum{} (same).
+\item Entries of the local 10\% skim (\nTen) = sum of the skim job outputs: \chkTenEntries; entries of the local full
+  $\pt$ skim (\nFull) = sum of its job outputs: \chkFullEntries{} (\fpath{logs/inputs.txt} vs.\ provenance).
+\item Local copies identical to the cluster files: md5 checked at download for the 4 full-skim files
+  (\fpath{logs/local_files_md5.txt}; the 10\% files were md5-checked at download on 2026-11-05, recorded in the session
+  log, not re-checked here).
+\item Skim cuts applied: the minimum daughter \pt{} (0.500\,GeV/$c$), $|\mathrm{DCA}_\mathrm{PV}|$ (0.0060\,cm), DIRA
+  (\diraMinTen) and \Dzero{} \pt{} of the full $\pt$ skim (\ptMinFull) in the files match the skim definitions
+  (\fpath{logs/inputs.txt}).
+\item Mass hypothesis and pair uniqueness: all candidates have track~1 = $\pi$, track~2 = $K$, all opposite charge, no
+  pair stored twice (\fpath{logs/inputs.txt}, both samples, all candidates).
+\item Every fit table entry and number in the text is generated from \fpath{logs/*} by \fpath{scripts/make_numbers.py};
+  all steps of \fpath{scripts/d0cutscan.C} ran without ROOT errors (\fpath{logs/run_*.out}).
+\end{itemize}
+
+\subsection*{Not verified (assumptions)}
+\begin{itemize}
+\item How KFParticle chooses the $K\pi$ assignment (taken from the comment in the production macro, not from the
+  KFParticle source).
+\item The \Dzero{} mass, width and the shape of wrongly assigned \Dzero{} decays (no simulation).
+\item The pion band as a function of run and $\eta$ (one average band).
+\item Statements marked ``read by eye'' (kaon band below 0.9\gevc; extent of the trial-mass structures).
+\item Absence of duplicate events between the 10\% and 90\% productions beyond the job-list construction (the 90\% lists
+  exclude the 10\% DST list by file name; not re-checked on the ntuples).
+\end{itemize}

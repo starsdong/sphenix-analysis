@@ -1,0 +1,51 @@
+\section{Audit}
+\label{sec:audit}
+
+\subsection{Checks that passed}
+All checks are computed by \fpath{scripts/make_qa.C} on the full test segment (\nEvents{} events,
+\nTracks{} tracks) and written as PASS/FAIL into \fpath{tables/qa_numbers.tex} and
+\fpath{logs/qa_numbers.txt}; \nFailed{} of \nChecks{} fail. The 100-segment checks are computed by \fpath{scripts/dca_study.C}; \sNFailed{} of \sNChecks{} fail.
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright}p{0.17\textwidth}p{0.66\textwidth}c}
+\toprule
+check & what is compared & result\\
+\midrule
+\fcmd{chkEvEntries} & entries of tree \fcmd{event} = entries of the DST tree \fcmd{T} (\nDSTEntries) = events in the job log & \chkEvEntries\\
+\fcmd{chkTrkEntries} & $\sum$ \fcmd{nTrk} over events = entries of tree \fcmd{track} = tracks in the job log (\fcmd{minPt}=0) & \chkTrkEntries\\
+\fcmd{chkTypeSum} & INTT + MVTX-only + TPC-only = \fcmd{nTrk}, INTT + MVTX-only = \fcmd{nTrkSil}, in every event & \chkTypeSum\\
+\fcmd{chkTpcOnlyXzero} & every TPC-only track has crossing 0 & \chkTpcOnlyXzero\\
+\fcmd{chkTpcVtxId} & no TPC-only track in classes 1--2, no silicon track in class 3 & \chkTpcVtxId\\
+\fcmd{chkMatchLog} & \fcmd{vtxMatch} counts in the ntuple = counts printed by the module & \chkMatchLog\\
+\fcmd{chkDcaFinite} & DCA finite for every track with an associated vertex & \chkDcaFinite\\
+\fcmd{chkSiSeed} & every silicon track has a silicon seed (id) & \chkSiSeed\\
+\fcmd{chkTrim} & ntuple re-made from the trimmed DST identical entry by entry (event, id, $p_T$, $\eta$, $\phi$, $\chi^2$, crossing, cluster counts, class, DCAs; event counters, BCO, $v_z$); \nTrimDiff{} differences & \chkTrim\\
+\fcmd{chkSJobs} & 100-segment sample: \sNJobs{} jobs, all with \fcmd{All done} (\fpath{scripts/dca_study.C}, \fpath{logs/stat100_jobs.txt}) & \chkSJobs\\
+\fcmd{chkSEntries} & merged 100-segment ntuple: event and track entries = sum of per-job module counts & \chkSEntries\\
+\fcmd{chkEDup} & 100-segment sample: event numbers unique (\fpath{scripts/qa_effdca.C}) & \chkEDup\\
+\fcmd{chkENoEv} & 100-segment sample: every track finds its event by event number & \chkENoEv\\
+\fcmd{chkECount} & efficiency denominators (all $p_T$, $p_T>1$) = counted tracks & \chkECount\\
+\fcmd{chkRSeed} & every track of the 100-segment v2 ntuple has a TPC seed (\fpath{scripts/ptres_study.C}) & \chkRSeed\\
+\fcmd{chkKFP} & per event \fcmd{nTrk}, \fcmd{nTrkINTT}, \fcmd{nTrkMVTXonly}, \fcmd{nTrkTPConly}, \fcmd{nTrkX0}, \fcmd{nVtx} equal to the \fcmd{EventInfoTree} of the KFParticle test (independent module, other job, matched on run and event number): \nKFPAgree{} of \nEvents{} events agree, \nKFPFound{} found & \chkKFP\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Vertex-id diagnostic (\fpath{tools/check_vertex_id.C}, first 200 events, output
+\fpath{logs/check_vertex_id_79509_00000.txt}): every set vertex id exists in the vertex map and has
+the track's crossing; every track listed in a vertex points back to it.
+
+\subsection{Not verified (assumptions)}
+\begin{itemize}\itemsep0pt
+\item Only run 79509 (a light run) was processed (1 and 100 segments); other runs, busier DSTs and
+  multi-file list input were not run with this macro (the list input code is the same as in the
+  KFParticle macro, where it was tested).
+\item The TPC-only $p_T$ resolution itself (only its difference to the Si+TPC fit is measured), and the origin of the large $\chi^2$/ndf of high-$p_T$ Si-matched tracks.
+\item The misalignment interpretation of the $\phi$-dependent DCA means (Sec.~\ref{sec:dca}) is not proven.
+\item The condor wrapper usage was not tested (only interactive runs).
+\item \fcmd{TrackAnalysisUtils::get_dca} was used as is (sign convention and uncertainties not
+  checked against an independent calculation).
+\item Statements marked \emph{(by eye)} in Sec.~\ref{sec:qa}.
+\item The minimum of \ntpcMin{} TPC clusters is attributed to the production tracking without
+  checking its configuration.
+\end{itemize}

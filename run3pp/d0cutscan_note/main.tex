@@ -1,0 +1,93 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-\do_\do.}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+\DeclareGraphicsExtensions{.pdf,.png}
+\graphicspath{{figures/}}
+\sloppy
+\emergencystretch=2em
+\captionsetup{font=small,labelfont=bf}
+
+% ---------------------------------------------------------------- macros
+\newcommand{\fpath}[1]{\nolinkurl{#1}}
+\newcommand{\fcmd}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\Dzero}{D$^0$}
+\newcommand{\pt}{\ensuremath{p_T}}
+\newcommand{\um}{\ensuremath{\,\mu\mathrm{m}}}
+\newcommand{\gevc}{\ensuremath{\,\mathrm{GeV}/c}}
+\newcommand{\Ks}{K$^0_{\rm S}$}
+\newcommand{\Ls}{\ensuremath{L/\sigma_L}}
+\newtcolorbox{choicebox}{colback=blue!5,colframe=blue!60!black,fonttitle=\bfseries,title=Choice,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newtcolorbox{caveatbox}{colback=red!5,colframe=red!60!black,fonttitle=\bfseries,title=Caveat,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newtcolorbox{decisionbox}{colback=orange!7,colframe=orange!80!black,fonttitle=\bfseries,title=Decision needed,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newcommand{\choice}[1]{\begin{choicebox}\small #1\end{choicebox}}
+\newcommand{\caveat}[1]{\begin{caveatbox}\small #1\end{caveatbox}}
+\newcommand{\decision}[1]{\begin{decisionbox}\small #1\end{decisionbox}}
+
+% script-generated numbers (scripts/d0cutscan.C -> logs/*_values.txt -> scripts/make_numbers.py)
+\input{tables/numbers.tex}
+
+\title{\Dzero$\to K^-\pi^+$ cut scan and signal search\\
+in the sPHENIX Run-3 p+p KFParticle \Dzero{} skim (ana581\_2026p005\_v001)\\[4pt]
+\large Analysis note \texttt{d0cutscan}}
+\author{X.~Dong (dongxs) \quad -- \quad draft prepared with Hermes}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This note documents a search for the \Dzero$\to K^-\pi^+$ signal (and charge conjugate) in the KFParticle
+\Dzero{} ntuples of the sPHENIX Run-3 p+p track DSTs. The input is a second-stage skim (both daughters
+$|\mathrm{DCA}_\mathrm{PV}|>60\um$, \pt$>0.5\gevc$, DIRA$>0.95$): \nTen{} candidates from the 10\% sample, and
+\fullOut{} candidates from the full production of 2026-11-05, of which the \nFull{} with \Dzero{} $\pt>1.5\gevc$ are
+analysed here. A hand scan of \scanN{} selections (pointing, decay length, pair DCA, $\cos\theta^*$, TPC $dE/dx$ kaon
+identification, \pt) and a grid of \gridN{} selections, each fitted with a Gaussian fixed at the \Dzero{} mass, show no
+narrow peak: the significances scatter around zero with an r.m.s.\ of \gridRmsFifteen{} (expected 1 for statistical
+fluctuations only), with \gridPosFifteen{} selections above $+2\sigma$ and \gridNegFifteen{} below $-2\sigma$. The mass
+spectra are not described by low-order polynomials, so the local significance at a fixed mass follows the background
+shape. Dividing the mass spectrum of pointing candidates by that of non-pointing candidates (DIRA 0.95--0.98) removes most
+of the kinematic shape: in the full sample this ratio shows a broad enhancement around 1.87--1.89\,GeV/$c^2$ in every
+pointing selection and a much weaker one in the control selection. The enhancement is
+produced by the pointing selection itself: for prompt random pairs the probability to pass it depends on how the momentum
+is shared between the two daughters, and the momentum sharing is correlated with $m(K\pi)$. Weighting the non-pointing
+control with the pointing probability measured versus momentum asymmetry and \pt{} removes the enhancement while keeping an
+injected narrow peak; the remaining excess at the \Dzero{} mass is $\hthreeAEx\pm\hthreeAeEx$ candidates ($z=\hthreeAZ$).
+No \Dzero{} signal is claimed.
+\textbf{Limitations:} no simulation (expected mass, width and efficiency unknown), no momentum calibration, no
+like-sign or mixed-event background, one mass hypothesis per track pair as chosen by KFParticle, full sample only
+with \Dzero{} $\pt>1.5\gevc$, statistical uncertainties only.
+Boxes: \textcolor{blue!60!black}{blue} = choice made and why,
+\textcolor{red!60!black}{red} = caveat / open point,
+\textcolor{orange!80!black}{orange} = needs a decision by the analyser.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\input{sections/01_overview}
+\input{sections/02_dataset}
+\input{sections/03_method}
+\input{sections/04_pid}
+\input{sections/05_scan}
+\input{sections/06_grid}
+\input{sections/07_trial}
+\input{sections/08_ratio}
+\input{sections/08b_hump}
+\input{sections/09_audit}
+\input{sections/10_open_issues}
+
+\end{document}

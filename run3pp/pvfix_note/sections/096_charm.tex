@@ -1,0 +1,56 @@
+\section{3-prong charm hadrons (stock PV, 10\% sample)}
+\label{sec:charm}
+\paragraph{Data.} The D$^+$, D$_s^+$ and $\Lambda_c^+$ candidates come from a separate production with the stock
+KFParticle (no PV fixes) on every tenth DST segment of \chRuns{} runs (\chSegs{} segments, \chJobs{} jobs;
+\fpath{output/charm10pct/}, macro \fcmd{makeCharm3} in \fpath{macro/Fun4All_run3pp_KFP.C}, \texttt{prod} cuts): daughters
+$\pt\geq0.3\gevc$, $\geq2$ MVTX and $\geq20$ TPC hits, track--PV DCA $\geq50$ / 30 / 20\um{} (D$^+$ / D$_s^+$ /
+$\Lambda_c^+$), DIRA $\geq0.95$, mass windows 1.70--2.05, 1.75--2.10 and 2.15--2.42\gevcc, D$_s^+$ via
+$\phi\to K^+K^-$ with $m(KK)$ 0.99--1.05\gevcc. All three daughters from the same crossing as the PV.
+
+\paragraph{Method} (\fpath{tools/pvfix/charm_search.C}): as for the \Dzero, with the 3-body analogue of the momentum
+asymmetry, $f_{\max}=\max_i p_i/\sum_i p_i$, as weighting variable (20 bins from 1/3 to 1, $\times$ the same 7 \pt{} bins).
+Offline: all daughters $\pt>0.5\gevc$, DCA as in the job, $L<2$\,mm (D$^+$, $c\tau=312\um$) or 1\,mm, and
+$|m(KK)-1.01946|<10\mev$ for D$_s^+$. Window $\pm$20\mev{} around the PDG mass, background fit over 1.72--2.04,
+1.77--2.09 and 2.17--2.41\gevcc{}; in the D$_s^+$ channel the D$^+\to\phi\pi^+$ window is excluded from the fit and
+reported too. Stored and $\kappa$-corrected masses (the latter recomputed from the daughters, Sec.~\ref{sec:kappa}).
+The in-job mass window acts on the stored mass, so the corrected spectra fall off at the edges of the range; the control
+spectra do the same.
+
+\begin{table}[H]
+\centering\tiny
+\caption{3-prong charm, excess $\pm$ Poisson error with ($z$; $z_{\rm c}$), $z_{\rm c}$ from the window scan as in
+Sec.~\ref{sec:full}. Bold: $|z_{\rm c}|\geq2$. INTT: all three daughters with INTT hits. Source: \fpath{logs/c_*.txt}.}
+\label{tab:charm}
+\begin{tabular}{@{}l c c c c@{}}
+\toprule
+& \multicolumn{2}{c}{no extra cut} & \multicolumn{2}{c}{INTT} \\
+selection & stored & $\kappa$-corrected & stored & $\kappa$-corrected \\
+\midrule
+\csname @@input\endcsname tables/charm.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Results.}
+\begin{itemize}
+\item D$^+$: positive excesses in most selections, largest for all \pt, pointing, $\kappa$-corrected
+  (\chExDpNoneKcAllP, $z=\chZDpNoneKcAllP$, $z_{\rm c}=\chZcDpNoneKcAllP$; with INTT $z_{\rm c}=\chZcDpInttKcAllP$). The
+  data/prediction ratio (Fig.~\ref{fig:dplus}) shows a bump of about 5\% at 1.84--1.88\gevcc{} on top of a falling trend
+  (read by eye). Model-calibrated, the significances are at most about 2.
+\item D$_s^+$: no excess ($|z|\leq1.2$), and none at the D$^+\to\phi\pi^+$ position ($|z|\leq\chAltMaxNone$).
+\item $\Lambda_c^+$: no excess with the stored masses; with the corrected masses and INTT the tight selections give
+  $z=\chZLcInttKcHiT$ and \chZLcInttKcAllT{} ($z_{\rm c}=\chZcLcInttKcHiT$, \chZcLcInttKcAllT), not present without the INTT
+  requirement at the same level.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{c_Dplus_none_AllP}
+\caption{D$^+\to K^-\pi^+\pi^+$, all \pt, pointing, $L<2$\,mm, 10\% charm sample. Left: mass spectra with stored (black)
+and $\kappa$-corrected (red) momenta; right: data / weighted prediction. Dotted line: D$^+$ mass.}
+\label{fig:dplus}
+\end{figure}
+
+\caveat{This production has the PV bias of Sec.~\ref{sec:fixes} (the stock PV includes the daughters, and the in-job
+DIRA and DCA cuts use it); a fixed production for the 3-prong channels has not been made. The 3-body weighting variable
+$f_{\max}$ was not validated beyond the injection test. The expected yields are unknown (no simulation).}

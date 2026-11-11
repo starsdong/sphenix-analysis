@@ -1,0 +1,33 @@
+\section{Open issues}
+\label{sec:open}
+Ordered by importance; [decision] marks items for the analyser.
+\begin{enumerate}\setlength\itemsep{1pt}
+\item \Lam{} with daughters in different crossings: $\xclCLambda\pm\exclCLambda$ in class C; repeat
+  with $\sim$10$\times$ the statistics (Section~\ref{sec:crossing}).
+\item \Ks{} mass $\massShiftKs$\,MeV below the PDG value: check momentum scale, field map and
+  energy-loss treatment (Section~\ref{sec:v0}).
+\item Production trimming (Section~\ref{sec:trim}): signal loss of the impact-parameter cuts for a final
+  selection looser than the QA cuts, and \Dzero{} efficiency, still to be measured.
+\item V0s with a TPC-only daughter are only recovered from the crossing-0 collision; recovering the
+  others would need a crossing estimate for TPC-only tracks (not available in the DST).
+\item [decision] \Dzero{} pre-cuts; no signal seen (Section~\ref{sec:d0}).
+\item [decision] Event selection: trigger and PV-$z$ cut.
+\item Include runs 80906 and 81600 (single-segment tests still running) and more runs to check
+  run dependence.
+\item Efficiency and acceptance (simulation with the same macro).
+\end{enumerate}
+
+\section{Glossary}
+\label{sec:glossary}
+\begin{description}\setlength\itemsep{0pt}
+\item[BCO] beam-clock counter; \fcmd{GL1_BCO} is the BCO of the event's trigger.
+\item[crossing ($X$)] bunch crossing of a track or vertex relative to the GL1 BCO.
+\item[DCA$_{12}$] 3D distance of closest approach between the two daughter trajectories.
+\item[DIRA] cosine of the angle between the mother momentum and the PV$\to$SV vector.
+\item[FD $\chi^2$] flight-distance $\chi^2$ of the SV from the PV.
+\item[I / M / T] daughter with INTT clusters / MVTX but no INTT / TPC-only.
+\item[PV, SV] primary vertex (\fcmd{SvtxVertexMap}), secondary (decay) vertex.
+\item[pre-cuts] requirements applied in KFParticle when the ntuple is written.
+\item[QA cuts] offline cuts used in this note only to show the peaks (Section~\ref{sec:qacuts}).
+\item[streaming readout] continuous TPC/silicon readout: one event contains collisions from many crossings.
+\end{description}

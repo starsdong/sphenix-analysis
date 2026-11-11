@@ -1,0 +1,101 @@
+\section{\Ks{} and \Lam{} in the default (crossing-matched) sample}
+\label{sec:v0}
+
+Figures~\ref{fig:precutKs} and \ref{fig:precutLambda} show the stored topological variables,
+i.e.\ after the reconstruction pre-cuts and before any offline cut. Figures~\ref{fig:massKs}
+and~\ref{fig:massLambda} show the invariant mass before and after the offline QA cuts of
+Section~\ref{sec:qacuts}, after removing duplicates (Section~\ref{sec:dup}). Fits: Gaussian plus
+second-order polynomial, binned likelihood, in 0.43--0.57 (\Ks) and 1.09--1.16\,GeV/$c^2$ (\Lam);
+the signal yield is the Gaussian integral, S/B is in $\pm3\sigma$. Uncertainties are statistical.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_precut_Ks}
+\caption{\Ks{} candidates as stored (pre-cuts only, \nCandKs{} candidates, \nEvents{} events):
+DIRA, DCA between the daughters, SV $\chi^2$/ndf, decay length, the smaller of the two daughter
+DCA$_{xy}$ to the PV, and mother \pt. Red dashed lines: pre-cut values (DIRA$>0.8$,
+DCA$_{12}<0.5$\,cm, $\chi^2$/ndf$<20$). Log scale.}
+\label{fig:precutKs}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_precut_Lambda}
+\caption{As Figure~\ref{fig:precutKs} for \Lam+\aLam{} candidates (\nCandLambda{} candidates).}
+\label{fig:precutLambda}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_mass_Ks}
+\caption{$\pi^+\pi^-$ invariant mass. Left: pre-cuts only. Right: with offline QA cuts
+(\nQAKs{} candidates before, \dupQAKs{} duplicates removed) and the fit (red). The \Ks{} peak is
+at $\meanKs\pm\emeanKs$\,MeV, $\massShiftKs$\,MeV below the PDG mass (497.6\,MeV), with
+$\sigma=\sigmaKs\pm\esigmaKs$\,MeV, $N_{\rm sig}=\yieldKs\pm\eyieldKs$ and S/B=\SBKs.}
+\label{fig:massKs}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_mass_Lambda}
+\caption{$p\pi$ invariant mass (\Lam{} and \aLam{} together). Left: pre-cuts only. Right: with
+offline QA cuts and fit: $\mu=\meanLambda\pm\emeanLambda$\,MeV, $\sigma=\sigmaLambda\pm\esigmaLambda$\,MeV,
+$N_{\rm sig}=\yieldLambda\pm\eyieldLambda$, S/B=\SBLambda.}
+\label{fig:massLambda}
+\end{figure}
+
+With the shape fixed to the inclusive fit, the separate yields are
+\Lam: $\yieldLambdaP\pm\eyieldLambdaP$ and \aLam: $\yieldLambdaA\pm\eyieldLambdaA$.
+The QA-cut signal per 1000 events is \yieldPerKevKs{} (\Ks) and \yieldPerKevLambda{} (\Lam+\aLam);
+these are not efficiency corrected and depend strongly on the ad-hoc QA cuts.
+
+\caveat{The \Ks{} mass is $\massShiftKs$\,MeV below the PDG value, i.e.\ about
+$-0.6\%$ in mass; with the stated statistical error this is significant. Possible causes
+(momentum scale / field map, energy-loss correction, daughter momenta taken at the SV) were not
+investigated. The \Lam{} mass agrees with the PDG value within $\approx$1\,MeV.}
+
+\subsection{Yield by daughter type}
+\begin{table}[H]
+\centering\small
+\caption{Signal by daughter-track type (I = INTT, M = MVTX-only, T = TPC-only;
+Section~\ref{sec:trackclasses}), default sample with QA cuts, duplicates removed. Gaussian mean
+and width fixed to the inclusive fit, polynomial background free.}
+\label{tab:pairtype}
+\begin{minipage}[t]{0.48\textwidth}\centering
+\begin{tabular}{lrrr}
+\toprule
+\multicolumn{4}{c}{\Ks} \\
+types & cand. & signal & \% \\
+\midrule
+\input{tables/tab_pairtype_Ks.tex}
+\bottomrule
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}\centering
+\begin{tabular}{lrrr}
+\toprule
+\multicolumn{4}{c}{\Lam+\aLam} \\
+types & cand. & signal & \% \\
+\midrule
+\input{tables/tab_pairtype_Lambda.tex}
+\bottomrule
+\end{tabular}
+\end{minipage}
+\end{table}
+Most of the signal has two INTT-matched daughters. Pairs with two TPC-only daughters (TT) carry
+a small signal; by construction they come with a crossing-0 PV (Section~\ref{sec:crossing}).
+Mass distributions per type: Figures~\ref{fig:pairKs}--\ref{fig:pairLambda}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig_pairtype_Ks}
+\caption{$\pi^+\pi^-$ mass by daughter type (default sample, QA cuts, duplicates removed); blue:
+fit with mean and width fixed to the inclusive fit. Numbers in Table~\ref{tab:pairtype}.}
+\label{fig:pairKs}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig_pairtype_Lambda}
+\caption{As Figure~\ref{fig:pairKs} for $p\pi$.}
+\label{fig:pairLambda}
+\end{figure}

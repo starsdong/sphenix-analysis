@@ -1,0 +1,55 @@
+From 5c8c6eea5a628f198a362655e02269a0e17a000c Mon Sep 17 00:00:00 2001
+From: dongxs <dongxs@bnl.gov>
+Date: Sat, 7 Nov 2026 12:34:25 -0500
+Subject: [PATCH 1/7] KFParticle_nTuple: primary_vertex_ID = SvtxVertexMap key
+ (was beam crossing); add primary_vertex_crossing (d0-pvfix fix 1)
+
+---
+ offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc | 8 +++++++-
+ offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h  | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
+index f4a8aa348..73c45822d 100644
+--- a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
++++ b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
+@@ -299,6 +299,7 @@ void KFParticle_nTuple::initializeBranches(PHCompositeNode* topNode)
+     m_tree->Branch("primary_vertex_chi2", &m_calculated_vertex_chi2, "primary_vertex_chi2/F");
+     m_tree->Branch("primary_vertex_nDoF", &m_calculated_vertex_ndof, "primary_vertex_nDoF/i");
+     m_tree->Branch("primary_vertex_ID", &m_calculated_vertex_ID, "primary_vertex_ID/I");
++    m_tree->Branch("primary_vertex_crossing", &m_calculated_vertex_crossing, "primary_vertex_crossing/I");
+     // m_tree->Branch( "primary_vertex_Covariance",   m_calculated_vertex_cov, "primary_vertex_Covariance[6]/F", 6 );
+     m_tree->Branch("primary_vertex_Covariance", &m_calculated_vertex_cov, "primary_vertex_Covariance[6]/F", 6);
+   }
+@@ -660,10 +661,15 @@ void KFParticle_nTuple::fillBranch(PHCompositeNode* topNode,
+     if (m_use_fake_pv_nTuple)
+     {
+       m_calculated_vertex_ID = -100;  // error value returned by getPVID
++      m_calculated_vertex_crossing = -100;
+     }
+     else
+     {
+-      m_calculated_vertex_ID = getPVID(topNode, vertex_fillbranch);
++      // d0-pvfix fix 1: getPVID() returns the beam crossing of the vertex, not its identifier.
++      // primary_vertex_ID is now the SvtxVertexMap key (set in KFParticle_Tools::makeAllPrimaryVertices);
++      // the crossing is kept in primary_vertex_crossing.
++      m_calculated_vertex_ID = (int) vertex_fillbranch.Id();
++      m_calculated_vertex_crossing = getPVID(topNode, vertex_fillbranch);
+     }
+     // m_calculated_vertex_cov          = &vertex_fillbranch.CovarianceMatrix()[0];
+     for (int j = 0; j < 6; ++j)
+diff --git a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h
+index 2ff1ca87e..43b8625cd 100644
+--- a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h
++++ b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h
+@@ -237,6 +237,7 @@ class KFParticle_nTuple : public KFParticle_truthAndDetTools, public KFParticle_
+   float m_calculated_vertex_chi2{-1};
+   unsigned int m_calculated_vertex_ndof{std::numeric_limits<unsigned int>::max()};
+   int m_calculated_vertex_ID{-1};
++  int m_calculated_vertex_crossing{-1};  // d0-pvfix fix 1: beam crossing of the PV (was stored as primary_vertex_ID)
+   // float *m_calculated_vertex_cov;
+   float m_calculated_vertex_cov[6]{0};
+ 
+-- 
+2.52.0
+

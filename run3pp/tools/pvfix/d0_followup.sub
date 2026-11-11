@@ -1,0 +1,11 @@
+universe       = vanilla
+executable     = /gpfs02/sphenix/user/dongxs/run3pp/tools/pvfix/d0_followup.sh
+arguments      = $(job)
+output         = /gpfs02/sphenix/user/dongxs/run3pp/output/pvfix2_all/followup/condor_$(job).out
+error          = /gpfs02/sphenix/user/dongxs/run3pp/output/pvfix2_all/followup/condor_$(job).err
+log            = /tmp/dongxs/condor_logs/d0_followup.log
+request_memory = 8GB
+request_cpus   = 6
+priority       = 10
+getenv         = False
+queue job from seq 0 5 |

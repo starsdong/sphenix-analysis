@@ -1,0 +1,107 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-\do_\do.}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+\DeclareGraphicsExtensions{.png,.pdf}
+\graphicspath{{figures/}}
+\sloppy
+\emergencystretch=2em
+\captionsetup{font=small,labelfont=bf}
+
+% ---------------------------------------------------------------- macros
+\newcommand{\fpath}[1]{\nolinkurl{#1}}
+\newcommand{\fcmd}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\Dzero}{D$^0$}
+\newcommand{\pt}{\ensuremath{p_T}}
+\newcommand{\um}{\ensuremath{\,\mu\mathrm{m}}}
+\newcommand{\gevc}{\ensuremath{\,\mathrm{GeV}/c}}
+\newcommand{\gevcc}{\ensuremath{\,\mathrm{GeV}/c^2}}
+\newcommand{\mev}{\ensuremath{\,\mathrm{MeV}}}
+\newcommand{\Ks}{K$^0_{\rm S}$}
+\newcommand{\Ls}{\ensuremath{L/\sigma_L}}
+\newcommand{\hd}[2]{\begin{tabular}[b]{@{}c@{}}#1\\[-2pt]\scriptsize #2\end{tabular}}
+\newtcolorbox{choicebox}{colback=blue!5,colframe=blue!60!black,fonttitle=\bfseries,title=Choice,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newtcolorbox{caveatbox}{colback=red!5,colframe=red!60!black,fonttitle=\bfseries,title=Caveat,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newtcolorbox{decisionbox}{colback=orange!7,colframe=orange!80!black,fonttitle=\bfseries,title=Decision needed,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newcommand{\choice}[1]{\begin{choicebox}\small #1\end{choicebox}}
+\newcommand{\caveat}[1]{\begin{caveatbox}\small #1\end{caveatbox}}
+\newcommand{\decision}[1]{\begin{decisionbox}\small #1\end{decisionbox}}
+
+% script-generated numbers (logs/*.txt -> scripts/make_numbers.py)
+\input{tables/numbers.tex}
+
+\title{Primary-vertex bias in the KFParticle \Dzero{} reconstruction:\\
+fixed production, momentum-scale correction and charm searches\\
+in the sPHENIX Run-3 p+p data (ana581\_2026p005\_v001)\\[4pt]
+\large Analysis note \texttt{d0-pvfix}: full \Dzero{} sample and 3-prong charm (draft)}
+\author{X.~Dong (dongxs) \quad -- \quad draft prepared with Hermes}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+The stock KFParticle reconstruction measures pointing and decay length of charm candidates with respect to the stored
+primary vertex (PV), which was found with the candidate's daughters among its tracks; the PV is pulled towards the decay
+and displaced candidates are lost in the job. A modified KFParticle (branch \texttt{d0-pvfix}, \nCommits{} commits)
+refits the PV without the daughters with two methods (a re-implementation of the production pair-average algorithm and a
+KFParticle vertex fit with calibrated track errors), applies the production cuts with any of the three PVs, and
+reproduces the stock candidate set exactly. It was run on the \Dzero$\to K^-\pi^+$ channel of the sPHENIX Run-3 p+p
+track DSTs: \jobsOkTwo{} + \jobsOkNin{} jobs, all OK, \eventsAll\,M events, \candAllStock\,M stock candidates
+reproduced with no mismatching file. Removing the daughters moves the PV by a median of \shPairTwoMed\um{} in the
+transverse plane and adds 35\% more candidates. A momentum-scale correction from a separate calibration narrows the
+\Ks{} peak from \vKsAllSigRc{} to \vKsAllSigKc\mev; it is applied as a separate calculation.
+
+The \Dzero{} search compares pointing with non-pointing candidates weighted with the measured pointing probability, in
+12 selections (2 \pt{} ranges $\times$ 2 pointing selections $\times$ 3 PV versions), with and without the correction and
+two extra pair requirements. Moving the search window over the mass range shows that the background model fluctuates
+more than the statistical errors (r.m.s.\ of the local $z$ 0.7--4.3); significances are also given divided by that
+r.m.s.\ ($z_{\rm c}$). In the full sample the 10\% excesses of the loose selections disappear. The original-PV,
+$\pt>1.5\gevc$, tight selection keeps an excess of \exOrigHiTFuKc{} $\pm$ \eexOrigHiTFuKc{} candidates ($z_{\rm c}\approx
+\zcOrigHiTFuKc$, local), stable over three run groups but not confirmed by the refitted PVs; the 5$\sigma$ KF-fit tight
+excesses are broader than a \Dzero{} peak and absent in one run group. A search in a 10\% stock-PV production of
+D$^+$, D$_s^+$ and $\Lambda_c^+$ finds positive D$^+$ excesses up to $z_{\rm c}\approx\chZcDpNoneKcAllP$ and nothing robust
+in D$_s^+$ and $\Lambda_c^+$. \textbf{No charm signal is claimed.}
+
+\textbf{Limitations:} statistical uncertainties only, with a rough model calibration; no simulation (expected yields,
+widths, efficiencies unknown); fixed 15\mev{} narrow-peak width; no look-elsewhere correction; the momentum-scale map was
+derived on runs included here, from vertex-constrained daughters, and is applied to unconstrained tracks; the 3-prong
+production has the stock PV bias. Sections~\ref{sec:fixes}--\ref{sec:resultskc} document the method and the 10\% sample
+on which it was developed; Sec.~\ref{sec:full} gives the full-sample \Dzero{} results, Sec.~\ref{sec:charm} the 3-prong
+channels.
+Boxes: \textcolor{blue!60!black}{blue} = choice made and why,
+\textcolor{red!60!black}{red} = caveat / open point,
+\textcolor{orange!80!black}{orange} = needs a decision by the analyser.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\input{sections/01_overview}
+\input{sections/02_dataset}
+\input{sections/03_pvfix}
+\input{sections/04_validation}
+\input{sections/05_selection}
+\input{sections/06_method}
+\input{sections/07_results}
+\input{sections/08_kappa}
+\input{sections/09_results_kc}
+\input{sections/095_full}
+\input{sections/096_charm}
+\input{sections/10_audit}
+\input{sections/11_open_issues}
+\input{sections/12_glossary}
+
+\end{document}

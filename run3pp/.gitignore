@@ -1,0 +1,22 @@
+# data, outputs and results are not tracked
+*.root
+*.png
+*.pdf
+*.gz
+*.tgz
+*.tar
+*.so
+*.d
+*.pcm
+*ACLiC*
+*.log
+*.csv
+*.bak*
+.DS_Store
+**/build/
+**/logs/
+**/figures/
+**/tables/
+**/ntuples/
+**/output/
+session_log_*

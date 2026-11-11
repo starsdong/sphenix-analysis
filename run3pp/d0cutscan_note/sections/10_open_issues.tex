@@ -1,0 +1,33 @@
+\section{Open issues}
+\label{sec:open}
+
+Ordered by importance; [decision] = needs the analyser.
+
+\begin{enumerate}
+\item \textbf{Simulation} [decision]. PYTHIA \Dzero$\to K\pi$ embedded or standalone through the same tracking and
+  KFParticle configuration, to obtain the \Dzero{} mass and width, the fraction and mass shape of decays stored with the
+  wrong $K\pi$ assignment, and the efficiency of the skim and the selections of this note. Without it no selection can
+  be optimised and no expected yield given.
+\item \textbf{Weighted background model at all \pt{} and selections.} The origin of the broad enhancement is found
+  (Sec.~\ref{sec:hump}, done). Apply the ($A$, \pt)-weighted control to the full skim at all \pt{} on SDCC and to the
+  tighter selections; understand the remaining slope of the double ratio above 1.95\,GeV/$c^2$; a like-sign or
+  mixed-event sample (production change) would give an independent check of the weighted model.
+\item \textbf{Swapped-mass spectrum.} Recompute $m(K\pi)$ with the $K$ and $\pi$ masses exchanged from the stored
+  daughter momenta and study both assignments per pair, possibly selecting the assignment by $dE/dx$ below 0.9\gevc.
+\item \textbf{Momentum scale and resolution.} The calibration from the \Ks{} and $\Lambda$ mass study (separate
+  analysis) should be applied before fitting a \Dzero{} peak position and width.
+\item \textbf{Statistics.} The full sample enters only with \Dzero{} $\pt>1.5\gevc$; the full skim (\fullOut{} candidates,
+  13\,GB on SDCC) can be analysed on the cluster at all \pt. The DST area has grown since the production of 2026-11-05;
+  a top-up production would add about a fifth more data (estimated from the file count, not measured).
+\item \textbf{PID calibration.} Run- and $\eta$-dependent $dE/dx$ calibration; extend kaon identification above
+  0.9\gevc{} if the calibrated resolution allows.
+\end{enumerate}
+
+\subsection*{Glossary}
+\begin{description}\setlength{\itemsep}{0pt}
+\item[DIRA] cosine of the pointing angle between the \Dzero{} momentum and the PV-to-vertex direction.
+\item[\Ls] decay length divided by its uncertainty.
+\item[$z$] fitted yield divided by its statistical uncertainty.
+\item[pointing / non-pointing] candidates with large DIRA (selections a--f) / DIRA 0.95--0.98 (control).
+\item[skim] second-stage selection of the production ntuples (Table~\ref{tab:cuts}).
+\end{description}

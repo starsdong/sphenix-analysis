@@ -1,0 +1,57 @@
+\section{Overview}
+\label{sec:overview}
+
+\subsection*{Findings}
+\begin{enumerate}
+\item \textbf{One mass hypothesis per track pair.} Every candidate has track~1 as pion and track~2 as kaon
+  (\hypFracTen\% of the 10\% skim, \hypFracFull\% of the full $\pt>1.5$ skim), and no track pair appears twice
+  (\multiTen{} of \pairsTen{} pairs in the 10\% skim, \multiFull{} of \pairsFull{} in the full skim). KFParticle with a
+  \fcmd{[...]cc} descriptor keeps one of the two $K\leftrightarrow\pi$ assignments per pair; the other assignment is not
+  stored (Sec.~\ref{sec:dataset}).
+\item \textbf{Kaon identification is weak.} Only \kLowFrac\% of the kaon-hypothesis daughters have $p<0.9\gevc$, where the
+  TPC $dE/dx$ separates kaons from pions; of those \kLowAbove\% lie more than two widths above the pion band
+  (Sec.~\ref{sec:pid}).
+\item \textbf{Cut scan: no narrow peak.} In \scanN{} hand-picked selections the largest fixed-mass significance among
+  fits with an acceptable background ($\chi^2/\mathrm{ndf}<2$) is $z=\scanZmaxGood$ (\scanZmaxGoodSel); larger values
+  occur only where the pol2 background fails. The free fits run to their parameter limits in \scanFreeLim{} of \scanN{}
+  selections (Sec.~\ref{sec:scan}).
+\item \textbf{Grid scan: consistent with no signal plus background mismodelling.} Over \gridN{} selections and three
+  assumed widths (10, 15, 22\,MeV) the significances have a mean near zero and an r.m.s.\ of \gridRmsTen, \gridRmsFifteen{}
+  and \gridRmsTwentyTwo{} (1 expected); positive and negative excursions occur at similar rates (Sec.~\ref{sec:grid}).
+\item \textbf{The background is not polynomial.} For DIRA$>0.995$, \Ls$>2$ the local significance of a 15\,MeV Gaussian
+  varies smoothly between \trialZminThree{} and \trialZmaxThree{} across 1.74--1.99\,GeV/$c^2$ (pol3 background), with
+  $\chi^2/\mathrm{ndf}=\trialChiThree$ at the \Dzero{} mass (Sec.~\ref{sec:trial}).
+\item \textbf{Ratio method: broad enhancement, no narrow peak required.} Pointing / non-pointing mass ratios of the full
+  sample show a broad enhancement centred at \ratioFullBMean\,GeV/$c^2$ (DIRA$>0.995$, \Ls$>2$); a narrow 15\,MeV
+  Gaussian at the \Dzero{} mass reaches $z=\ratioFullBZfour$ with a pol4 background but $z=\ratioFullBZnb$ once the broad
+  component is included (Sec.~\ref{sec:ratio}).
+\item \textbf{The enhancement is made by the pointing selection.} It is not due to far-displaced vertices, \Ks/$\Lambda$/$\gamma$,
+  the stored-mass definition or the opening angle. For prompt-like random pairs ($L<1$\,mm) the pointing probability is
+  \hthreeRaMid{} for balanced momentum sharing and \hthreeRaLo--\hthreeRaHi{} for very unbalanced pairs, and the sharing is
+  correlated with the $K\pi$ mass. Weighting the control in (momentum asymmetry, \pt) removes the enhancement
+  ($\Delta\chi^2$ \hthreeRDchi{} $\to$ \hthreeADchi) and recovers an injected narrow peak at \hthreeARec\%; the \Dzero-window
+  excess is $\hthreeAEx\pm\hthreeAeEx$ ($z=\hthreeAZ$; Sec.~\ref{sec:hump}).
+\end{enumerate}
+
+\subsection*{Choices (one line each, details where they are used)}
+\begin{itemize}
+\item Signal hypothesis: Gaussian at the PDG \Dzero{} mass (1.86484\,GeV/$c^2$) with fixed width 15\,MeV, varied to
+  10 and 22\,MeV; amplitude unbounded (negative allowed); binned likelihood fit with free pol2 background in
+  1.70--2.05\,GeV/$c^2$ (Sec.~\ref{sec:method}).
+\item Kaon identification: kaon-hypothesis daughter more than two pion-band widths above the pion band if $p<0.9\gevc$,
+  no requirement above; pion-hypothesis daughter within three widths of the pion band (Sec.~\ref{sec:pid}).
+\item Background-shape control for the ratio method: non-pointing candidates, DIRA 0.95--0.98, same \pt{} range
+  (Sec.~\ref{sec:ratio}), weighted with the pointing probability in (momentum asymmetry, \pt) (Sec.~\ref{sec:hump}).
+\end{itemize}
+
+\subsection*{Corrections to earlier statements (README of 2026-11-06)}
+\begin{itemize}
+\item ``Each $K\pi$ pair is stored with both mass assignments'' was wrong: one assignment per pair is stored (finding 1).
+\item ``The $\pt>1.5$ enhancement has $\sigma\approx23$--80\,MeV'': that width was set by the fit limits. With the width
+  free up to 250\,MeV the broad component has $\sigma=\ratioFullBSig\pm\ratioFullBeSig$\,MeV (full sample, selection b),
+  i.e.\ it spans the whole fit range and is partly degenerate with the polynomial (Sec.~\ref{sec:ratio}).
+\item ``The enhancement is absent at $\pt<1.5\gevc$'': with the wider width limit the 10\% ratio at $\pt<1.5$ also
+  deviates from pol2 ($\Delta\chi^2=\ratioTenHDchi$, Sec.~\ref{sec:ratio}).
+\item The order-of-magnitude expected \Dzero{} yield quoted in the README was not computed from any input and is
+  dropped; an expected yield needs simulation (open issue~1).
+\end{itemize}

@@ -1,0 +1,139 @@
+\section{Bunch-crossing assignment: checks}
+\label{sec:crossing}
+
+\subsection{Why the crossing matters}
+In streaming readout one event (one GL1 trigger) contains tracks from many collisions in different
+bunch crossings (\vtxPerEv{} vertices per event, Figure~\ref{fig:event}). The silicon detectors
+fix the crossing of a track (INTT timing); the TPC measures only the drift time, so the $z$
+position of the TPC part of a track depends on the crossing assumed for it. Combining two tracks
+from different crossings, or attaching a candidate to a PV from another crossing, produces
+combinatorial background and wrong pointing/decay-length values. The default reconstruction
+therefore requires both daughters and the PV to have the same crossing
+(Section~\ref{sec:reco}).
+
+The vertex-crossing distribution (Figure~\ref{fig:event}, left) is flat at
+$\approx$\vtxPerOtherX{} vertices per crossing, with a spike of \vtxAtXzero{} vertices at $X=0$;
+\evVtxXzeroFrac\% of the events have a vertex at $X=0$ (\evVtxXzeroMultiFrac\% more than one).
+We interpret the spike as the collision that fired the trigger; this interpretation was not
+checked against the trigger information. Because all TPC-only tracks have $X=0$, a candidate
+with a TPC-only daughter can only be formed with $X=0$ silicon tracks and an $X=0$ PV.
+
+\subsection{Consistency of the default sample}
+In the default \Ks{} and \Lam{} ntuples every candidate satisfies
+\fcmd{track_1_bunch_crossing} = \fcmd{track_2_bunch_crossing} = \fcmd{primary_vertex_ID}
+(violations: \nViolXKs{} and \nViolXLambda; check \checkXKs/\checkXLambda,
+\fpath{scripts/make_numbers.C}). \nTTKs{} \Ks{} and \nTTLambda{} \Lam{} candidates have two
+TPC-only daughters (before QA cuts).
+
+\subsection{Duplicates across events}
+\label{sec:dup}
+Consecutive streaming events overlap in time, so the same collision can be reconstructed twice,
+with crossings that differ by the BCO difference of the two events. Such candidates have the same
+\fcmd{Collision_BCO} and identical kinematics. Using the key (\fcmd{Collision_BCO}, mass rounded to
+10\,keV, $p_x$ of \fcmd{track_1} rounded to 0.1\,MeV) we find \dupFracKs\% (\Ks) and
+\dupFracLambda\% (\Lam) duplicates before QA cuts, \dupQAKs{} and \dupQALambda{} after QA cuts. They
+are removed in all results of this note.
+
+\choice{Duplicates are kept in the ntuple and removed offline with the \fcmd{Collision_BCO} key: the
+removal needs the neighbouring events, which a per-event module cannot see across file
+boundaries.}
+
+\subsection{Reconstruction without any crossing requirement}
+To test whether the crossing requirement loses real signal, the \fcmd{_noXmatch} instances run with
+the same cuts but with \fcmd{requireBunchCrossingMatch(false)} and
+\fcmd{requireTrackVertexBunchCrossingMatch(false)}: any two tracks may be combined and the PV is
+chosen among all vertices by the smallest $\chi^2$-deviation. (The implicit requirement that each
+daughter has a vertex in its own crossing, Section~\ref{sec:trackcuts}, still applies.) This gives
+\candPerEvNoXKs{} \Ks{} and \candPerEvNoXLambda{} \Lam{} candidates per event. Each candidate is
+put in one of six classes:
+\begin{itemize}\setlength\itemsep{0pt}
+\item[A] both daughters with silicon, $X_1=X_2=X_{\rm PV}$ (what the default keeps);
+\item[B] both with silicon, $X_1=X_2\neq X_{\rm PV}$ (consistent pair, PV of another crossing);
+\item[C] both with silicon, $X_1\neq X_2$;
+\item[D] one TPC-only daughter ($X=0$) and one silicon daughter with $X\neq0$;
+\item[E] one TPC-only daughter and one silicon daughter with $X=0$;
+\item[F] two TPC-only daughters.
+\end{itemize}
+The signal in each class is obtained with the QA cuts and a fit with mean and width fixed to the
+default-sample result (Table~\ref{tab:xclass}, Figures~\ref{fig:xclassKs}--\ref{fig:xclassLambda}).
+
+\begin{table}[H]
+\centering\small
+\caption{Signal per crossing class in the no-crossing-requirement samples (QA cuts; Gaussian
+with fixed mean/width + free pol2; statistical errors). Duplicates are not removed here.}
+\label{tab:xclass}
+\begin{tabular}{llrrr}
+\toprule
+\multicolumn{5}{c}{\Ks} \\
+class & definition & candidates & signal & signal/error \\
+\midrule
+\input{tables/tab_xclass_Ks.tex}
+\midrule
+\multicolumn{5}{c}{\Lam+\aLam} \\
+class & definition & candidates & signal & signal/error \\
+\midrule
+\input{tables/tab_xclass_Lambda.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Observations.}
+\begin{itemize}\setlength\itemsep{1pt}
+\item \textbf{Class C} (daughters in different crossings) contains no significant signal:
+  \Ks{} $\xclCKs\pm\exclCKs$, \Lam{} $\xclCLambda\pm\exclCLambda$ ($2.6\sigma$), on a background
+  of $>3\times10^4$ candidates. Splitting class C, the \Lam{} excess sits entirely at
+  $|X_1-X_2|>5$ ($\xclClargeLambda\pm\exclClargeLambda$; $|X_1-X_2|\leq5$:
+  $\xclCsmallLambda\pm\exclCsmallLambda$), where the background is largest; for \Ks{} both parts
+  are compatible with zero ($\xclCsmallKs\pm\exclCsmallKs$, $\xclClargeKs\pm\exclClargeKs$).
+\item A fit-free cross-check: for silicon--silicon pairs, peak window ($|m-\mu|<2\sigma$) minus
+  equal-width sidebands (5--7$\sigma$) gives \Ks{} $\dXzeroAllKs\pm\edXzeroAllKs$ with
+  $X_1=X_2$ and $\dXnonzeroAllKs\pm\edXnonzeroAllKs$ with $X_1\neq X_2$; for \Lam{}
+  $\dXzeroAllLambda\pm\edXzeroAllLambda$ and $\dXnonzeroAllLambda\pm\edXnonzeroAllLambda$
+  (Figure~\ref{fig:dX}, which shows $|X_1-X_2|\leq20$).
+\item \textbf{Class B} holds $\xclBKs\pm\exclBKs$ \Ks: same-crossing pairs for which the
+  smallest-$\chi^2$ PV is from another crossing. Without the crossing requirement the PV choice
+  is therefore wrong for about 10\% of the real \Ks{} (B/(A+B)), and the pointing variables are computed
+  w.r.t.\ the wrong vertex. In the default sample these \Ks{} are attached to the PV of their own
+  crossing: the default yields more \Ks{} with two silicon daughters (sum of the II, IM and MM rows of
+  Table~\ref{tab:pairtype}) than class A ($\xclAKs\pm\exclAKs$), presumably because pointing cuts evaluated
+  w.r.t.\ a wrong PV reject part of the signal.
+\item \textbf{Class D} (TPC-only daughter + silicon daughter with $X\neq0$) has no signal
+  (\Ks{} $\xclDKs\pm\exclDKs$, \Lam{} $\xclDLambda\pm\exclDLambda$): with the wrong crossing the
+  TPC-only track does not form a good vertex. Such decays are lost both with and without the
+  crossing requirement.
+\item Classes E and F (crossing 0) carry small signals, consistent with the TT/IT entries of
+  Table~\ref{tab:pairtype}.
+\end{itemize}
+
+\choice{Keep the default: both daughters and the PV in the same crossing. Relaxing it adds class C,
+which after QA cuts has about 16 times more \Ks{} candidates than class A (Table~\ref{tab:xclass})
+but no significant signal, and it makes the PV choice wrong for about 10\% of the \Ks{} (class B).}
+
+\caveat{The \Lam{} class-C excess of $\xclCLambda\pm\exclCLambda$ is not significant but not zero
+either. If real, it would be \Lam{} whose daughters were given different crossings (e.g.\ a
+mis-assigned crossing of a low-momentum proton). This should be rechecked with $\sim$10 times more
+events and with the crossing difference resolved per daughter type before it is ignored.}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.48\textwidth]{fig_dX_Ks}\hfill
+\includegraphics[width=0.48\textwidth]{fig_dX_Lambda}
+\caption{Crossing difference $X_1-X_2$ for silicon--silicon pairs in the no-crossing-requirement
+samples with QA cuts. Black: peak window $|m-\mu|<2\sigma$; red: sidebands 5--7$\sigma$ (same total
+width); blue points: difference. Left \Ks, right \Lam. The subtracted signal sits at $X_1=X_2$.}
+\label{fig:dX}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig_xclass_Ks}
+\caption{$\pi^+\pi^-$ mass per crossing class A--F (no crossing requirement, QA cuts); blue: fit with
+mean and width fixed to the default-sample peak. Numbers in Table~\ref{tab:xclass}.}
+\label{fig:xclassKs}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig_xclass_Lambda}
+\caption{As Figure~\ref{fig:xclassKs} for $p\pi$.}
+\label{fig:xclassLambda}
+\end{figure}

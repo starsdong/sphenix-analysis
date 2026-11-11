@@ -1,0 +1,33 @@
+\section{Audit}
+\label{sec:audit}
+
+\subsection{Checks that passed}
+\begin{itemize}\setlength\itemsep{1pt}
+\item All jobs finished: \nCondorOK/\nCondorJobs{} condor jobs with exit code 0 and \nKFPdone/\nKFPlogs{}
+  job logs ending with ``All done'' (\checkLogsDone; \fpath{scripts/job_stats.py} on
+  \fpath{logs/condor_471173.txt}, \fpath{logs/kfp_job_summary.txt}).
+\item KFParticle's own candidate count for \Ks, summed over the 31 job logs (\nCandKsFromLogs), equals the
+  number of entries in the merged ntuple (\nCandKs) (\checkCandLogs; \fpath{scripts/job_stats.py}).
+\item Crossing consistency of the default \Ks{} and \Lam{} samples: $X_1=X_2=X_{\rm PV}$ for every
+  candidate (\checkXKs, \checkXLambda; \fpath{scripts/make_numbers.C}, full test sample).
+\item Track crossing of TPC-only tracks is 0 for all 17871 TPC-only tracks of segment 79509-00000
+  (\fpath{tools/inspect_dst.C}, \fpath{logs/inspect_dst_79509_00000.txt}).
+\item Merged ntuples copied to the laptop are identical to the cluster files (md5).
+\item Every figure was opened and compared with its caption.
+\end{itemize}
+
+\subsection{Not verified (assumptions)}
+\begin{itemize}\setlength\itemsep{1pt}
+\item The internal KFParticle behaviour described in Section~\ref{sec:reco} (order of cuts, PV choice,
+  implicit ``vertex in own crossing'' track requirement, one candidate per pair) was read from the
+  source of the coresoftware commit, not tested with dedicated inputs.
+\item Interpretation of the vertex spike at $X=0$ as the triggered collision.
+\item How the crossing of MVTX-only tracks is assigned in the production.
+\item The trigger-bit names come from \fcmd{TriggerRunInfoReco}; their correctness for this run and the
+  trigger mix of the sample were not checked.
+\item The offline QA cuts are ad hoc; yields and S/B depend on them.
+\item Fit model (Gaussian + pol2) and fit ranges: no systematic variation.
+\item The duplicate key (rounded mass and $p_x$) could in principle merge two different candidates of
+  the same collision; the effect was not quantified.
+\item Data quality of run 79509.
+\end{itemize}

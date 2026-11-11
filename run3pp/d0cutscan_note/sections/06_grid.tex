@@ -1,0 +1,43 @@
+\section{Grid scan on the 10\% skim}
+\label{sec:grid}
+
+The grid crosses DIRA $>0.99, 0.995, 0.998, 0.999$; \Ls{} $>2,3,4,5,7$; \Dzero{} $\pt>0,1,2,3\gevc$; PID on/off; cts on/off:
+\gridN{} selections. Each is fitted with the fixed Gaussian at $m_{\mathrm{D}^0}$ for three assumed widths (10, 15,
+22\,MeV); all \gridFitFifteen{} selections have enough entries to be fitted.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{grid_pulls}
+\caption{Distribution of $z=S/\sigma_S$ over the \gridN{} grid selections for an assumed \Dzero{} width of 10 (left),
+15 (middle) and 22\,MeV (right), fixed fit with pol2 background, 10\% skim. Red dashed: unit Gaussian normalised to
+the number of selections, the expectation for independent selections without signal and with a correct background model.
+Printed: r.m.s.\ and number of selections above $+2$ and below $-2$, with the Gaussian expectation per tail.}
+\label{fig:grid}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\caption{Grid scan, 15\,MeV width: the eight selections with the largest $z$ and the five with the smallest. Source:
+\fpath{logs/grid.txt} (all selections, all widths).}
+\label{tab:grid}
+\begin{tabular}{rrrccrrr}
+\toprule
+DIRA $>$ & \Ls{} $>$ & \pt{} $>$ & PID & cts & $N$ & $S$ & $z$ \\
+\midrule
+\input{tables/grid_top.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Result.} For 10 / 15 / 22\,MeV the mean $z$ is \gridMeanTen{} / \gridMeanFifteen{} / \gridMeanTwentyTwo{} and
+the r.m.s.\ \gridRmsTen{} / \gridRmsFifteen{} / \gridRmsTwentyTwo; above $+2$: \gridPosTen{} / \gridPosFifteen{} /
+\gridPosTwentyTwo, below $-2$: \gridNegTen{} / \gridNegFifteen{} / \gridNegTwentyTwo{} (\gridExpFifteen{} expected per
+tail). Both tails are populated at similar rates and the width grows with the assumed peak width, which is the
+signature of background mismodelling over the wider window rather than of a signal; a signal would shift the distribution
+to positive $z$ for the selections that enrich it. The largest value, $z=\gridTopZ$ ($S=\gridTopS\pm\gridTopES$), is for
+the loose selection DIRA$>0.995$, \Ls$>2$ without further cuts, where Sec.~\ref{sec:trial} shows that the background is not
+described.
+
+\caveat{The \gridN{} selections overlap strongly, so their $z$ values are correlated; the tail counts cannot be compared
+with the Gaussian expectation as independent trials. The comparison is used only to show that positive and negative
+excursions are equally frequent.}

@@ -1,0 +1,108 @@
+\section{First QA distributions}
+\label{sec:qa}
+
+All figures: test segment (run \runNo, segment 0, \nEvents{} events), no event selection, made by
+\fpath{scripts/make_qa.C} from \fpath{ntuples/TrackQA_00079509_00000.root}. Error bars, where shown,
+are statistical. Statements marked \emph{(by eye)} are read from the figure and not computed.
+
+\subsection{Event level}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{fig_evt_ntrk}
+\caption{Tracks per event: all tracks (black), tracks with at least one silicon cluster (blue),
+TPC-only tracks (red) and silicon tracks at crossing 0 (green). Means: \trkPerEv{} all,
+\silPerEv{} silicon, \tpcOnlyPerEv{} TPC-only, \silXzeroPerEv{} silicon at crossing 0 per event.
+Most tracks come from other bunch crossings within the streaming readout window: these are frame totals,
+not the multiplicity of one collision (for that see the same-crossing multiplicity in Sec.~\ref{sec:effdca}).}
+\label{fig:ntrk}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_evt_vtx}
+\caption{Left: vertices per event, all (black) and at crossing 0 (red); means \vtxPerEv{} and
+\vtxXzeroPerEv. Right: $z$ of the crossing-0 vertex with most tracks, for the
+\fracEvVtxXzero\% of events that have one; mean \vzMean\,cm, RMS \vzRMS\,cm. Its mean transverse
+position is $(\vxMean, \vyMean)\,\mu$m and it has on average \vntrkMean{} tracks.}
+\label{fig:vtx}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_evt_crossing}
+\caption{Left: beam crossing of silicon tracks (relative to the GL1 BCO), per event. The spike at 0
+is the triggered crossing; the plateau covers the streaming window (by eye: about $-100$ to $+480$).
+Right: number of distinct crossings with at least one silicon track per event, mean \xingPerEv.}
+\label{fig:xing}
+\end{figure}
+
+\subsection{Track level}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_trk_kin}
+\caption{Track $p_T$, $\eta$ and $\phi$ per event for INTT (blue), MVTX-only (green) and
+TPC-only (red) tracks; $\eta$ and $\phi$ for $p_T>0.2$\,GeV/$c$ (\fracPtLow\% of all tracks
+are below). By eye: the INTT-track $\phi$ distribution has dips near $\phi\approx0.2$ and
+$\approx1.3$\,rad, and the MVTX-only tracks have an excess at $\phi\approx0.2$\,rad, consistent
+with an INTT inefficiency there being partly recovered by MVTX-only tracks.}
+\label{fig:kin}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_trk_etaphi}
+\caption{$\eta$--$\phi$ occupancy (linear $z$) of silicon (left) and TPC-only (right) tracks with
+$p_T>0.2$\,GeV/$c$, all events. By eye: a low-occupancy band in silicon tracks at
+$\phi\approx1.3$--1.4\,rad over the full $\eta$ range.}
+\label{fig:etaphi}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_trk_hits}
+\caption{Left: clusters per track in MVTX (green), INTT (blue), TPC (red) and TPOT (magenta), all
+tracks. Ranges: TPC \ntpcMin--\ntpcMax{} (mean \ntpcMean), MVTX and INTT at most \nmvtxMax{} and
+\ninttMax, TPOT at most \ntpotMax{} (\fracTpot\% of tracks have TPOT clusters). No track has fewer than \ntpcMin{} TPC clusters, presumably a requirement of the production
+tracking (not checked in its configuration). Right: $\chi^2$/ndf of silicon (blue) and TPC-only (red)
+tracks, each normalised to unit area; means in the shown range \qualSilMean{} and \qualTpcMean.}
+\label{fig:hits}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_trk_dca}
+\caption{Transverse (left) and longitudinal (right) DCA for $p_T>0.5$\,GeV/$c$, split by vertex
+association class (Sec.~\ref{sec:vtxassoc}): silicon tracks used in the vertex fit (black, class 1),
+silicon tracks carrying a vertex id but not used in the fit (blue, class 2), TPC-only tracks with
+the closest crossing-0 vertex (red, class 3). Each curve normalised to unit area. Class 1 shows a
+narrow core; class 2 is broad (secondaries, tracks from other collisions in the same crossing,
+poorly measured tracks); class 3 is flat within $\pm1$\,cm in DCA$_{xy}$ (by eye), as expected for
+tracks mostly from other crossings.}
+\label{fig:dca}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{fig_trk_dcares}
+\caption{Gaussian core width (iterative fit in $\pm2\sigma$) of DCA$_{xy}$ (circles) and DCA$_z$
+(squares) vs.\ $p_T$ for class-1 tracks with MVTX\,$\geq3$, INTT\,$\geq1$, TPC\,$\geq20$ clusters,
+all vertices (black, full) and vertices with $\geq10$ tracks (blue, open). Values in
+Table~\ref{tab:dcares}.}
+\label{fig:dcares}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\input{tables/tab_dcares.tex}
+\caption{DCA core widths of Fig.~\ref{fig:dcares} with fit uncertainties; $N$ = tracks in the bin.}
+\label{tab:dcares}
+\end{table}
+
+\caveat{The widths of Fig.~\ref{fig:dcares} are residuals to a vertex that contains the track, not
+the DCA resolution: the track pulls the vertex towards itself. With vertices of $\geq10$ tracks
+(less pull) the widths at low $p_T$ are \emph{larger}
+(Table~\ref{tab:dcares}), consistent with a significant bias (the two samples also differ in
+vertex population, so this is not a clean measurement of the bias). A resolution needs an unbiased
+vertex (refit without the track, or the vertex of the other tracks); not done here.}

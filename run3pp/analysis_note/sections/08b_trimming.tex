@@ -1,0 +1,80 @@
+\section{Trimming the output for mass production}
+\label{sec:trim}
+
+The loose configuration of Section~\ref{sec:reco} stays the default for small diagnostic samples.
+For the full-dataset production a second cut set, \fcmd{prod}, trims the output in four steps. It is
+selected by the last argument of the macro (\fcmd{Fun4All_run3pp_KFP.C(...,"prod")}, i.e.\
+\fcmd{macro/run_kfp.sh <nev> <dst> <outdir> 0 0 Ks,Lambda,D0 prod} or
+\fcmd{condor/submit.sh <tag> <list> 0 prod}) and is always run without the crossing-study
+channels. Each step was tested on the same 31 segments of run 79509 (\trimNev{} events).
+
+\subsection{Trimming steps}
+\begin{enumerate}\setlength\itemsep{2pt}
+\item \textbf{No crossing-study output.} The \fcmd{*_noXmatch} files (\trimNoXMB\,MB, \trimNoXKB\,kB per
+  event in the test) are not produced.
+\item \textbf{Daughter impact parameter} (KFParticle \fcmd{setMinimumTrackPV_DCA}, 3D DCA, minimum over
+  the PVs of the track's crossing, Section~\ref{sec:trackcuts}): $>0.05$\,cm for \Ks{} and \Lam{}
+  daughters, $>0.003$\,cm (30\,$\mu$m) for \Dzero{} daughters; in this step also DIRA$>0.8$ for \Dzero.
+\item \textbf{Slim format} (\fpath{tools/slim_kfp.C}, run inside the job after \fcmd{se->End()}): the
+  64 trigger branches are not booked (\fcmd{getTriggerInfo(false)}, no \fcmd{TriggerRunInfoReco}; the
+  trigger vectors remain per event in \fcmd{EventInfo}); redundant momentum branches are dropped
+  (mother: $p_x,p_y,p_z,E,p,\sigma_p,\theta,y$, charge; daughters: $p_x,p_y,p_z,E,p,\sigma_p,\theta,y$,
+  mass, $j_T$, $x,y,z$; and \fcmd{secondary_vertex_mass_pionPID}); the tree is rewritten with ZSTD
+  compression and a 32\,kB basket size. The latter fixes a storage inefficiency of KFParticle, which
+  books the covariance branches with a buffer of 6 or 21 \emph{bytes}, i.e.\ one basket per entry.
+  For \Ks{} the four covariance branches took 640 bytes per candidate before and 260 after the fix
+  (PV 121$\to$15, mother 171$\to$81, daughters 348$\to$163; \fpath{logs/branch_sizes_Ks.txt}).
+\item \textbf{No covariance matrices} (mother 21, daughters $2\times21$, PV 6 elements).
+\item \textbf{DIRA$>0.9$} for all three channels.
+\end{enumerate}
+The dropped kinematic quantities follow from the kept ones: $p=p_T\cosh\eta$, and the daughter mass
+from its PDG code (needed e.g.\ for the swapped \Dzero{} mass). Duplicates across events are removed
+with the key (\fcmd{Collision_BCO}, mass, \fcmd{track_1_pT}), because \fcmd{track_1_px} no longer exists.
+
+\subsection{Size and signal}
+\begin{table}[H]
+\centering\footnotesize
+\setlength\tabcolsep{4pt}
+\caption{Cumulative effect of the trimming steps on the same \trimNev{} events
+(\fpath{scripts/trim_study.C}). Candidates and sizes of the \Ks, \Lam, \Dzero{} trees; MB and kB per
+event are file sizes of the merged ntuples (the \fcmd{*_noXmatch} files and the \fcmd{EventInfo}
+file, \trimEvInfoKB\,kB/event in all versions, are not included). Signal: \Ks{} and \Lam+\aLam{}
+yield with the offline QA cuts of Section~\ref{sec:qacuts} (Gaussian+pol2 fit, duplicates kept,
+statistical errors).}
+\label{tab:trim}
+\begin{tabular}{rp{0.26\textwidth}rrrrrrrr}
+\toprule
+ & version & br. & \Ks{} cand. & \Lam{} cand. & \Dzero{} cand. & MB & kB/ev & \Ks{} signal & \Lam{} signal \\
+\midrule
+\input{tables/tab_trim.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}\setlength\itemsep{1pt}
+\item The three candidate trees shrink from \trimKBLoose{} to \trimKBDira\,kB per event (\trimFracDira\%
+  of the loose size); with the crossing-study files of the diagnostic run included the reduction is a
+  factor $\approx$\trimTotalReduction.
+\item The largest single gains come from the daughter impact-parameter cut (version 0$\to$1:
+  \trimFracProd\% of the loose size) and from the covariance branches (versions 1$\to$3: basket fix and
+  removal, \trimKBProd$\to$\trimKBNoCov\,kB/event). The trigger block was only 0.6\% of the size.
+\item With the QA cuts the \Ks{} and \Lam{} yields are unchanged within less than 1\% through all steps.
+  Since the QA cuts already contain DIRA$>0.995$ and $|{\rm DCA}_{xy}|>0.02$\,cm, this shows that the
+  trimming does not cut into that selection; it does not measure the loss for a looser final selection.
+\item Signal removed by DIRA$>0.9$: with the other QA cuts but no DIRA cut, sideband-subtracted counts in
+  the version before the change give \Ks{} $\bandLoKs\pm\ebandLoKs$ in $0.8<{\rm DIRA}\leq0.9$ against
+  $\bandHiKs\pm\ebandHiKs$ above 0.9, and \Lam{} $\bandLoLambda\pm\ebandLoLambda$ against
+  $\bandHiLambda\pm\ebandHiLambda$, i.e.\ no significant loss.
+\end{itemize}
+
+\caveat{The sizes in Table~\ref{tab:trim} are of merged files written by \fcmd{hadd} (zlib level 1).
+The per-segment job outputs, which are what a production stores, measure 3.72, 1.76 and 0.62\,kB/event
+for versions 1, 2 and 4 (\fpath{logs/trim_persegment.txt}), within 2--7\% of the merged values. The signal
+loss of the impact-parameter cuts was not measured without the QA $|{\rm DCA}_{xy}|>0.02$\,cm cut, and
+the \Dzero{} loss cannot be measured in this sample (no peak).}
+
+\paragraph{Production estimate.} With \trimKBDira+\trimEvInfoKB\,kB per event, the $\approx5\times10^8$
+events in the DST area at the time of the test (\nDSTfiles{} segments) give $\approx$\trimTBDira\,TB,
+compared with \trimTBLoose\,TB for the loose configuration without the crossing-study files. The three
+KFParticle modules need 63+71+94\,ms per event in the final configuration
+(\fpath{logs/trim_persegment.txt}).

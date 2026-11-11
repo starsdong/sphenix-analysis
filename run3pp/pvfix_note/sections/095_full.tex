@@ -1,0 +1,99 @@
+\section{Full sample: \Dzero{} results and checks of the excess}
+\label{sec:full}
+\paragraph{Production and reproduction.} The remaining 90\% (cluster 480665, 63{,}302 jobs, all OK) was compared file by
+file with the stock 90\% production of the same lists (\fpath{repro_v2.C}): in all \ninFiles{} files the number of
+candidates with \texttt{pvfix\_passOriginal}=1 equals the stock number (\ninNone{} candidates, \ninMismatch{} mismatching
+files, \chkReproNinety). The 90\% contains \ninNtwo\,M candidates (\ninRatio$\times$), \ninOnlyR\,M only with the pair refit
+and \ninOnlyK\,M only with the KF fit. The full sample (10\% + 90\%) has \skimAllIn\,M candidates, skimmed to
+\skimAllOut\,M. The search (Sec.~\ref{sec:method}) is run unchanged; with INTT + same collision \nSelFuKc\,M candidates
+enter.
+
+\paragraph{Window scan.} The Poisson error of the window ignores the uncertainty of the background model. To measure the
+latter, the window ($\pm$20\mev) is moved over the fit range in steps of 10\mev{} (\fpath{pvfix_d0_scan*.C}), the
+polynomial refitted each time without that window, and the local $z$ recorded. Away from the \Dzero{} mass (centres at
+least 40\mev{} away, \nwayScan{} positions, neighbouring positions overlap and are correlated) the r.m.s.\ of these $z$
+values should be about 1 if the model were exact. It is 0.7--4.3 depending on the selection. The ratio
+$z_{\rm c}=z/{\rm rms}$ is used below as a model-calibrated significance; it is approximate (correlated scan points,
+few positions).
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Full sample: excess $\pm$ Poisson error in the \Dzero{} window, with ($z$; $z_{\rm c}$). Bold: $|z_{\rm c}|\geq2$.
+Source: \fpath{logs/fu_*.txt}.}
+\label{tab:full}
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+selection & original PV & pair refit w/o daughters & KF fit w/o daughters \\
+\midrule
+\csname @@input\endcsname tables/full_d0.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Local $z$ around the \Dzero{} mass.} Table~\ref{tab:scan} gives the scan near the \Dzero{} mass for the tight
+selections. A narrow peak inside one window gives a triangular profile peaking at the true mass and falling to zero
+40\mev{} away.
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Window scan ($\kappa$-corrected, INTT + same collision): local $z$ at the window centres (\gevcc) listed in the
+header. Source: \fpath{logs/fu_kc_both.txt}.}
+\label{tab:scan}
+\begin{tabular}{@{}l *{\nScanCentres}{c}@{}}
+\toprule
+centre & \scanCentres \\
+\midrule
+\csname @@input\endcsname tables/full_scan.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Run groups.} The sample is split into the three run groups (79509--79516, which includes the $\kappa$-map
+training runs; 80880--80915; 81556--81609), each analysed separately with its own weights (\nSelRunA, \nSelRunB{} and
+\nSelRunC\,M candidates). Table~\ref{tab:runs} gives the excess per group; the last column is the $\chi^2$ (2 degrees of
+freedom) of a common excess, a rough test because the groups differ in size by up to 30\%.
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Excess per run group, $\kappa$-corrected, INTT + same collision, tight selections. Source:
+\fpath{logs/fu_kc_both_r*.txt}.}
+\label{tab:runs}
+\begin{tabular}{@{}l c c c c c@{}}
+\toprule
+selection, PV & 79509--79516 & 80880--80915 & 81556--81609 & full & $\chi^2$ (equal) \\
+\midrule
+\csname @@input\endcsname tables/full_runs.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Reading the results.}
+\begin{itemize}
+\item The 10\% excesses in the loose (pointing) selections did not grow with the statistics: original PV, $\pt>1.5$,
+  pointing went from \exOrigHiPKcNone{} $\pm$ \eexOrigHiPKcNone{} (10\%) to \exOrigHiPFuKcNone{} $\pm$ \eexOrigHiPFuKcNone{}
+  (full), where a real signal would have grown about tenfold. They were fluctuations of the background model.
+\item KF fit, tight selections: $z=\zKfHiTFuKc$ and \zKfAllTFuKc, but the local $z$ stays above 3 for window centres spanning about 50\mev{}
+  (Table~\ref{tab:scan}), wider than a \Dzero{} peak, the scan r.m.s.\ is \rmsKfHiTFuKc, and the excess is absent in the
+  last run group (Table~\ref{tab:runs}). This is a broad feature of the low-statistics KF tight sample, not a narrow peak.
+\item Original PV, $\pt>1.5$, tight: \exOrigHiTFuKc{} $\pm$ \eexOrigHiTFuKc{} ($z=\zOrigHiTFuKc$, $z_{\rm c}=\zcOrigHiTFuKc$;
+  none of the \nwayScan{} scan positions away from the \Dzero{} mass reaches it), a triangular scan profile peaking at the
+  \Dzero{} mass, and similar excesses in all three run groups. With the stored momenta the same selection gives
+  \exOrigHiTFuUnc{} $\pm$ \eexOrigHiTFuUnc{} ($z_{\rm c}=\zcOrigHiTFuUnc$). This is the most signal-like result of the
+  analysis. The pair refit gives a smaller excess in the same selection (\exPairHiTFuKc{} $\pm$ \eexPairHiTFuKc,
+  $z_{\rm c}=\zcPairHiTFuKc$), not the larger one expected if the refit removes a bias against displaced \Dzero{}.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{d0allkc_both_HiT}
+\caption{Full sample, $\kappa$-corrected, INTT + same collision, $\pt>1.5\gevc$, tight. Panels and colours as in
+Fig.~\ref{fig:uncorrP}. Right panel: the data/prediction ratio falls by about 20\% over the range (read by eye), which
+the second-order polynomial must absorb; the vertical range cuts off KF-fit points.}
+\label{fig:fullHiT}
+\end{figure}
+
+\decision{The original-PV tight excess (\exOrigHiTFuKc{} $\pm$ \eexOrigHiTFuKc, model-calibrated $\approx\zcOrigHiTFuKc\sigma$
+local) is a hint, not an observation: the background-model systematic is estimated only roughly, the selection was one
+of 12 looked at, and the refits do not confirm it. Needed before any claim: a simulation of the expected yield and width
+in this selection, a background model with a stated systematic (e.g.\ variations of the weighting variables and of the
+polynomial order), and the same selection fixed in advance on independent data (newer runs).}

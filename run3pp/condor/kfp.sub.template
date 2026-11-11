@@ -1,0 +1,10 @@
+universe       = vanilla
+executable     = /gpfs02/sphenix/user/dongxs/run3pp/macro/run_kfp.sh
+arguments      = -1 $(dst) @OUTDIR@ @XSTUDY@ 0 Ks,Lambda,D0 @CUTSET@
+output         = @OUTDIR@/logs/condor_$Fn(dst).out
+error          = @OUTDIR@/logs/condor_$Fn(dst).err
+log            = /tmp/dongxs/condor_logs/kfp_@TAG@.log
+request_memory = 3GB
+getenv         = False
+PeriodicHold   = (NumJobStarts>=2 && JobStatus == 1)
+queue dst from @LIST@

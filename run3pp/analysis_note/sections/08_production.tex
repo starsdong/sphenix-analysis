@@ -1,0 +1,31 @@
+\section{Running the analysis and proposed next steps}
+\label{sec:production}
+
+\paragraph{Commands} (in \fpath{/gpfs02/sphenix/user/dongxs/run3pp}):
+\begin{itemize}\setlength\itemsep{0pt}
+\item build the companion module once: \fcmd{./build.sh};
+\item one segment interactively:\\ \fcmd{macro/run_kfp.sh <nEvents|-1> <DST or list> <outdir> [crossingStudy 0/1] [nSkip] [channels]};
+\item a list on condor: \fcmd{condor/make_list.sh <run> <firstSeg> <nFiles> > list.txt}, then
+  \fcmd{condor/submit.sh <tag> list.txt [crossingStudy] [loose|prod]} (outputs in \fpath{output/<tag>/});
+\item merge: \fcmd{hadd -k} per channel; numbers and figures of this note:
+  \fcmd{root -b -q 'analysis_note/scripts/make_numbers.C+("<merged dir>","<note dir>")'}.
+\end{itemize}
+
+\paragraph{Offline analysis checklist.} Remove duplicates with \fcmd{Collision_BCO}
+(Section~\ref{sec:dup}); normalise with \fcmd{EventInfo}; choose the trigger with the
+\fcmd{trigger_*} branches or \fcmd{GL1_scaled}; apply a PV-$z$ cut with \fcmd{primary_vertex_z};
+compute the swapped \Dzero{} mass; use \fcmd{track_N_*_nHits} for daughter quality and
+\fcmd{track_N_calculated_dEdx} for PID.
+
+\decision{Crossing study channels: keep \fcmd{crossingStudy=0} for production (saves
+\msPerEvKsNoX+\msPerEvLambdaNoX\,ms per event and $\approx$1.5\,GB per 30k events), and repeat the study
+once on $\sim$300k events to settle the \Lam{} class-C question (Section~\ref{sec:crossing}).}
+
+\choice{Ntuple size for production: resolved by the \fcmd{prod} cut set and slim format of
+Section~\ref{sec:trim} (\trimKBDira\,kB per event, $\approx$\trimTBDira\,TB for the full dataset).}
+
+\decision{\Dzero{} production cuts (daughter DCA$>30\,\mu$m, DIRA$>0.9$) were chosen without a visible
+signal; their efficiency should be checked with simulation.}
+
+\decision{Event selection: which trigger(s) and PV-$z$ range define the analysis sample (stored, not
+applied).}

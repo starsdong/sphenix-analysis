@@ -1,0 +1,58 @@
+\section{Overview}
+\label{sec:overview}
+
+\paragraph{Goal.} A light-weight, fast, run-everywhere QA ntuple of the Run-3 p+p track DSTs: per
+event the trigger (GL1) word, track and vertex counts; per track everything needed for basic
+tracking QA (acceptance, cluster counts, fit quality, crossing, impact parameter). It complements
+the KFParticle K$^0_S$/$\Lambda$/D$^0$ ntuples of the same project (\fpath{run3pp/analysis_note}),
+whose pre-requisites (release, crossing structure, track types) are re-used here.
+
+\paragraph{Findings on the test segment} (run \runNo, segment 0, \nEvents{} events):
+\begin{itemize}\itemsep0pt
+\item Output size: ntuple \sizeNtkB\,kB/event ($\ratioNt\times$ smaller than the DST,
+  \bytesPerTrk\,B per track), trimmed DST \sizeTrimkB\,kB/event ($\ratioTrim\times$ smaller).
+  Clusters and seeds are \pctClus\% and \pctSeeds\% of the DST.
+\item Speed: \cpuMsPerEv\,ms CPU per event for the whole job, of which the module itself takes
+  \modMsPerEv\,ms; a 1k-event segment runs in \wallTime{} (m:ss) wall time.
+\item Content: \trkPerEv{} tracks per event, \fracINTT\% with INTT clusters, \fracMVTXonly\% MVTX
+  without INTT, \fracTpcOnly\% TPC-only; \vtxPerEv{} vertices per event, of which \vtxXzeroPerEv{}
+  at crossing 0; \fracEvVtxXzero\% of the events have a crossing-0 vertex.
+\item Validation: \nFailed{} of the \nChecks{} consistency checks of Sec.~\ref{sec:audit} fail, including
+  event-by-event equality of six track/vertex counters with the KFParticle-test \fcmd{EventInfo}
+  tree (\nKFPAgree/\nEvents{} events) and an identical ntuple when re-made from the trimmed DST.
+\item Vertex association: a track's stored vertex id always points to a vertex of its own
+  crossing; TPC-only tracks never carry a vertex id. \fracMatchOne\% of the tracks were used in
+  their vertex fit, \fracMatchTwo\% carry a vertex id without being used in the fit,
+  \fracMatchThree\% (all TPC-only) are associated with the closest crossing-0 vertex in $z$, and
+  \fracMatchZero\% have no vertex in their crossing.
+\end{itemize}
+
+\paragraph{Silicon efficiency and DCA dependences} (Sec.~\ref{sec:effdca}, same 100 segments):
+\begin{itemize}\itemsep0pt
+\item silicon-matched fraction of TPC tracks (INTT\,$\geq1$, MVTX\,$\geq2$) in the matching acceptance
+  $|z_{\rm PCA}|<10$\,cm, $|\eta|<1.5$ ($|\eta|<1$ vs.\ $p_T$): \eEffAll\% ($|\eta|<1$), \eEffHi\% ($p_T>1$),
+  flat to 2.5\,GeV/$c$, \eEffPtHigh\% at 6--10\,GeV/$c$ (Sec.~\ref{sec:ptres}: mostly poorly fitted TPC tracks plus
+  resolution migration; \rEffQualFour\% at 4--6\,GeV/$c$ with quality cuts); \eLowPhiN{} $\phi$ bins below 70\%;
+  flat in time, bunch number and crossing-0 multiplicity;
+\item DCA widths independent of beam crossing and time; mean DCA$_{xy}$ vs.\ vertex $z$ slope \eSlopeXyVz\,$\mu$m/cm.
+\end{itemize}
+
+\paragraph{DCA study} (Sec.~\ref{sec:dca}, run 79509 segments 0--99, \sNEvents{} events, ntuple
+saved as \fpath{ntuples/TrackQA_run79509_seg000-099.root}), tracks with MVTX\,$\geq3$, INTT\,$\geq1$,
+TPC\,$\geq20$, $p>0.8$\,GeV/$c$, used in their vertex fit:
+\begin{itemize}\itemsep0pt
+\item core $\sigma_{xy}=\sSigXyA\,\mu$m, $\sigma_z=\sSigZA\,\mu$m; $\sigma_{xy}$ \sSigXyAlowP$\to$\sSigXyAhighP\,$\mu$m
+  from 0.8 to 10\,GeV/$c$ (no visible multiple-scattering term), $\sigma_z$ \sSigZEtaMin--\sSigZEtaMax\,$\mu$m over $|\eta|<1.2$;
+\item $\phi$-dependent core means (DCA$_{xy}$ \sMeanXyPhiMin{} to \sMeanXyPhiMax\,$\mu$m, DCA$_z$ \sMeanZPhiMin{} to
+  \sMeanZPhiMax\,$\mu$m), identical for both charges: likely residual silicon misalignment;
+\item DCA pulls have core widths \sPullXyA{} ($xy$) and \sPullZA{} ($z$): stored uncertainties too small;
+\item tracks carrying a vertex id without being in the fit are not prompt (sample B).
+\end{itemize}
+
+\paragraph{Choices} (each in a blue box where it is used):
+no event or track selection in the ntuple (Sec.~\ref{sec:tool});
+no geometry, CDB or reconstruction in the job (Sec.~\ref{sec:tool});
+vertex for the DCA = stored vertex id, else closest same-crossing vertex (Sec.~\ref{sec:vtxassoc});
+trimmed DST keeps \fcmd{SvtxTrackMap}, \fcmd{SvtxVertexMap}, GL1, event header and sync nodes
+(Sec.~\ref{sec:size}); ZSTD-5 compression, 32-bit floats and 8/16-bit integers for counters
+(Sec.~\ref{sec:ntuple}).

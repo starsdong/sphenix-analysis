@@ -1,0 +1,31 @@
+\section{Signal-search method}
+\label{sec:method}
+The method is the one developed in the \Dzero{} cut-scan note (\fpath{d0cutscan_note/}, Sec.~8b there), implemented in
+\fpath{pvfix10pct/pvfix_d0_v2.C} and run per PV version, \pt{} range, selection and extra pair cut.
+
+\begin{enumerate}
+\item \textbf{Mass spectra.} $m(K\pi)$ with the stored mass hypotheses, 43 bins of 10\mev{} from 1.60 to
+  2.03\gevcc, for the signal-region sample $S$ (pointing or tight) and the control sample $C$.
+\item \textbf{Background prediction.} The probability to pass the pointing selection depends on how the momentum is
+  shared between the daughters, and the sharing is correlated with the mass. The ratio $W=S/C$ is measured in
+  20 bins of the momentum asymmetry $A=(p_1-p_2)/(p_1+p_2)$ ($-1$ to 1) $\times$ 7 bins of \Dzero{} \pt{} (edges 0.5, 1,
+  1.5, 2, 2.5, 3, 4, 20\gevc); the prediction $P$ is the control mass spectrum weighted with $W(A,\pt)$ per candidate.
+\item \textbf{Window excess.} The ratio $S/P$, normalised to a mean of 1, is fitted with a second-order polynomial in
+  1.65--2.08\gevcc{} excluding the window 1.845--1.885\gevcc. The excess is
+  $\sum_{\rm window}(S_i-f(m_i)P_i/k)$ with $k$ the normalisation; its uncertainty is $\sqrt{N_{\rm window}}$, and
+  $z=$\,excess/uncertainty.
+\item \textbf{Narrow-peak fit.} A Gaussian with mean fixed at 1.86484\gevcc{} and width fixed at 15\mev{} on top of the
+  polynomial, fitted to $S/P$; $z_{\rm narrow}$ = amplitude/error.
+\item \textbf{Broad component.} A free Gaussian (mean 1.75--2.0\gevcc, width 5--250\mev) on top of the polynomial; the
+  improvement $\Delta\chi^2$ over the polynomial alone measures the broad structure, both for $S/P$ and for the raw
+  ratio $S/C$.
+\item \textbf{Injection test.} $N_{\rm inj}=\max(50, 0.002\,N_S)$ control candidates from 1.855--1.875\gevcc{} are
+  added to $S$ (and to the weight map), and steps 2--3 are repeated; the recovered fraction is the change of the excess
+  divided by $N_{\rm inj}$.
+\end{enumerate}
+
+\caveat{The uncertainty of the window excess is the Poisson error of the window count; the uncertainty of the
+polynomial and of the weights is not included, and the $\chi^2$/ndf of the polynomial fits reaches \chiMaxNone{}
+(Table~\ref{tab:model}), so the background model is not exact at the few-percent level. The $z$ values are local
+(window fixed at the \Dzero{} mass), not corrected for the number of selections, and the selections share candidates.
+For 12 independent tests with no signal one expects about 0.5 with $|z|>2$.}

@@ -1,0 +1,104 @@
+\section{Ratio of pointing to non-pointing candidates}
+\label{sec:ratio}
+
+\paragraph{Method.} For each selection the $K\pi$ mass spectrum of pointing candidates is divided bin by bin (10\,MeV
+bins) by that of non-pointing candidates, DIRA 0.95--0.98, in the same \pt{} range. Both come from the same daughter
+kinematics and the same skim, so the kinematic shape of the combinatorial background largely cancels, while true \Dzero{}
+decays, which point back to the PV, should appear as an excess at their mass. The ratio is normalised to a mean of one
+and fitted with $\chi^2$ in 1.65--2.08\,GeV/$c^2$ with
+(i)~pol2;
+(ii)~pol2 + narrow Gaussian fixed at $m_{\mathrm{D}^0}$, width 15\,MeV, amplitude unbounded;
+(iii)~pol2 + broad Gaussian (mean 1.75--2.0\,GeV/$c^2$, width 5--250\,MeV);
+(iv)~pol4 + the narrow fixed Gaussian;
+(v)~pol2 + broad Gaussian (width 40--250\,MeV) + the narrow fixed Gaussian.
+Fits (iv) and (v) test whether a narrow component of \Dzero{} width is needed on top of a more flexible background.
+The 10\% sample uses \Dzero{} $\pt>1.5\gevc$ except selection h; the full sample is the $\pt>1.5$ skim.
+
+\choice{DIRA 0.95--0.98 is the control because it is background dominated (it lies below all pointing selections) and is
+kept in both skims; the selection g (DIRA 0.98--0.99) is a second, background-like selection to see what the ratio does
+without strong pointing.}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ratio_full}
+\caption{Pointing / non-pointing mass ratio, full $\pt>1.5$ skim (\nFull{} candidates), normalised to mean one; 10\,MeV
+bins, statistical errors of both spectra. Panels (a)--(f): pointing selections, (g): control-like selection DIRA
+0.98--0.99. Grey dashed: pol2 fit (i); red: pol2 + broad Gaussian (iii), with its mean, width and the $\chi^2$ improvement
+over pol2 printed. Dotted line: PDG \Dzero{} mass.}
+\label{fig:ratiofull}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ratio_ten}
+\caption{As Fig.~\ref{fig:ratiofull} for the 10\% skim, with \Dzero{} $\pt>1.5\gevc$ in (a)--(g) and $\pt<1.5\gevc$ in (h).}
+\label{fig:ratioten}
+\end{figure}
+
+\begin{table}[H]
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Ratio fits. $N$: pointing candidates; pol2: $\chi^2$/ndf of fit (i); $A_{15}$: amplitude of the narrow Gaussian
+in fit (ii) (ratio units); broad: amplitude, mean (GeV/$c^2$) and width (MeV) of the Gaussian in fit (iii), $\dagger$ = at
+a limit; $\Delta\chi^2$ = (i) minus (iii) for three extra parameters. Source: \fpath{logs/ratio.txt}.}
+\label{tab:ratio}
+\begin{tabular}{llrrrrrrr}
+\toprule
+ & selection & $N$ & pol2 & $A_{15}$ & broad amp. & broad mean & broad $\sigma$ & $\Delta\chi^2$ \\
+\csname @@input\endcsname tables/ratio_results.tex
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\caption{Significance $z$ of the narrow Gaussian (15\,MeV, fixed at $m_{\mathrm{D}^0}$) in the ratio for three background
+models, with the $\chi^2$/ndf of each fit. Source: \fpath{logs/ratio.txt}.}
+\label{tab:narrow}
+\begin{tabular}{llrrrrrr}
+\toprule
+ & sample & $z$ (pol2) & $\chi^2$/ndf & $z$ (pol4) & $\chi^2$/ndf & $z$ (broad + pol2) & $\chi^2$/ndf \\
+\midrule
+\input{tables/ratio_narrow.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{ratio_trial_full}
+\caption{Significance of a 15\,MeV Gaussian at the trial mass in the full-sample ratio, pol4 background, for selections
+a, b, e and the control-like g. Dotted line: PDG \Dzero{} mass.}
+\label{fig:ratiotrial}
+\end{figure}
+
+\paragraph{Result.}
+\begin{itemize}
+\item \textbf{Broad enhancement.} In the full sample every pointing selection deviates from pol2 ($\chi^2$ improvement
+  \ratioFullADchi, \ratioFullBDchi, \ratioFullCDchi, \ratioFullDDchi, \ratioFullEDchi, \ratioFullFDchi{} for a--f) with a
+  broad Gaussian centred at \ratioFullEMean--\ratioFullFMean\,GeV/$c^2$ and width
+  \ratioFullFSig--\ratioFullCSig\,MeV; the control-like g improves by \ratioFullGDchi. The width is comparable to the fit
+  range, so amplitude and width are correlated with the polynomial and are not a measure of a yield
+  (Fig.~\ref{fig:ratiofull}).
+\item \textbf{No narrow component required.} A narrow Gaussian at the \Dzero{} mass reaches $z=\ratioFullAZfour$
+  (a), \ratioFullBZfour{} (b), \ratioFullEZfour{} (e) with pol4, but these fits still have $\chi^2/\mathrm{ndf}$ of 2.6--4.1
+  (Table~\ref{tab:narrow}); with the broad Gaussian in the background the narrow component drops to $z=\ratioFullAZnb$,
+  \ratioFullBZnb, \ratioFullEZnb{} with $\chi^2/\mathrm{ndf}$ 1.1--1.6. The trial-mass scan (Fig.~\ref{fig:ratiotrial})
+  peaks at \ratioFullATrialMmax\,GeV/$c^2$ (a) with $z>4$ over about 1.81--1.90\,GeV/$c^2$ (read by eye): a broad
+  structure, not a peak of \Dzero{} width.
+\item \textbf{10\% sample.} The same pattern at lower significance: broad Gaussians with $\Delta\chi^2=\ratioTenADchi$ (a) and \ratioTenBDchi{} (b), and a narrow component with $|z|<2.1$ in every pointing selection and every
+  background model (Table~\ref{tab:narrow}). At $\pt<1.5\gevc$ (h) the ratio also deviates from pol2 ($\Delta\chi^2=
+  \ratioTenHDchi$, width \ratioTenHSig\,MeV).
+\item \textbf{Dependence on the pointing cut.} Tightening DIRA (a$\to$b$\to$c) or \Ls{} (b$\to$d) lowers the $\chi^2$
+  improvement (partly through the smaller samples), and the fitted width stays at \ratioFullASig, \ratioFullBSig,
+  \ratioFullCSig{} and \ratioFullDSig\,MeV. For true \Dzero{} decays the signal fraction should rise with tighter pointing; with the broad
+  component's parameters degenerate with the background this cannot be tested here.
+\end{itemize}
+
+\caveat{The broad enhancement is several times wider than any plausible \Dzero{} resolution. Its origin, the dependence of the
+pointing probability of random pairs on the daughter momentum sharing, is established in Sec.~\ref{sec:hump}, where it is
+also removed from the background model.}
+
+\caveat{The plain ratio assumes the non-pointing control has the same mass shape as the background in the pointing
+selections. This is not the case (Sec.~\ref{sec:hump}); even the control-like selection g is not flat
+($\Delta\chi^2=\ratioFullGDchi$).}

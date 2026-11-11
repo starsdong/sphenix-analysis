@@ -1,0 +1,74 @@
+From cc077c6c5dca199252e2f9b310be3117bd2be119 Mon Sep 17 00:00:00 2001
+From: dongxs <dongxs@bnl.gov>
+Date: Sun, 8 Nov 2026 22:33:45 -0500
+Subject: [PATCH 7/7] KFParticle_eventReconstruction: prefer combinations
+ passing KFP_PVFIX_PREFER_DIRA in selectBestCombination (d0-pvfix fix 5)
+
+---
+ .../KFParticle_eventReconstruction.cc         | 42 +++++++++++++++++--
+ 1 file changed, 39 insertions(+), 3 deletions(-)
+
+diff --git a/offline/packages/KFParticle_sPHENIX/KFParticle_eventReconstruction.cc b/offline/packages/KFParticle_sPHENIX/KFParticle_eventReconstruction.cc
+index a69c64481..e6760d2ab 100644
+--- a/offline/packages/KFParticle_sPHENIX/KFParticle_eventReconstruction.cc
++++ b/offline/packages/KFParticle_sPHENIX/KFParticle_eventReconstruction.cc
+@@ -26,6 +26,9 @@
+ /*****************/
+ 
+ #include "KFParticle_eventReconstruction.h"
++
++#include <cstdlib>  // d0-pvfix fix 5
++#include <iostream>
+ #include "KFParticle_Tools.h"
+ #include "KFParticle_truthAndDetTools.h"
+ 
+@@ -532,10 +535,43 @@ int KFParticle_eventReconstruction::selectBestCombination(bool PVconstraint, boo
+                                                           std::vector<KFParticle> possibleCandidates,
+                                                           std::vector<KFParticle> possibleVertex)
+ {
+-  KFParticle smallestMassError = possibleCandidates[0];
+-  int bestCombinationIndex = 0;
+-  for (unsigned int i = 1; i < possibleCandidates.size(); ++i)
++  // d0-pvfix fix 5: prefer combinations passing KFP_PVFIX_PREFER_DIRA (w.r.t. their PV) when any exists
++  static const float preferDira = [] {
++    const char* e = std::getenv("KFP_PVFIX_PREFER_DIRA");
++    float v = e ? std::atof(e) : -2.F;
++    if (e)
++    {
++      std::cout << "d0-pvfix: best combination chosen among those with DIRA >= " << v << " when any exists" << std::endl;
++    }
++    return v;
++  }();
++  std::vector<bool> allowed(possibleCandidates.size(), true);
++  if (preferDira > -1.5F && PVconstraint && !isAnInterMother)
++  {
++    bool any = false;
++    for (unsigned int i = 0; i < possibleCandidates.size(); ++i)
++    {
++      allowed[i] = eventDIRA(possibleCandidates[i], possibleVertex[i]) >= preferDira;
++      any = any || allowed[i];
++    }
++    if (!any)
++    {
++      allowed.assign(possibleCandidates.size(), true);
++    }
++  }
++  unsigned int first = 0;
++  while (!allowed[first])
+   {
++    ++first;
++  }
++  KFParticle smallestMassError = possibleCandidates[first];
++  int bestCombinationIndex = (int) first;
++  for (unsigned int i = first + 1; i < possibleCandidates.size(); ++i)
++  {
++    if (!allowed[i])
++    {
++      continue;
++    }
+     if (!PVconstraint || isAnInterMother || m_select_by_mass_error)
+     {
+       if (possibleCandidates[i].GetErrMass() < smallestMassError.GetErrMass())
+-- 
+2.52.0
+

@@ -1,0 +1,46 @@
+\section{Cut scan on the 10\% skim}
+\label{sec:scan}
+
+Sixteen selections (S0--S15) combine the building blocks of Sec.~\ref{sec:method}, ordered from loose to tight
+(Table~\ref{tab:scan}, Figs.~\ref{fig:scan1} and~\ref{fig:scan2}). Each is fitted with the fixed 15\,MeV Gaussian at the
+\Dzero{} mass, the free fit and the sideband cross-check.
+
+\begin{table}[H]
+\centering\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{Hand cut scan, 10\% skim. $N$: candidates; $S$, $z$: fixed fit (15\,MeV Gaussian at $m_{\mathrm{D}^0}$, pol2,
+amplitude unbounded); $\chi^2/$ndf of that fit; $S_\mathrm{sb}$: sideband cross-check; free fit: mean (GeV/$c^2$) /
+width (MeV), $\dagger$ = a parameter at its limit (not interpreted). Statistical errors only. Source:
+\fpath{logs/scan.txt}.}
+\label{tab:scan}
+\begin{tabular}{llrrrrrl}
+\toprule
+ & selection & $N$ & $S$ & $z$ & $\chi^2/$ndf & $S_\mathrm{sb}$ & free fit \\
+\midrule
+\input{tables/scan_results.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Result.} The pol2 background describes the loosest selections badly ($\chi^2/\mathrm{ndf}\ge2$ for
+\scanBadSels; up to \scanChiMax), and their apparent excesses (S0: $z=\scanZmax$) follow the background curvature
+(Sec.~\ref{sec:trial}). Among the \scanGoodN{} selections with $\chi^2/\mathrm{ndf}<2$ the largest significance is
+$z=\scanZmaxGood$ (\scanZmaxGoodSel), and the tight selections (C, strict PID, $\pt>2$) give $z$ between \scanZminAll{}
+and about zero. The free fits end at a parameter limit in \scanFreeLim{} of \scanN{} selections; where they converge
+inside the limits (S5, S6, S14, S15) their means are 1.872--1.880\,GeV/$c^2$ (Table~\ref{tab:scan}), above the PDG mass,
+with yields compatible with the fixed fit within its error (read from the table). No selection shows a narrow peak.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{scan_mass_1}
+\caption{$K\pi$ mass spectra of selections S0--S7 (10\% skim, 5\,MeV bins, statistical errors). Red: fixed fit
+(15\,MeV Gaussian at the \Dzero{} mass, dotted line, plus pol2); the fitted yield is printed in each panel.}
+\label{fig:scan1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{scan_mass_2}
+\caption{As Fig.~\ref{fig:scan1} for S8--S15.}
+\label{fig:scan2}
+\end{figure}

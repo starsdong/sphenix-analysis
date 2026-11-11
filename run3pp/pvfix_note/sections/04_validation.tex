@@ -1,0 +1,83 @@
+\section{Validation of the production}
+\label{sec:validation}
+
+\subsection{Stock candidates are reproduced}
+\paragraph{Smoke tests} (300 events each, \fpath{tools/pvfix/pvfix_sets.C}, \fpath{pvfix_validate.C}; candidates matched
+by event and the two track IDs). Run \smRunA: \smPOA{} of \smNA{} written candidates pass the stock cut, and they are
+exactly the \smStockA{} stock candidates; \smOnlyRA{} pass only with the pair refit and \smOnlyKA{} only with the KF fit.
+Run \smRunB: \smPOB{} of \smNB{}, exactly the \smStockB{} stock candidates; \smOnlyRB{} and \smOnlyKB{}. In both runs no
+stock candidate is missing. Of all stock branches only \texttt{\valDiffName} differs (fix~1), and
+\texttt{primary\_vertex\_crossing} equals the old value for \valCrossEq{} of \valCommon{} candidates. CPU per job changes
+by \smCpuA\% and \smCpuB\%; the output grows from \smBrStock{} to \smBrSlim{} branches (\smBrFull{} before the in-job
+slimming of the all-track quantities), \smBytesCand{} bytes per candidate after compression (stock: \smBytesStock).
+
+\paragraph{At scale} (\fpath{tools/pvfix/repro_v2.C}, all \repFiles{} files of the 10\% sample, compared file by file
+with the fix-1--2 production of the same lists). In every file the number of candidates with
+\texttt{pvfix\_passOriginal}=1 equals the stock number: \repNoneExact{} in total, \repMismatch{} mismatching files,
+\repMissing{} missing. The new production has \repNtwo\,M candidates (\repRatio$\times$): \repPR\,M pass with the pair
+refit, \repPK\,M with the KF fit, \repOnlyR\,M only with the pair refit and \repOnlyK\,M only with the KF fit.
+
+\subsection{Closure of the refits}
+The all-track refits (\emph{refitAll}, \emph{kfAll}) use the same tracks as the stored PV, so their difference to it
+tests the method (\fpath{tools/pvfix/pv_shifts.C}, \psFiles{} files, \psN\,M candidates).
+
+\begin{table}[H]
+\centering\small
+\caption{All-track refits vs the stored PV, in bins of the number of tracks used by the refit. $|\Delta r_{xy}|$
+median and 90\% quantile, fraction below 1\um, robust width of $\Delta z$. Source: \fpath{logs/pv_shifts.txt}.}
+\label{tab:closure}
+\begin{tabular}{@{}l c r c c c c@{}}
+\toprule
+method & tracks & candidates & \hd{$|\Delta r_{xy}|<1\um$}{(\%)} & \hd{median}{(\um)} & \hd{90\%}{(\um)} & \hd{$\Delta z$ width}{(\um)} \\
+\midrule
+\csname @@input\endcsname tables/closure.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+The pair refit reproduces the stored vertex to below 1\um{} for most candidates (median \cloPairTwoMed\um{} with 2
+tracks); the 90\% quantile reaches \cloPairManyNinety\um{} for vertices with $\geq$7 tracks. The tail is expected from the track states: the DST states are not the ones the vertex finder used
+(Sec.~\ref{sec:fixes}), so pairs near the 500\um{} pair-DCA and 1\,mm outlier cuts can change; this explanation was
+not tested directly. The KF fit is a different algorithm and differs from the stored vertex by a median
+of \cloKfManyMed\um{} for $\geq$7 tracks; this is not a closure failure.
+
+\subsection{Effect of removing the daughters}
+\label{sec:shift}
+
+\begin{table}[H]
+\centering\small
+\caption{PV shift when the candidate's daughters are removed, versus the number of daughters attached to the stored
+PV. Source: \fpath{logs/pv_shifts.txt}.}
+\label{tab:shift}
+\begin{tabular}{@{}l c r c c c@{}}
+\toprule
+& \hd{daughters}{attached} & candidates & \hd{$|\Delta r_{xy}|$ median}{(\um)} & \hd{90\%}{(\um)} & \hd{$\Delta z$ width}{(\um)} \\
+\midrule
+\csname @@input\endcsname tables/shift.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+When both daughters are attached, removing them moves the PV by a median of \shPairTwoMed\um{} (pair) and
+\shKfTwoMed\um{} (KF) in $xy$, with a 90\% tail around 100\um. With no daughter attached the track list does not change and
+the shift is exactly zero (\chkShiftZero). Figure~\ref{fig:effects} shows the consequence for the candidate quantities in
+the fix-1--2 production (pair refit only, \efN\,M candidates): the median daughter DCA grows from \efDcaO{} (stored PV)
+to \efDcaR\um{} (refit without daughters), the median \Ls{} from \efLsO{} to \efLsR, and the number of candidates passing
+the tight selection (DIRA $>0.999$, $\Ls>5$) by a factor \efTightRA{} relative to the all-track refit.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{effects10pct_quantities}\\
+\includegraphics[width=0.75\textwidth]{effects10pct_shift}
+\caption{Fix-1--2 production, 10\% sample (\efN\,M candidates, \fpath{pvfix10pct/effects10pct_*.png}, copied).
+Top: daughter-1 $|{\rm DCA}_{\rm PV}|$, \Ls{} and DIRA with the stored PV (black), the pair refit with all tracks
+(blue dashed) and the pair refit without the daughters (red). Bottom: $|\Delta r_{xy}|$ (left) and $\Delta z$ (right)
+between the refits without and with the daughters, for candidates with 0 (black, a spike at zero), 1 (blue) and 2 (red)
+daughters attached to the stored PV (the vertical scale indicates unit-area normalisation; read from the plot). Removing the daughters increases DCA and \Ls{} and moves
+the PV by tens of \um.}
+\label{fig:effects}
+\end{figure}
+
+\paragraph{Refit availability.} Fraction of candidates with a valid vertex: refitAll \stRefitAll\%, refit \stRefit\%,
+kfAll \stKfAll\%, kf \stKf\%; the KF fit keeps on average \stKfUse\% of the tracks used by the all-track pair refit.
+The analysis uses candidates with both refits without daughters (Sec.~\ref{sec:selection}).

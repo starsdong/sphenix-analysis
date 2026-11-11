@@ -1,0 +1,63 @@
+\section{Ntuple content and size}
+\label{sec:ntuple}
+
+\subsection{Candidate tree \fcmd{DecayTree}}
+One file per channel and DST segment, one entry per candidate, \nBranchKs{} branches. Mother
+prefix \fcmd{K_S0_}, \fcmd{Lambda0_}, \fcmd{D0_}; daughters \fcmd{track_1_}, \fcmd{track_2_}
+(the PDG code tells which is which; for \Lam{} \fcmd{track_1} can be the pion or the proton).
+\begin{table}[H]
+\centering\small
+\caption{Branch groups of \fcmd{DecayTree} (\fcmd{M} = mother prefix, \fcmd{d} = daughter
+prefix). All lengths in cm, momenta in GeV/$c$.}
+\label{tab:branches}
+\begin{tabular}{p{0.24\textwidth}p{0.70\textwidth}}
+\toprule
+group & branches \\
+\midrule
+mother kinematics & \fcmd{M_mass, M_massErr, M_px/py/pz/pE/p/pErr, M_pT, M_pTErr, M_charge, M_pseudorapidity, M_rapidity, M_theta, M_phi, M_PDG_ID} \\
+mother topology & \fcmd{M_x/y/z} (SV), \fcmd{M_decayLength(Err), M_decayLength_xy, M_decayLengthErr_xy, M_decayTime(Err), M_DIRA, M_DIRA_xy, M_FDchi2, M_PV_DCA, M_PV_DCA_xy, M_PV_DCA_Err, M_PV_DCA_StdDev, M_vertex_volume, M_chi2, M_nDoF, M_Covariance[21]} \\
+pair & \fcmd{track_1_track_2_DCA, _DCA_xy, _DCA_sig, _DCA_sig_xy} \\
+daughter kinematics & \fcmd{d_mass, d_px/py/pz/pE/p/pErr, d_pT, d_pTErr, d_jT, d_charge, d_pseudorapidity, d_rapidity, d_theta, d_phi, d_x/y/z, d_PDG_ID, d_track_ID, d_Covariance[21]} \\
+daughter quality / topology & \fcmd{d_chi2, d_nDoF, d_PV_DCA, d_PV_DCA_Err, d_PV_DCA_xy, d_PV_DCA_sig, d_PV_DCA_sig_xy, d_bunch_crossing} \\
+daughter detector & \fcmd{d_MVTX/INTT/TPC/TPOT_nHits} (clusters on the seeds), \fcmd{d_..._nStates}, \fcmd{d_calculated_dEdx} \\
+PV & \fcmd{primary_vertex_x/y/z, _volume, _chi2, _nDoF, _Covariance[6], primary_vertex_ID} \\
+event & \fcmd{runNumber, eventNumber, GL1_BCO, last_GL1_BCO, Collision_BCO, nPrimaryVerticesOfBC, nTracksOfBC, nTracksOfVertex, nSiSeedMultiplicity, secondary_vertex_mass_pionPID} \\
+trigger & 64 Booleans \fcmd{trigger_<name>} (e.g.\ \fcmd{trigger_MBD_NandS_geq_1}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\caveat{Two branches do not mean what their names suggest:
+\fcmd{primary_vertex_ID} holds the \emph{beam crossing} of the chosen PV (KFParticle
+\fcmd{getPVID} returns \fcmd{get_beam_crossing()}), not the vertex map key;
+\fcmd{Collision_BCO} = \fcmd{GL1_BCO} + crossing of \fcmd{track_1}, i.e.\ the absolute BCO of the
+collision, which is the right key to identify the same collision across events.}
+
+\subsection{Per-event tree \fcmd{EventInfo}}
+File \fcmd{KFP_EventInfo_*.root}, one entry per processed event (\nEvents{} entries in the test):
+\fcmd{runNumber, eventNumber, GL1_BCO, GL1_scaled, GL1_live, GL1_bunch}; track counts \fcmd{nTrk,
+nTrkINTT, nTrkMVTXonly, nTrkTPConly, nTrkX0}; and the vertex list \fcmd{nVtx, vtx_id,
+vtx_crossing, vtx_x/y/z, vtx_chi2, vtx_ndof, vtx_ntrk}. It is used for normalisation and to look
+up any vertex by (\fcmd{runNumber}, \fcmd{eventNumber}, crossing).
+
+\subsection{Size}
+\begin{table}[H]
+\centering\small
+\caption{Ntuple size in the test sample (\nEvents{} events; \fpath{tables/tab_sizes.tex} from
+\fcmd{TTree::GetZipBytes/GetTotBytes}).}
+\label{tab:sizes}
+\begin{tabular}{lrrrrrrr}
+\toprule
+channel & candidates & per event & branches & B/cand (raw) & B/cand (disk) & kB/event & MB total \\
+\midrule
+\input{tables/tab_sizes.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+Together the three channels need \kBPerEvProd\,kB per event. Extrapolated to the \nDSTfiles{}
+segments available at the time of the test ($\approx$\nEvFullE$\times10^8$ events) this is
+$\approx$\TBFull\,TB and $\approx$\kCPUhFull{}k CPU hours for the three default channels
+(\fpath{logs/job_stats.txt}).
+
+\choice{These sizes are for the loose diagnostic configuration. For mass production a trimmed
+configuration is used (Section~\ref{sec:trim}): \trimKBDira\,kB per event for the three channels.}

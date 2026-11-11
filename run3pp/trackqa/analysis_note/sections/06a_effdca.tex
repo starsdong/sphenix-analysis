@@ -1,0 +1,181 @@
+\section{Silicon efficiency and DCA vs.\ kinematics, crossing, vertex and multiplicity}
+\label{sec:effdca}
+
+Sample: the 100-segment ntuple (run 79509, segments 0--99, \eNEvents{} events; production and merging described in Sec.~\ref{sec:dca}).
+Numbers, table and figures from \fpath{scripts/qa_effdca.C}; checks \fcmd{chkEDup} (\chkEDup: unique event
+numbers), \fcmd{chkENoEv} (\chkENoEv: every track finds its event) and \fcmd{chkECount} (\chkECount:
+efficiency denominators equal the counted tracks).
+
+\paragraph{Definitions.}
+\begin{itemize}\itemsep0pt
+\item \textbf{Silicon efficiency} $=N(\text{TPC}\geq20 \wedge \text{INTT}\geq1 \wedge \text{MVTX}\geq2)\,/\,N(\text{TPC}\geq20)$,
+  over tracks of \fcmd{SvtxTrackMap} (every track has $\geq21$ TPC clusters) inside the matching acceptance
+  \textbf{$|z_{\rm PCA}|<10$\,cm and $|\eta|<1.5$}; for the $p_T$ dependence \textbf{$|\eta|<1.0$}. $z_{\rm PCA}$ is the
+  track $z$ at its point of closest approach, the only $z$ available for TPC-only tracks (no vertex in their
+  crossing); for in-time tracks it is close to the vertex $z$. Denominators: \eNDen{} tracks ($|\eta|<1$, all
+  $p_T$) and \eNDenHi{} ($|\eta|<1.5$, $p_T>1$\,GeV/$c$). The plots vs.\ event $v_z$ and track $z$ apply only
+  $|\eta|<1.5$. Binomial uncertainties (\fcmd{TEfficiency}, Clopper--Pearson).
+\item \textbf{DCA sample}: tracks passing the numerator cuts that were used in their vertex fit
+  (\fcmd{vtxMatch==1}), \eNDca{} tracks (\eNDcaHi{} with $p_T>1$\,GeV/$c$). Core mean and $\sigma$ as in
+  Sec.~\ref{sec:dca} (iterative Gaussian in $\pm2\sigma$, 10-$\mu$m bins), fit errors only.
+\item Multiplicity: since an event is a streaming frame with many crossings, the multiplicity used is the
+  number of silicon tracks in the \emph{same crossing} as the track (DCA), or at crossing 0 (efficiency, see
+  Fig.~\ref{fig:effevent}); the event total is not used.
+\item Dependences on $\eta$, $\phi$, crossing, $z$, multiplicity and time: $p_T>1$\,GeV/$c$; the $p_T$ and $p$
+  dependences use all tracks ($p_T>0.2$ and $p>0.3$\,GeV/$c$). The DCA sample has no extra $z$/$\eta$ cut.
+\end{itemize}
+
+\choice{Matching acceptance $|z_{\rm PCA}|<10$\,cm, $|\eta|<1.5$ ($|\eta|<1$ vs.\ $p_T$), chosen by the
+analyser: it removes most TPC tracks outside the silicon acceptance, including TPC-only tracks from other
+crossings whose $z$ is shifted by the drift-time offset (Sec.~\ref{sec:ptres}).}
+
+\caveat{This "efficiency" is the fraction of TPC tracks with a silicon match, not a tracking efficiency:
+even inside the acceptance the denominator contains secondaries, out-of-time tracks that happen to have
+$|z|<10$\,cm, and fakes. Its shape is meaningful for QA (holes, trends), its absolute value is an
+approximate lower limit of the matching efficiency.}
+
+\caveat{The track beam crossing is only measured with silicon; TPC-only tracks carry crossing 0 by
+default. The efficiency vs.\ track crossing is therefore undefined (the denominator at crossing $\neq0$
+would contain only numerator tracks). The efficiency is shown vs.\ the GL1 bunch number of the event
+instead, and the numerator crossing distribution is shown for reference.}
+
+\subsection{Silicon efficiency}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_eff_kin}
+\caption{Silicon efficiency inside $|z_{\rm PCA}|<10$\,cm vs.\ $p_T$ ($|\eta|<1$), $\eta$ and $\phi$
+($p_T>1$\,GeV/$c$, $|\eta|<1.5$). Inclusive: \eEffAll\% ($|\eta|<1$, all $p_T$), \eEffHi\% ($|\eta|<1.5$,
+$p_T>1$\,GeV/$c$). It falls from \eEffPtLow\% at 0.2--0.3 to
+\eEffPtHigh\% at 6--10\,GeV/$c$ (Table~\ref{tab:effpt}; explained in Sec.~\ref{sec:ptres}); vs.\ $\eta$ it stays within
+\eEffEtaMin--\eEffEtaMax\%. Vs.\ $\phi$ (5-degree bins) it ranges from \eEffPhiMin{} to \eEffPhiMax\%;
+\eLowPhiN{} bins are below 70\%, centred at $\phi=$ \eLowPhiList\,rad.}
+\label{fig:effkin}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig_eff_2d}
+\caption{Silicon efficiency maps, $|z_{\rm PCA}|<10$\,cm. Left: $\eta$--$\phi$, $p_T>1$\,GeV/$c$; the deepest hole
+($\phi\approx0.1$--0.3\,rad) covers $\eta\lesssim0.7$ only, the shallower bands (e.g.\ $\phi\approx-1.4$ and
+1.3\,rad) the full $\eta$ range (by eye): azimuthal (and for the deep hole also $z$) sectors of the silicon
+detectors. The event-$v_z$ panel of Fig.~\ref{fig:effevent} has no track-$z$ cut and is therefore lower. Right: $\eta$--$p_T$; the drop above $\approx3$\,GeV/$c$ is present at all $\eta$ (by eye).}
+\label{fig:eff2d}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\input{tables/tab_eff_pt.tex}
+\caption{Silicon efficiency vs.\ $p_T$, $|z_{\rm PCA}|<10$\,cm, $|\eta|<1$ (Clopper--Pearson 68\% intervals; shown as 0.0 when below 0.05\%).}
+\label{tab:effpt}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_eff_event}
+\caption{Silicon efficiency ($p_T>1$\,GeV/$c$, $|\eta|<1.5$, $|z_{\rm PCA}|<10$\,cm except for the two $z$ panels) vs.\ GL1 bunch number (\eBunchMin--\eBunchMax; range
+\eEffBunchMin--\eEffBunchMax\%, the extremes are the sparsely populated bunches near the abort gap), event
+$v_z$ of the crossing-0 vertex (events that have one; \eEffVzMin--\eEffVzMax\%), track $z$ at the PCA,
+the number of silicon tracks at crossing 0 of the event, $N_{\rm Si}(X{=}0)$ (\eEffNtrkMin--\eEffNtrkMax\%; this is the multiplicity of the triggered collision only -- the TPC-only tracks of the denominator have no measured crossing, so a per-track same-crossing multiplicity cannot be defined for them) and event entry in the
+merged file (time order, $\approx$1 segment per 1000 entries; \eEffEntryMin--\eEffEntryMax\%: stable over
+the run). Track $z$: plateau of \eEffPcazPlateau\% for $|z|<10$\,cm, falling steeply beyond $|z|\approx15$\,cm,
+the edge of the MVTX acceptance. Bottom right: crossing of the numerator tracks; \eFracNumXzero\% are in the
+bin containing crossing 0.}
+\label{fig:effevent}
+\end{figure}
+
+\subsection{DCA vs.\ momentum, $\eta$ and $\phi$}
+Each figure has four panels: DCA$_{xy}$ and DCA$_z$ vs.\ the variable (log colour scale, $\pm0.1$\,cm shown,
+40-$\mu$m bins), then the core $\sigma$ and core mean of DCA$_{xy}$ (black circles) and DCA$_z$ (red squares).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_dcav_p}
+\caption{DCA vs.\ $p$ (all $p_T$). $\sigma_{xy}$ falls from \eSigXyPfirst{} (0.3--0.4\,GeV/$c$) to
+\eSigXyPlast\,$\mu$m (6--10\,GeV/$c$) and flattens above $\approx1$\,GeV/$c$; $\sigma_z$ stays within
+\eSigZPMin--\eSigZPMax\,$\mu$m. Means within \eMeanXyPMin{} to \eMeanXyPMax\,$\mu$m ($xy$) and
+\eMeanZPMin{} to \eMeanZPMax\,$\mu$m ($z$).}
+\label{fig:dcavp}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_dcav_eta}
+\caption{DCA vs.\ $\eta$, $p_T>1$\,GeV/$c$. $\sigma_{xy}$ flat (\eSigXyEtaMin--\eSigXyEtaMax\,$\mu$m),
+$\sigma_z$ from \eSigZEtaMin{} (central) to \eSigZEtaMax\,$\mu$m (edges). Means: $xy$ \eMeanXyEtaMin{} to
+\eMeanXyEtaMax\,$\mu$m, $z$ \eMeanZEtaMin{} to \eMeanZEtaMax\,$\mu$m, with an $\eta$-odd pattern in $z$ (by eye).}
+\label{fig:dcaveta}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_dcav_phi}
+\caption{DCA vs.\ $\phi$ (5-degree bins), $p_T>1$\,GeV/$c$. Core means $xy$ \eMeanXyPhiMin{} to
+\eMeanXyPhiMax\,$\mu$m and $z$ \eMeanZPhiMin{} to \eMeanZPhiMax\,$\mu$m; widths $\sigma_{xy}$
+\eSigXyPhiMin--\eSigXyPhiMax, $\sigma_z$ \eSigZPhiMin--\eSigZPhiMax\,$\mu$m. The structure is
+step-like (sector by sector, by eye) and is visible as shifts of the band in the 2D panels.}
+\label{fig:dcavphi}
+\end{figure}
+
+\subsection{DCA vs.\ crossing, vertex $z$, same-crossing multiplicity and time}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_dcav_crossing}
+\caption{DCA vs.\ track beam crossing (bins of 20), $p_T>1$\,GeV/$c$. $\sigma_{xy}$ is the same in the bin
+containing crossing 0 (\eSigXyXbinZero\,$\mu$m) and in all other bins together (\eSigXyXbinOther\,$\mu$m);
+over the bins $\sigma_{xy}$ ranges over \eSigXyXingMin--\eSigXyXingMax\,$\mu$m and $\sigma_z$ over
+\eSigZXingMin--\eSigZXingMax\,$\mu$m, the lowest values in the sparse edge bins of the streaming window.
+Means within \eMeanXyXingMin{} to \eMeanXyXingMax{} ($xy$) and \eMeanZXingMin{} to \eMeanZXingMax\,$\mu$m ($z$):
+the DCA does not depend on the crossing.}
+\label{fig:dcavx}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_dcav_vz}
+\caption{DCA vs.\ $z$ of the associated vertex, $p_T>1$\,GeV/$c$. The mean DCA$_{xy}$ rises linearly with
+$z$: slope $\eSlopeXyVz\pm\eESlopeXyVz\,\mu$m/cm (fit $|z|<15$\,cm), from \eMeanXyVzMin{} to
+\eMeanXyVzMax\,$\mu$m, which looks like a relative tilt of the silicon barrels or a $z$-dependent
+misalignment (interpretation not verified). $\sigma_{xy}$ \eSigXyVzMin--\eSigXyVzMax\,$\mu$m and $\sigma_z$
+\eSigZVzMin--\eSigZVzMax\,$\mu$m, larger at negative $z$.}
+\label{fig:dcavvz}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_dcav_ntrk}
+\caption{DCA vs.\ the number of silicon tracks (MVTX or INTT cluster, any $p_T$) in the \emph{same beam crossing}
+as the track, $N_{\rm Si}$, for $p_T>1$\,GeV/$c$ (log $x$). An event (streaming frame) contains on average
+\eXingPerEv{} crossings with silicon tracks, with \eSilPerXing{} silicon tracks per such crossing (median
+\eSilPerXingMedian), so the event total is not the multiplicity of the collision the track comes from.
+$\sigma_{xy}$ rises from \eSigXyNtrkMin\,$\mu$m ($N_{\rm Si}=2$) and saturates at about 70\,$\mu$m (by eye) from
+$N_{\rm Si}\approx6$; $\sigma_z$ from \eSigZNtrkMin{} to about 105\,$\mu$m (range \eSigZNtrkMin--\eSigZNtrkMax).
+The rise is the vertex self-bias of small vertices (Fig.~\ref{fig:dcantrk}), not a multiplicity-dependent
+resolution. Means within \eMeanXyNtrkMin{} to \eMeanXyNtrkMax{} ($xy$) and \eMeanZNtrkMin{} to \eMeanZNtrkMax\,$\mu$m ($z$),
+the extreme values in the sparse last bin.}
+\label{fig:dcavnt}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_dcav_entry}
+\caption{DCA vs.\ event entry / 1000 ($\approx$ segment, time order within the run), $p_T>1$\,GeV/$c$:
+$\sigma_{xy}$ \eSigXyEntryMin--\eSigXyEntryMax, $\sigma_z$ \eSigZEntryMin--\eSigZEntryMax\,$\mu$m,
+means within \eMeanXyEntryMin{} to \eMeanXyEntryMax{} and \eMeanZEntryMin{} to \eMeanZEntryMax\,$\mu$m: stable
+over the 100 segments.}
+\label{fig:dcavent}
+\end{figure}
+
+\subsection{Summary of this section}
+\begin{itemize}\itemsep0pt
+\item Inside the matching acceptance ($|z_{\rm PCA}|<10$\,cm, $|\eta|<1$) the silicon efficiency is
+  \eEffAll\% and flat ($\approx$90--92\%) from 0.2 to 2.5\,GeV/$c$; it is stable in time, bunch number and
+  crossing-0 multiplicity, has \eLowPhiN{} azimuthal bins below 70\% (at $\phi=$ \eLowPhiList\,rad), falls
+  steeply outside the MVTX $z$ acceptance ($|z|\gtrsim15$\,cm), and drops above 3\,GeV/$c$ to \eEffPtHigh\% at
+  6--10\,GeV/$c$. Sec.~\ref{sec:ptres}: the remaining drop is mostly poorly fitted TPC tracks, plus a small
+  momentum-resolution migration.
+\item DCA widths do not depend on the crossing or on time; vs.\ the same-crossing multiplicity they only show the vertex self-bias below $N_{\rm Si}\approx6$. The DCA means depend on $\phi$ (up to
+  $\pm$50--70\,$\mu$m) and the DCA$_{xy}$ mean on vertex $z$ (\eSlopeXyVz\,$\mu$m/cm), both pointing to
+  residual silicon misalignment in this production.
+\end{itemize}

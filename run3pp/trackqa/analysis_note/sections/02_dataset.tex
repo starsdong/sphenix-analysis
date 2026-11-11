@@ -1,0 +1,28 @@
+\section{Dataset, software and computing}
+\label{sec:dataset}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{>{\raggedright}p{0.25\textwidth}p{0.68\textwidth}}
+\toprule
+input & \fpath{/sphenix/lustre01/sphnxpro/production/run3pp/physics/ana581_2026p005_v001/DST_TRKR_TRACKS/run_00079500_00079600/DST_TRKR_TRACKS_run3pp_ana581_2026p005_v001-00079509-00000.root}\\
+events in input (tree \fcmd{T}) & \nDSTEntries \\
+input size & \sizeDSTMB\,MB (\sizeDSTkB\,kB/event; 1\,kB = 1024\,B throughout) \\
+release & \fcmd{ana.581} (\fpath{/cvmfs/sphenix.sdcc.bnl.gov/alma9.2-gcc-14.2.0/release/release_ana/ana.581}), ROOT 6.32.06, gcc 14.2.0, via \fpath{run3pp/setup_env.sh} \\
+module library & \fpath{/gpfs02/sphenix/user/dongxs/run3pp/install/lib/libtrackqatree.so} \\
+job & interactive on \fcmd{sphnxuser01}, \fpath{trackqa/macro/run_trackqa.sh 0 <DST> <outdir> 1} \\
+CPU / wall / memory & user \cpuUser\,s + system \cpuSys\,s, wall \wallTime, max RSS \rssMB\,MB \\
+module time & \modMsPerEv\,ms/event (Fun4All timer of \fcmd{TrackQATree}) \\
+outputs & \fpath{/gpfs02/sphenix/user/dongxs/run3pp/trackqa/output/test79509/}; local copies in \fpath{trackqa/ntuples/} (md5 checked) \\
+\bottomrule
+\end{tabular}
+\caption{Test sample and job. Source: \fpath{logs/dataset_software.txt} (remote \fcmd{ls}, release
+banner, DST branch sizes) and \fpath{logs/run_trackqa_79509_00000.log} (job log with
+\fcmd{/usr/bin/time -v}). The same segment was the first file of the KFParticle test sample.}
+\label{tab:dataset}
+\end{table}
+
+The run was chosen because it is the KFParticle test run, so the event counters can be compared
+event by event with that independent code (Sec.~\ref{sec:audit}). Run 79509 is a light run; busier
+runs (e.g.\ 80906) have larger DSTs and the time per event of this read-dominated job will scale
+with the DST size (not measured here).

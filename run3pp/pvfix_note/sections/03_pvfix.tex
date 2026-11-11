@@ -1,0 +1,81 @@
+\section{The primary-vertex bias and the modified reconstruction}
+\label{sec:fixes}
+
+\subsection{How the stock reconstruction uses the PV}
+The \Dzero{} instance of \texttt{KFParticle\_sPHENIX} (\texttt{[D0 -> K\^{}- pi\^{}+]cc}) is configured with
+\fcmd{dontUseGlobalVertex(true)} and \fcmd{constrainToPrimaryVertex(true)}: it reads the \texttt{SvtxVertexMap}, and for
+every track pair and mass assignment it tries every PV of the event, keeps the combinations that pass the mother cuts,
+and among those keeps one per track pair, the one with the smallest PV--DCA $\chi^2$ (\fcmd{selectBestCombination}, read
+from source). Pointing (DIRA), decay length and its significance are computed w.r.t.\ that PV. The track--PV DCA cut of
+the daughters uses the minimum DCA over the PVs of the track's crossing (\fcmd{calcMinPV_DCA}).
+
+The \texttt{SvtxVertexMap} vertices are found by \texttt{PHSimpleVertexFinder} from the tracks of each crossing; the
+\Dzero{} daughters are among them. After vertex finding, \texttt{PHActsVertexPropagator} moves every track state to its
+point of closest approach to its vertex. This was checked in a DST (\fpath{tools/pvfix/trkstate_check.C},
+\tsVtxTracks{} vertex tracks): the component of (state $-$ vertex) along the track momentum has a median of
+\tsAlong\um. The states the vertex finder used are therefore no longer in the DST.
+
+\subsection{Changes}
+\begin{description}
+\item[Fix 1 (bookkeeping).] The ntuple branch \texttt{primary\_vertex\_ID} held the beam crossing, not the
+  \texttt{SvtxVertexMap} key; it now holds the key, and the crossing is in \texttt{primary\_vertex\_crossing}.
+\item[Fix 2 (pair refit).] For each candidate the tracks attached to its PV are selected (quality $\leq 300$,
+  $\pt\geq0.1\gevc$, $\geq3$ MVTX clusters on the silicon seed) and the vertex is recomputed with a re-implementation of
+  \texttt{PHSimpleVertexFinder}: straight-line points of closest approach for all track pairs with DCA $<500\um$
+  (if none, $<1.5$\,mm) and both points within $|x|,|y|<2$\,mm; the median of all points; the average of the pairs within
+  1\,mm of the median in $x$ and $y$. Covariance: sum of the used tracks' position covariances divided by
+  $\sqrt{N}$. This is done twice: with all selected tracks (\emph{refitAll}, closure test) and without the candidate's
+  daughters (\emph{refit}).
+\item[Fix 3 (KF fit).] The same track lists are fitted with \fcmd{KFVertex::ConstructPrimaryVertex}, the tracks entering
+  with their full DST state and $6\times6$ covariance (as \fcmd{KFParticle_Tools::makeParticle}); \emph{kfAll} and
+  \emph{kf}. Fixes 3b/3c make the outlier cut and a covariance scale configurable (Sec.~\ref{sec:splithalf}).
+\item[Fix 4 (selection with any PV).] Flags \texttt{pvfix\_passOriginal/Refit/KF} record whether the candidate passes
+  the production cuts (both daughters $|{\rm DCA}|\geq30\um$, DIRA $\geq0.9$) w.r.t.\ each PV; \texttt{passOriginal}
+  reproduces the stock in-job cut (minimum DCA over the PVs of the crossing). With the in-job cuts loosened, a candidate
+  is written if any flag is set.
+\item[Fix 5 (stock combination preserved).] With a looser in-job DIRA cut, a combination that fails the stock DIRA cut
+  could win the best-combination choice and replace the stock candidate (\smNoFiveMissB{} of \smStockB{} stock candidates were lost in a
+  smoke test of run \smRunB). The choice is now restricted to combinations with DIRA $\geq 0.9$ whenever one exists.
+\end{description}
+For every PV version the ntuple stores the vertex position, status and number of tracks, and the candidate quantities
+(DIRA, DIRA$_{xy}$, flight-distance $\chi^2$, PV--DCA, decay length and its error, in 3D and $xy$; per daughter DCA,
+DCA$_{xy}$ and their significances) with the suffixes \texttt{\_PVrefit} and \texttt{\_PVkf}.
+
+\subsection{KF-fit track errors from split-half vertices}
+\label{sec:splithalf}
+The track covariances in the DST turned out to be too small for vertexing. The test (\fpath{tools/pvfix/pv_splithalf.C},
+\splitVtx{} vertices from one DST file each of runs 79513 and 80880, \splitSel{} with $\geq\splitMinTrk$ selected tracks) splits the tracks of each
+vertex by index parity, fits each half with each method, and uses $\sigma(\Delta)/2$ of the two half-vertices as the
+resolution of the full vertex; for the KF fit, $\Delta/\sqrt{C_1+C_2}$ tests the error scale. Widths are robust
+(1.4826\,$\times$\,MAD).
+
+\begin{table}[H]
+\centering\small
+\caption{Split-half test of the PV methods. Scale: factor applied to the track covariance (squared); resolution:
+$\sigma(\Delta)/2$; pull: width of $\Delta/\sqrt{C_1+C_2}$; used: median fraction of tracks kept by the outlier cut.
+Source: \fpath{logs/split_s1.txt}, \fpath{logs/split_s7.txt}.}
+\label{tab:splithalf}
+\begin{tabular}{@{}l c r c c c c@{}}
+\toprule
+method & scale & vertices & \hd{resolution $x$ / $z$}{(\um)} & pull $x$ / $z$ & $\chi^2$/ndf & used \\
+\midrule
+\csname @@input\endcsname tables/splithalf.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+With the DST errors the KF fit has $\chi^2/{\rm ndf}=\spKallOneChi$ and pulls of \spKallOnePullX{} ($x$) and
+\spKallOnePullZ{} ($z$); the default outlier cut (3.5) then rejects most tracks (\spKcutOneUse{} kept) and only
+\spKcutOneN{} of \splitSel{} vertices survive. Scaling the errors by 7 gives $\chi^2/{\rm ndf}=\spKallSevenChi$ and
+pulls \spKallSevenPullX/\spKallSevenPullZ{}; with the cut at 3.5 the resolution is \spKcutSevenX/\spKcutSevenZ\um{}
+($x$/$z$), against \spPairOneX/\spPairOneZ\um{} for the pair average.
+
+\choice{KF fit with track errors $\times7$ and outlier cut 3.5. The scale is calibrated on the data themselves: without
+outlier rejection it brings the vertex $\chi^2$/ndf from \spKallOneChi{} to \spKallSevenChi{} and the pulls from
+\spKallOnePullX/\spKallOnePullZ{} to \spKallSevenPullX/\spKallSevenPullZ; with the cut at 3.5 it gives the best
+split-half resolution of the methods tested. The $z$ pull is then below 1 (\spKcutSevenPullZ), i.e.\ the $z$ errors are
+somewhat overestimated.}
+\caveat{The scaled errors also enter the vertex covariance and hence $\sigma_L$: with the KF fit, decay-length
+significances are smaller than with the other PVs, and the same \Ls{} cut selects far fewer candidates
+(Table~\ref{tab:counts}). A \Ls{} cut is therefore not equivalent across PV versions. The factor 7 is a single number for
+all tracks; its \pt{} and $\eta$ dependence was not studied.}

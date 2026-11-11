@@ -1,0 +1,74 @@
+\section{Results with the stored track momenta}
+\label{sec:results}
+
+Table~\ref{tab:d0uncorr} lists the window excess for every selection, PV version and pair requirement;
+Figs.~\ref{fig:uncorrP} and \ref{fig:uncorrT} show the spectra of the main configuration (INTT + same collision).
+
+\begin{table}[H]
+\centering\small
+\caption{Excess in the \Dzero{} window 1.845--1.885\gevcc{} (candidates) $\pm$ Poisson error of the window count, and
+$z$ in brackets; $|z|\geq2$ in bold. Pointing: DIRA $>0.995$, $\Ls>2$; tight: DIRA $>0.999$, $\Ls>5$; all with
+$L<1$\,mm. Source: \fpath{logs/d0cut_*.txt}.}
+\label{tab:d0uncorr}
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+selection & original PV & pair refit w/o daughters & KF fit w/o daughters \\
+\midrule
+\csname @@input\endcsname tables/d0_uncorr.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+No configuration shows an excess: the largest $|z|$ is \zAbsMaxNone{} without extra cuts and \zAbsMaxBoth{} with both
+pair requirements; no value has $|z|>2$. Per configuration the r.m.s.\ of the 12 $z$ values is \zRmsNone{} (no extra
+cut), \zRmsIntt{} (INTT), \zRmsColl{} (same collision) and \zRmsBoth{} (both), and \zPosNone{} of 12 excesses are
+positive without extra cuts. The narrow-peak fit gives $|z_{\rm narrow}|\leq\nzAbsMaxNone$. An injected narrow peak is
+recovered at \recMinNone--\recMaxNone\% in every selection (\chkInjNone, \chkInjBoth).
+
+\paragraph{Effect of the PV versions.} The refits change which candidates are selected (Table~\ref{tab:counts}); for all \pt,
+tight, the original PV selects \nsOrigAllTNone, the pair refit \nsPairAllTNone{} and the KF fit \nsKfAllTNone{}
+candidates (the KF numbers are low because of its larger $\sigma_L$, Sec.~\ref{sec:splithalf}). In none of the versions
+does an excess appear at the \Dzero{} mass.
+
+\paragraph{Background model.} Table~\ref{tab:model} gives the polynomial $\chi^2$/ndf of $S/P$ and the broad-component
+$\Delta\chi^2$ for the raw ratio $S/C$ and for $S/P$. In the pointing selections, where the raw ratio has a broad structure, the weighting
+reduces its $\Delta\chi^2$ substantially (uncorrected rows of Table~\ref{tab:model}); in the tight selections the broad
+structure is small with and without weighting. The remaining $\chi^2$/ndf of up to \chiMaxNone{} shows that the prediction does not describe the data to the
+statistical precision everywhere. In the tight selections $S/P$ still falls by about 20\% from 1.6 to 2.0\gevcc{}
+(read by eye from Fig.~\ref{fig:uncorrT}), which the polynomial absorbs.
+
+\begin{table}[H]
+\centering\small
+\caption{Background-model quality, no extra pair cut: polynomial $\chi^2$/ndf of $S/P$, broad-component $\Delta\chi^2$ of
+the raw ratio $S/C$ (``raw'') and of $S/P$ (``wt''). Source: \fpath{logs/d0cut_none.txt}, \fpath{logs/d0kc_none.txt}.}
+\label{tab:model}
+\begin{tabular}{@{}l ccc ccc ccc@{}}
+\toprule
+& \multicolumn{3}{c}{original PV} & \multicolumn{3}{c}{pair refit} & \multicolumn{3}{c}{KF fit} \\
+selection & $\chi^2$/ndf & raw & wt & $\chi^2$/ndf & raw & wt & $\chi^2$/ndf & raw & wt \\
+\midrule
+\csname @@input\endcsname tables/d0_model.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{d0cut_both_HiP}
+\caption{\Dzero{} $\pt>1.5\gevc$, pointing selection, INTT + same collision, stored momenta, 10\% sample. Left: mass
+spectra of the signal-region sample; middle: pointing / non-pointing ratio, normalised; right: data / weighted
+prediction, normalised. Black circles: original PV; blue squares: pair refit without daughters; red triangles: KF fit
+without daughters. Dotted line: \Dzero{} mass. Statistical errors. Window excesses \exOrigHiPBoth{} $\pm$
+\eexOrigHiPBoth, \exPairHiPBoth{} $\pm$ \eexPairHiPBoth, \exKfHiPBoth{} $\pm$ \eexKfHiPBoth{} candidates. The label at
+the top left is cut off at the right in the source figure.}
+\label{fig:uncorrP}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{d0cut_both_AllT}
+\caption{As Fig.~\ref{fig:uncorrP} for all \pt, tight selection (DIRA $>0.999$, $\Ls>5$). The right panel's vertical range
+(0.85--1.15) cuts off points of the low-statistics KF-fit sample. Window excesses \exOrigAllTBoth{} $\pm$
+\eexOrigAllTBoth, \exPairAllTBoth{} $\pm$ \eexPairAllTBoth, \exKfAllTBoth{} $\pm$ \eexKfAllTBoth.}
+\label{fig:uncorrT}
+\end{figure}

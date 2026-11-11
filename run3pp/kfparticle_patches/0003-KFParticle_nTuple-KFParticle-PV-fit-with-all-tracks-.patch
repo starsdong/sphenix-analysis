@@ -1,0 +1,210 @@
+From 4d032561dd8eb872002796502ed8ba0ad7ea09c5 Mon Sep 17 00:00:00 2001
+From: dongxs <dongxs@bnl.gov>
+Date: Sun, 8 Nov 2026 22:15:03 -0500
+Subject: [PATCH 3/7] KFParticle_nTuple: KFParticle PV fit with all tracks
+ (*_PVkfAll) and w/o candidate daughters (*_PVkf) (d0-pvfix fix 3)
+
+---
+ .../KFParticle_sPHENIX/KFParticle_nTuple.cc   | 111 ++++++++++++++++++
+ .../KFParticle_sPHENIX/KFParticle_nTuple.h    |  22 ++++
+ 2 files changed, 133 insertions(+)
+
+diff --git a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
+index 6f5ac71a1..707ef1829 100644
+--- a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
++++ b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.cc
+@@ -16,6 +16,7 @@
+ #include <globalvertex/SvtxVertexMap.h>             // d0-pvfix fix 2
+ #include <array>
+ #include <limits>
++#include <memory>
+ #include <set>
+ 
+ #include <KFParticle.h>
+@@ -346,6 +347,35 @@ void KFParticle_nTuple::initializeBranches(PHCompositeNode* topNode)
+     bookF(mother_name + "_decayLengthErr_PVrefitAll", &m_ma_Lerr);
+     bookF(mother_name + "_decayLength_xy_PVrefitAll", &m_ma_Lxy);
+     bookF(mother_name + "_decayLengthErr_xy_PVrefitAll", &m_ma_Lxyerr);
++    // d0-pvfix fix 3
++    auto bookV = [&](const std::string& n, PVfixV& v) {
++      bookF(n + "_x", &v.x);
++      bookF(n + "_y", &v.y);
++      bookF(n + "_z", &v.z);
++      bookF(n + "_chi2", &v.chi2);
++      bookI(n + "_nDoF", &v.ndf);
++      bookI(n + "_status", &v.status);
++      bookI(n + "_nTracks", &v.ntrk);
++    };
++    auto bookQ = [&](const std::string& sfx, PVfixQ& q) {
++      const char* mn[9] = {"_DIRA", "_DIRA_xy", "_FDchi2", "_PV_DCA", "_PV_DCA_xy", "_decayLength", "_decayLengthErr", "_decayLength_xy", "_decayLengthErr_xy"};
++      for (int k = 0; k < 9; ++k)
++      {
++        bookF(mother_name + mn[k] + sfx, &q.m[k]);
++      }
++      for (int i = 0; i < std::min(m_num_tracks_nTuple, kMaxRefitTracks); ++i)
++      {
++        std::string dn = "track_" + std::to_string(i + 1);
++        bookF(dn + "_PV_DCA" + sfx, &q.dca[i]);
++        bookF(dn + "_PV_DCA_xy" + sfx, &q.dcaxy[i]);
++        bookF(dn + "_PV_DCA_sig" + sfx, &q.sig[i]);
++        bookF(dn + "_PV_DCA_sig_xy" + sfx, &q.sigxy[i]);
++      }
++    };
++    bookV("primary_vertex_kf", m_v_kf);
++    bookV("primary_vertex_kfAll", m_v_kfAll);
++    bookQ("_PVkf", m_q_kf);
++    bookQ("_PVkfAll", m_q_kfAll);
+     for (int i = 0; i < std::min(m_num_tracks_nTuple, kMaxRefitTracks); ++i)
+     {
+       std::string dn = "track_" + std::to_string(i + 1);
+@@ -918,6 +948,7 @@ namespace
+ {
+   struct PVfixTrack
+   {
++    SvtxTrack* trk;
+     unsigned int id;
+     double a[3];
+     double b[3];
+@@ -1060,12 +1091,72 @@ namespace
+     }
+     return 1;
+   }
++  // d0-pvfix fix 3: KFParticle primary-vertex fit of a set of tracks; returns 1 if >= 2 tracks remain
++  int pvfixKFVertex(const std::vector<PVfixTrack>& t, KFParticle& out, int& nUsed)
++  {
++    nUsed = 0;
++    if (t.size() < 2)
++    {
++      return 0;
++    }
++    std::vector<KFParticle> parts(t.size());
++    std::vector<const KFParticle*> ptr(t.size());
++    std::unique_ptr<Bool_t[]> flag(new Bool_t[t.size()]);
++    for (size_t i = 0; i < t.size(); ++i)
++    {
++      const SvtxTrack* s = t[i].trk;
++      float par[6] = {s->get_x(), s->get_y(), s->get_z(), s->get_px(), s->get_py(), s->get_pz()};
++      float cov[21];
++      int k = 0;
++      for (int a = 0; a < 6; ++a)
++      {
++        for (int b = 0; b <= a; ++b)
++        {
++          cov[k++] = s->get_error(a, b);
++        }
++      }
++      parts[i].Create(par, cov, (Int_t) s->get_charge(), -1);
++      parts[i].NDF() = s->get_ndf();
++      parts[i].Chi2() = s->get_chisq();
++      parts[i].SetId(s->get_id());
++      ptr[i] = &parts[i];
++      flag[i] = true;
++    }
++    KFVertex v;
++    v.ConstructPrimaryVertex(ptr.data(), (int) t.size(), flag.get(), 3.5);
++    for (size_t i = 0; i < t.size(); ++i)
++    {
++      nUsed += flag[i] ? 1 : 0;
++    }
++    if (nUsed < 2 || !std::isfinite(v.GetX()) || !std::isfinite(v.GetZ()))
++    {
++      return 0;
++    }
++    out = v;
++    return 1;
++  }
+ }  // namespace
+ 
+ void KFParticle_nTuple::pvRefit(PHCompositeNode* topNode, const KFParticle& mother, const KFParticle& pvIn, const std::vector<KFParticle>& daughters)
+ {
+   const float nan = std::numeric_limits<float>::quiet_NaN();
+   m_nTracksOfVertex_noDaughters = -1;
++  for (auto* q : {&m_q_kf, &m_q_kfAll})
++  {
++    for (float& x : q->m)
++    {
++      x = nan;
++    }
++    for (int i = 0; i < kMaxRefitTracks; ++i)
++    {
++      q->dca[i] = q->dcaxy[i] = q->sig[i] = q->sigxy[i] = nan;
++    }
++  }
++  for (auto* v : {&m_v_kf, &m_v_kfAll})
++  {
++    v->status = v->ntrk = v->ndf = -1;
++    v->x = v->y = v->z = v->chi2 = nan;
++  }
+   m_pvr_status = m_pvra_status = -1;
+   m_pvr_ntrk = m_pvr_npair = m_pvra_ntrk = m_pvra_npair = -1;
+   m_pvr_x = m_pvr_y = m_pvr_z = m_pvra_x = m_pvra_y = m_pvra_z = nan;
+@@ -1130,6 +1221,7 @@ void KFParticle_nTuple::pvRefit(PHCompositeNode* topNode, const KFParticle& moth
+       continue;
+     }
+     PVfixTrack r{};
++    r.trk = t;
+     r.id = *it;
+     r.a[0] = t->get_x();
+     r.a[1] = t->get_y();
+@@ -1208,6 +1300,25 @@ void KFParticle_nTuple::pvRefit(PHCompositeNode* topNode, const KFParticle& moth
+     m_ma_Lxyerr = mq[8];
+   }
+ 
++  // d0-pvfix fix 3: KFParticle vertex fits
++  auto doKF = [&](const std::vector<PVfixTrack>& trks, PVfixV& v, PVfixQ& q) {
++    KFParticle kv;
++    v.status = pvfixKFVertex(trks, kv, v.ntrk);
++    if (v.status != 1)
++    {
++      return;
++    }
++    v.x = kv.GetX();
++    v.y = kv.GetY();
++    v.z = kv.GetZ();
++    v.chi2 = kv.GetChi2();
++    v.ndf = kv.GetNDF();
++    kv.SetId(pvIn.Id());
++    fillQ(kv, q.m, q.dca, q.dcaxy, q.sig, q.sigxy);
++  };
++  doKF(all, m_v_kfAll, m_q_kfAll);
++  doKF(noD, m_v_kf, m_q_kf);
++
+   KFParticle pv;
+   const char* closure = std::getenv("KFP_PVREFIT_CLOSURE");
+   if (closure && std::string(closure) == "1")
+diff --git a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h
+index 9a69f3f61..6dcd9e016 100644
+--- a/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h
++++ b/offline/packages/KFParticle_sPHENIX/KFParticle_nTuple.h
+@@ -294,6 +294,28 @@ class KFParticle_nTuple : public KFParticle_truthAndDetTools, public KFParticle_
+   float m_da_dca_sig[kMaxRefitTracks]{0};
+   float m_da_dca_sig_xy[kMaxRefitTracks]{0};
+ 
++  // d0-pvfix fix 3: KFParticle vertex fit with all attached tracks (kfAll) and without the daughters (kf)
++  struct PVfixQ
++  {
++    float m[9]{0};  // DIRA, DIRA_xy, FDchi2, PV_DCA, PV_DCA_xy, decayLength, decayLengthErr, decayLength_xy, decayLengthErr_xy
++    float dca[kMaxRefitTracks]{0};
++    float dcaxy[kMaxRefitTracks]{0};
++    float sig[kMaxRefitTracks]{0};
++    float sigxy[kMaxRefitTracks]{0};
++  };
++  struct PVfixV
++  {
++    int status{-1};
++    int ntrk{-1};
++    int ndf{-1};
++    float x{0};
++    float y{0};
++    float z{0};
++    float chi2{0};
++  };
++  PVfixQ m_q_kf, m_q_kfAll;
++  PVfixV m_v_kf, m_v_kfAll;
++
+   int m_runNumber{-1};
+   int m_evtNumber{-1};
+   int64_t m_bco{-1};
+-- 
+2.52.0
+

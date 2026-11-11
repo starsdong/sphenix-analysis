@@ -1,0 +1,161 @@
+\section{Reconstruction and pre-selection}
+\label{sec:reco}
+
+\subsection{Fun4All chain}
+For every DST segment the macro \fpath{macro/Fun4All_run3pp_KFP.C} sets the run number and
+timestamp from the file name, uses the CDB global tag \fcmd{newcdbtag}, loads the tracking
+geometry (\fcmd{Tracking_Geometry} from the CDB) through a run-node input manager, calls
+\fcmd{TpcReadoutInit(run)}, enables MVTX misalignment and \fcmd{TRACKING::streaming_mode},
+and runs \fcmd{TrackingInit()} (ACTS geometry, field map \fcmd{FIELDMAP_TRACKING}). This mirrors the
+official example \fpath{macros/TrackingProduction/Fun4All_KShortReco.C} of the same macros commit.
+No track or vertex is refitted: the analysis uses the production \fcmd{SvtxTrackMap} and
+\fcmd{SvtxVertexMap} as they are. The registered modules are, in order:
+\fcmd{TriggerRunInfoReco} (trigger names for the trigger-bit branches), \fcmd{EventInfoTree},
+and one \fcmd{KFParticle_sPHENIX} instance per channel (\fcmd{Ks_reco}, \fcmd{Lambda_reco},
+\fcmd{D0_reco}; with \fcmd{crossingStudy=true} also \fcmd{Ks_noXmatch}, \fcmd{Lambda_noXmatch}).
+Each instance writes its own file \fcmd{KFP_<channel>_<run>_<segment>_<skip>.root}.
+
+\subsection{Event-level selection}
+\choice{None. Every event of the DST is processed and recorded in the \fcmd{EventInfo} tree,
+candidates are written for all events. No trigger, vertex-$z$, pile-up or run-quality cut is
+applied at ntuple level; trigger bits (64 \fcmd{trigger_*} branches per candidate, and
+\fcmd{GL1_scaled}/\fcmd{GL1_live} per event) and all vertices are stored so these cuts can be
+applied offline.}
+
+In the test sample an event (one GL1 trigger in streaming readout) contains on average
+\trkPerEv{} tracks and \vtxPerEv{} reconstructed vertices spread over beam crossings
+\vtxXmin{} to \vtxXmax{} relative to the GL1 BCO (Figure~\ref{fig:event}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_event_overview}
+\caption{Event overview of the test sample (\nEvents{} events, \fcmd{EventInfo} tree, no
+selection). Left: beam crossing of all \fcmd{SvtxVertexMap} vertices relative to the event's GL1
+BCO (log scale); the spike at 0 holds \vtxAtXzero{} vertices compared with
+$\approx$\vtxPerOtherX{} per crossing elsewhere. Middle: vertex $z$. Right: number of tracks per
+event (black) and of TPC-only tracks per event (red).}
+\label{fig:event}
+\end{figure}
+
+\subsection{Track classes and bunch crossing}
+\label{sec:trackclasses}
+Each track in \fcmd{SvtxTrackMap} carries a bunch-crossing number \Xc{} relative to the GL1 BCO
+(\fcmd{SvtxTrack::get_crossing()}); each vertex carries the crossing of its tracks
+(\fcmd{get_beam_crossing()}). We classify tracks by their silicon clusters
+(\fcmd{SvtxTrack_v5} cluster counts):
+\begin{itemize}\setlength\itemsep{0pt}
+\item \textbf{I}: $\geq1$ INTT cluster -- crossing from INTT timing (\trkINTTPerEv{} per event);
+\item \textbf{M}: MVTX but no INTT clusters (\trkMVTXonlyPerEv{} per event); these tracks have
+  non-zero crossings in the DST, but how their crossing is determined was not checked;
+\item \textbf{T}: TPC-only, no silicon cluster (\trkTPConlyPerEv{} per event, \trkTPConlyFrac\%).
+  All TPC-only tracks have $X=0$ in the DST (17871 of 17871 in segment 0,
+  \fpath{logs/inspect_dst_79509_00000.txt}): their crossing is not measured, and their
+  $z$ position is only correct if they really come from crossing 0.
+\end{itemize}
+
+\subsection{Track (daughter) pre-selection}
+\label{sec:trackcuts}
+All cuts are applied by KFParticle\_sPHENIX. Cluster counts (``hits'' in the KFParticle
+interface) are the \fcmd{SvtxTrack_v5} cluster numbers. The track quality cuts (\pt, $\chi^2$, DCA
+to PV) are evaluated for each track pair after the pair DCA and two-track vertex $\chi^2$ cuts.
+
+\begin{table}[H]
+\centering\small
+\caption{Daughter-track requirements. ``--'' = no requirement (set to $\pm$FLT\_MAX or the
+KFParticle default that does not cut).}
+\label{tab:trackcuts}
+\begin{tabular}{lccc}
+\toprule
+ & \Ks$\to\pi^+\pi^-$ & \Lam$\to p\pi^-$ (+c.c.) & \Dzero$\to K^-\pi^+$ (+c.c.) \\
+\midrule
+TPC clusters & $\geq20$ & $\geq20$ & $\geq20$ \\
+MVTX clusters & $\geq0$ & $\geq0$ & $\geq2$ \\
+INTT clusters & $\geq0$ & $\geq0$ & $\geq0$ \\
+TPOT clusters & $\geq0$ & $\geq0$ & $\geq0$ \\
+\pt{} (GeV/$c$) & $\geq0.1$ & $\geq0.1$ & $\geq0.2$ \\
+track $\chi^2$/ndf & -- & -- & -- \\
+DCA to PV (3D, and its significance) & -- & -- & -- \\
+DCA$_{xy}$ to PV & -- & -- & -- \\
+PID (d$E$/d$x$) & none (stored) & none (stored) & none (stored) \\
+mass hypothesis & $\pi$,$\pi$ & $p$,$\pi$ & $K$,$\pi$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\caveat{Implicit track requirement (read from \fcmd{KFParticle_Tools::isGoodTrack/calcMinPV_DCA},
+not tested separately): the minimum DCA to the PVs is computed only with PVs of the track's own
+crossing (for TPC-only tracks at $X=0$: with all PVs). A silicon track whose crossing has no
+reconstructed vertex gets NaN, fails the ``DCA$\geq-1$'' comparison and is rejected. So every
+daughter must have a vertex in its crossing -- also in the \fcmd{_noXmatch} instances.}
+
+\subsection{Pair, vertex and mother pre-selection}
+For each pair of selected tracks KFParticle (i) requires both tracks to have the same crossing
+(\fcmd{requireBunchCrossingMatch}, default instances), (ii) cuts on the 3D distance of closest
+approach of the two trajectories (DCA$_{12}$) and on its $xy$ projection, (iii) fits a two-track
+vertex (KFVertex) and cuts on its $\chi^2$/ndf, (iv) applies the track cuts of
+Table~\ref{tab:trackcuts}, (v) builds the mother for each allowed mass assignment and cuts on
+mass, \pt{} and the volume of the mother's position-error ellipsoid, and (vi) for every PV
+computes the pointing quantities w.r.t.\ that PV and requires the PV crossing to equal the
+daughter crossing (\fcmd{requireTrackVertexBunchCrossingMatch}).
+
+\begin{table}[H]
+\centering\small
+\caption{Pair, secondary-vertex, mother and PV-related pre-cuts as configured in
+\fpath{macro/Fun4All_run3pp_KFP.C}. Lengths in cm.}
+\label{tab:precuts}
+\begin{tabular}{lccc}
+\toprule
+ & \Ks & \Lam & \Dzero \\
+\midrule
+daughters in same crossing & yes & yes & yes \\
+DCA$_{12}$ (3D) & $<0.5$ & $<0.5$ & $<0.05$ \\
+DCA$_{12}$ ($xy$) & -- & -- & -- \\
+SV fit $\chi^2$/ndf & $<20$ & $<20$ & $<20$ \\
+SV radius & -- & -- & -- \\
+mother mass window (GeV/$c^2$) & 0.40--0.60 & 1.05--1.20 & 1.60--2.10 \\
+mother \pt & -- & -- & -- \\
+mother position-error ellipsoid volume (cm$^3$) & $<0.1$ & $<0.1$ & $<0.1$ \\
+PV crossing = daughter crossing & yes & yes & yes \\
+DIRA (3D) w.r.t.\ PV & $>0.8$ & $>0.8$ & $>0$ \\
+DIRA$_{xy}$ & -- & -- & -- \\
+flight-distance $\chi^2$ & -- & -- & -- \\
+decay length, decay length$_{xy}$, $c\tau$ (and significances) & -- & -- & -- \\
+mother DCA to PV (3D, $xy$, significances) & -- & -- & -- \\
+charge conjugate & -- & included & included \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\choice{Lifetime and impact-parameter variables are not cut at ntuple level (they are stored),
+so that the final selection, including a cut-based or MVA optimisation, can be done offline.
+The kept cuts (DCA$_{12}$, SV $\chi^2$, DIRA, mass window) bound the combinatorics. For \Dzero{}
+the much shorter $c\tau$ requires MVTX precision on both daughters, hence $\geq2$ MVTX clusters
+and DCA$_{12}<500\,\mu$m.}
+
+\subsection{Primary-vertex choice and candidate multiplicity}
+The PVs are all vertices of \fcmd{SvtxVertexMap} (\fcmd{dontUseGlobalVertex(true)}; the MBD is not
+used). For a given track pair every (PV, mass assignment) combination that passes all cuts is a
+possible candidate. KFParticle keeps \emph{one} of them: the one whose mother has the smallest 3D
+$\chi^2$-deviation from its PV (\fcmd{selectBestCombination}). Consequences:
+\begin{itemize}\setlength\itemsep{0pt}
+\item each track pair yields at most one candidate per channel;
+\item for \Lam{} and \Dzero{} with the \fcmd{[...]cc} descriptor only one of the two mass
+  assignments of a pair is kept. For \Dzero{} the swapped ($K\leftrightarrow\pi$) mass is
+  recomputed offline from the stored daughter momenta (Section~\ref{sec:d0}); for \Lam{} the
+  $p\pi^-$ vs $\bar p\pi^+$ ambiguity is resolved by charge, so only the $\pi\pi$-like
+  ``wrong'' assignment would be lost, which is outside the mass window anyway.
+\end{itemize}
+
+\subsection{What is stored for the mother}
+The mother mass and momentum are those of the unconstrained secondary-vertex fit (no mass or PV
+constraint). Decay length, decay time and their $xy$ versions are computed from a copy of the
+mother with its production vertex set to the chosen PV. DIRA, flight-distance $\chi^2$ and the
+mother's DCA to the PV are computed w.r.t.\ the chosen PV. Daughter momenta are stored after the
+daughters are moved to the decay vertex (\fcmd{extrapolateTracksToSV}, default true).
+
+\subsection{Offline QA cuts used in this note}
+\label{sec:qacuts}
+To display and fit the V0 peaks we apply, offline only, DIRA$>0.995$, $L_{xy}>0.5$\,cm,
+DCA$_{12}<0.2$\,cm and $|{\rm DCA}_{xy}|>0.02$\,cm to the PV for both daughters. These cuts were
+chosen by eye to make the peaks visible; they are not optimised and are not part of the
+ntuple pre-selection.

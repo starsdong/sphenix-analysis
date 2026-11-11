@@ -1,0 +1,40 @@
+\section{Trimming: DST vs.\ trimmed DST vs.\ ntuple}
+\label{sec:size}
+
+\begin{table}[H]
+\centering\small
+\input{tables/tab_dstsize.tex}
+\caption{Compressed size per event of each node of the production DST and of the trimmed DST
+(test segment, \nEvents{} events; ROOT \fcmd{GetZipBytes} of the branches of tree \fcmd{T}, run tree
+not included). The trimmed DST is written by \fcmd{Fun4AllDstOutputManager} with its default
+compression, which makes \fcmd{SvtxTrackMap} slightly larger than in the input. Source:
+\fpath{logs/dataset_software.txt}.}
+\label{tab:dstsize}
+\end{table}
+
+Clusters (\fcmd{TRKR_CLUSTER_SEED}) are \pctClus\% and the three seed containers \pctSeeds\% of
+the DST; the track map is \pctTrkMap\% (\trkMapkBPerEv\,kB/event) and the vertex map
+\pctVtxMap\%. File sizes per event:
+
+\begin{center}\small
+\begin{tabular}{lrrr}
+\toprule
+file & size (MB) & kB/event & reduction\\
+\midrule
+production DST & \sizeDSTMB & \sizeDSTkB & 1\\
+trimmed DST (track + vertex maps, GL1, header) & \sizeTrimMB & \sizeTrimkB & \ratioTrim\\
+TrackQA ntuple & \sizeNtMB & \sizeNtkB & \ratioNt\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\choice{Trimmed DST = \fcmd{Sync}, \fcmd{EventHeader}, \fcmd{GL1RAWHIT}, \fcmd{SvtxTrackMap},
+\fcmd{SvtxVertexMap}. It keeps the full \fcmd{SvtxTrack} objects (states, covariances, seed ids),
+so modules that need only tracks and vertices can run on it; for \fcmd{TrackQATree} this was
+verified: re-running \fcmd{TrackQATree} on it reproduces the
+ntuple exactly (check \fcmd{chkTrim}). The file name keeps the production pattern
+\fpath{DST_TRKR_TRACKS_TRIM-<run>-<seg>.root} so that \fcmd{Fun4AllUtils::GetRunSegment} works on it.}
+
+\caveat{Anything that needs clusters or seeds (dE/dx, residuals, refits, KFParticle detailed
+tracking or dE/dx branches) does not work on the trimmed DST. Running KFParticle on it was not
+tested.}

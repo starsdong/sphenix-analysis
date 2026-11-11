@@ -1,0 +1,61 @@
+\section{Overview}
+\label{sec:overview}
+
+\paragraph{Question.} The stock KFParticle \Dzero{} production of the Run-3 p+p track DSTs showed no \Dzero{} signal.
+One suspected reason: every pointing and decay-length quantity is computed with respect to the stored primary vertex,
+and that vertex was found with the \Dzero{} daughters among its tracks. A displaced daughter pair pulls the vertex towards
+itself, the decay length shrinks, and the candidate can fail the in-job cuts (track--PV DCA $\geq 30\um$, DIRA
+$\geq 0.9$) before it is ever written. This note documents how the reconstruction was changed to remove that bias,
+how the change was validated, and what the \Dzero{} search finds in the 10\% sample.
+
+\paragraph{Findings (full sample and 3-prong charm).}
+\begin{enumerate}
+\item The full \Dzero{} production (\eventsAll\,M events) reproduces all \candAllStock\,M stock candidates
+  (Secs.~\ref{sec:validation}, \ref{sec:full}).
+\item The background model is accurate to the statistical precision only in some selections: the local $z$ away from
+  the \Dzero{} mass has an r.m.s.\ of 0.7--4.3 (Sec.~\ref{sec:full}).
+\item With the full sample, the 10\% excesses of the loose selections vanish. Original PV, $\pt>1.5\gevc$, tight,
+  $\kappa$-corrected, INTT + same collision: \exOrigHiTFuKc{} $\pm$ \eexOrigHiTFuKc{} ($z=\zOrigHiTFuKc$,
+  $z_{\rm c}=\zcOrigHiTFuKc$), similar in all three run groups, peaked at the \Dzero{} mass; the pair refit gives
+  \exPairHiTFuKc{} $\pm$ \eexPairHiTFuKc. KF fit, tight: $z=\zKfHiTFuKc$ but broad and run-group dependent.
+\item 3-prong charm (stock PV, 10\%): D$^+$ excesses up to $z=4.1$ ($z_{\rm c}\leq\chZcDpNoneKcAllP$), D$_s^+$ none,
+  $\Lambda_c^+$ $z\leq3.2$ only with corrected masses and INTT (Sec.~\ref{sec:charm}).
+\end{enumerate}
+
+\paragraph{Findings of the 10\% development sample.}
+\begin{enumerate}
+\item The refitted vertex without the daughters is displaced from the stored one by a median of \shPairTwoMed\um{}
+  (pair refit) and \shKfTwoMed\um{} (KF fit) in the transverse plane when both daughters were attached to the PV
+  (Sec.~\ref{sec:shift}). This is comparable to the daughter impact parameters themselves.
+\item The new production writes every stock candidate unchanged (\repNoneExact{} candidates, identical to the previous
+  production file by file) plus \repOnlyR\,M candidates that pass the production cuts only with the pair refit and
+  \repOnlyK\,M only with the KF fit; in total \repRatio{} times the stock number (Sec.~\ref{sec:validation}).
+\item \Dzero{} pairs are always built from two tracks of the same bunch crossing, measured against a PV of that crossing
+  (\pcSameA\% / \pcSameB\% verified in two runs). Requiring INTT hits on both daughters keeps \cutPtAllIntt\% of the
+  pointing candidates; requiring both daughters to come from the PV's collision removes almost nothing after the
+  decay-topology cuts (Sec.~\ref{sec:pairs}).
+\item With the stored track momenta, none of the 12 selections $\times$ 3 PV versions shows an excess at the \Dzero{}
+  mass: $|z|\leq\zAbsMaxNone$ for every selection and PV version, r.m.s.\ of the 12 $z$ values per configuration
+  \zRmsNone{} (Sec.~\ref{sec:results}).
+\item A momentum-scale correction ($\kappa$ map from a separate calibration) narrows the \Ks{} peak from \vKsAllSigRc{}
+  to \vKsAllSigKc\mev{} and the $\Lambda$ peak from \vLaAllSigRc{} to \vLaAllSigKc\mev{} (Sec.~\ref{sec:kappa}).
+\item With the corrected momenta \zGtTwoKcNone{} of 12 selections show local excesses with $|z|>2$ (largest
+  \zAbsMaxKcNone$\sigma$), and \zPosKcNone{} of 12 window excesses are positive. They appear in all three PV versions but in
+  different selections, i.e.\ not consistently for the same candidates (Sec.~\ref{sec:resultskc}). This is the first hint-like
+  structure in this analysis, but no signal is claimed from 10\% of the data.
+\end{enumerate}
+
+\paragraph{Choices (one line each; details where they are used).}
+\begin{itemize}
+\item PV versions: stored (\emph{original}), pair-average refit without daughters (\emph{pair refit}), KFParticle
+  vertex fit without daughters (\emph{KF fit}); all three stored per candidate (Sec.~\ref{sec:fixes}).
+\item KF fit with track covariances scaled by 7 and outlier $\chi^2$ cut 3.5, calibrated with split-half vertices
+  (Sec.~\ref{sec:splithalf}).
+\item In-job cuts loosened to track--PV DCA $\geq 10\um$, DIRA $\geq 0.5$; the production cuts (30\um, 0.9) applied
+  when the candidate is written, with any of the three PVs; the stock best combination kept (Sec.~\ref{sec:fixes}).
+\item Background model: non-pointing candidates weighted with the pointing probability in bins of momentum asymmetry
+  and \Dzero{} \pt{}, as in the cut-scan note (Sec.~\ref{sec:method}).
+\item Extra pair cuts: INTT on both daughters and same collision, applied offline (Sec.~\ref{sec:pairs}).
+\item Momentum-scale correction applied as a separate calculation; all uncorrected quantities are kept
+  (Sec.~\ref{sec:kappa}).
+\end{itemize}

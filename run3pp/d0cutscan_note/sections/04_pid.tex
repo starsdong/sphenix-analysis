@@ -1,0 +1,39 @@
+\section{TPC $dE/dx$ and kaon identification}
+\label{sec:pid}
+
+The pion band is measured from the pion-hypothesis daughter (track~1) of the 10\% skim, which is pion-dominated: in
+0.05\gevc{} momentum slices from 0.5 to 2.2\gevc{} the median and the width $w=(\text{median}-q_{25})/0.674$ are taken from
+the lower half of the distribution, which kaon and proton admixtures do not reach. Values between the slice centres are
+linearly interpolated and held constant outside 0.5--2.2\gevc; the band is stored in \fpath{logs/pionband.txt}
+(Table~\ref{tab:band}). The median rises from \bandMedLo{} at $p=0.55\gevc$ to \bandMedHi{} at 2.0\gevc, the width from
+\bandWidLo{} to \bandWidHi{} (arbitrary units).
+
+\begin{table}[H]
+\centering\small
+\caption{Pion $dE/dx$ band of the pion-hypothesis daughter, 10\% skim (every fourth slice shown; all slices in
+\fpath{logs/inputs.txt}).}
+\label{tab:band}
+\begin{tabular}{rrrr}
+\toprule
+$p$ (\gevc) & median & width & entries \\
+\midrule
+\input{tables/pionband.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{dedx_bands}
+\caption{TPC $dE/dx$ versus momentum of the pion-hypothesis (left) and kaon-hypothesis (right) daughters, 10\% skim
+(\nTen{} candidates, log colour scale). Black line: pion-band median; red dashed: median plus two widths ($z=2$).
+The kaon band is visible above the pion band only below about 0.9\gevc{} (read by eye).}
+\label{fig:dedx}
+\end{figure}
+
+\paragraph{Consequence.} \kLowFrac\% of the kaon-hypothesis daughters have $p<0.9\gevc$, and \kLowAbove\% of those have
+$z_K>2$; the PID selection of Sec.~\ref{sec:method} keeps \pidKeep\% of all candidates. Above 0.9\gevc{} the PID
+requirement acts only on the pion, so it cannot remove the bulk of the $\pi\pi$ and $\pi K$ combinatorics.
+
+\caveat{The $dE/dx$ is used as stored (\fcmd{track_N_calculated_dEdx}) without run or $\eta$ dependent calibration; the
+band is measured on the same sample it is applied to.}

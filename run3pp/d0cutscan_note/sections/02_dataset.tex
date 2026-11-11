@@ -1,0 +1,72 @@
+\section{Dataset, production and skims}
+\label{sec:dataset}
+
+\paragraph{Production.} The \Dzero{} ntuples come from the KFParticle production on the Run-3 p+p track DSTs
+\fpath{/sphenix/lustre01/sphnxpro/production/run3pp/physics/ana581_2026p005_v001/DST_TRKR_TRACKS/}
+with release ana.581 and the ``prod'' cut set of the main analysis note (\fpath{analysis_note/}, Secs.~3 and 8b there):
+the 10\% sample (segment number divisible by 10, \tenDZfiles{} jobs, output \fpath{output/prod10pct/}) and the remaining
+data as of 2026-11-05 (\ninetyJobs{} jobs, \ninetyBad{} failed, \ninetySeg{} DST segments, \ninetyEvt{} events,
+\ninetySize\,GB, output \fpath{output/prod90pct_D0/}); paths relative to \fpath{/gpfs02/sphenix/user/dongxs/run3pp/}.
+Provenance of all counts: \fpath{logs/provenance_cluster.txt}.
+
+\begin{table}[H]
+\centering\small
+\caption{Selection of the \Dzero{} candidates, per level. ``prod'' = production cut set in
+\fpath{macro/Fun4All_run3pp_KFP.C}; ``skim'' = \fpath{tools/skim_d0.C}; ``$\pt$ skim'' = \fpath{tools/skim_d0_tight.C}.
+``--'' = deliberately no cut. Cuts of the analysis selections are in Sec.~\ref{sec:method}.}
+\label{tab:cuts}
+\begin{tabular}{l p{3.4cm} p{6.6cm} l}
+\toprule
+level & quantity & requirement & stage \\
+\midrule
+decay & descriptor & \fcmd{[D0 -> K^- pi^+]cc}, one $K/\pi$ assignment kept per pair & prod \\
+event & trigger, vertex position & -- & \\
+track & \pt & $>0.2\gevc$ & prod \\
+      &     & $>0.5\gevc$ (both daughters) & skim \\
+      & MVTX / INTT / TPC states & $\ge2$ / $\ge0$ / $\ge20$ & prod \\
+      & 3D DCA to the PV & $>30\um$ (minimum over the PVs of the track's crossing) & prod \\
+      &                  & $|\mathrm{DCA}|>60\um$ to the candidate's PV (both daughters) & skim \\
+      & PID & -- & \\
+pair  & DCA between daughters & $<500\um$ & prod \\
+vertex & $\chi^2/\mathrm{ndf}$ & $<20$ & prod \\
+       & vertex volume & $<0.1\,\mathrm{cm}^3$ & prod \\
+       & crossing & daughters and PV from the same bunch crossing & prod \\
+mother & mass & 1.60--2.10\,GeV/$c^2$ & prod \\
+       & DIRA & $>0.9$ & prod \\
+       &      & $>0.95$ & skim \\
+       & \pt  & $>1.5\gevc$ & $\pt$ skim (full sample only) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Skims and the analysed samples.}
+\begin{itemize}
+\item \textbf{10\% skim}: \tenFiles{} production files, \tenIn{} $\to$ \tenOut{} candidates (\tenFrac\%), local copy
+  \fpath{../ntuples/d0skim/D0skim_prod10pct_*.root} (5 files). Used for Secs.~\ref{sec:pid}--\ref{sec:trial} and the
+  10\% part of Sec.~\ref{sec:ratio}.
+\item \textbf{Full skim}: all \fullFiles{} \Dzero{} files of both productions, \fullIn{} $\to$ \fullOut{} candidates
+  (\fullFrac\%), \fullJobsOK{} condor jobs OK, \fullJobsFailed{} failed (cluster 480615), 13\,GB on SDCC in
+  \fpath{output/d0skim_full/}.
+\item \textbf{Full $\pt$ skim}: the full skim with \Dzero{} $\pt>1.5\gevc$, \tightIn{} $\to$ \tightOut{} candidates
+  (\tightFrac\%), local copy \fpath{../ntuples/d0tight_full/D0tight_pT1p5_run*.root} (4 files, md5 in
+  \fpath{logs/local_files_md5.txt}). Used for the full-sample part of Sec.~\ref{sec:ratio}. The DIRA range 0.95--0.98 is
+  kept for the ratio control.
+\end{itemize}
+
+\paragraph{Mass hypothesis and charge.} In both analysed samples track~1 carries the pion and track~2 the kaon
+hypothesis (\hypFracTen\% and \hypFracFull\%), and each track pair appears once (\multiTen{} and \multiFull{} pairs stored
+more than once; \fpath{logs/inputs.txt}). The \fcmd{D0_PDG_ID} branch is $+421$ for every candidate, so \Dzero{} and
+$\bar{\mathrm{D}}^0$ are distinguished only by the charge of the kaon-hypothesis track; they are not separated here.
+
+\caveat{KFParticle keeps one $K\leftrightarrow\pi$ assignment per track pair (the production macro notes it is chosen by
+the PV-DCA $\chi^2$, not by PID; not re-checked in the KFParticle source for this note). A true \Dzero{} whose pair was
+given the wrong assignment is stored at a shifted, broadened mass and is missing from the narrow peak. The fraction is
+unknown without simulation (open issue~1). The swapped mass can be recomputed offline from the stored daughter momenta;
+this is not done in this note (open issue~3).}
+
+\caveat{The 10\% production files do not contain the processed-event count (added later for the 90\% production), so the
+number of events of the 10\% skim is not given; results here are not normalised per event.}
+
+\paragraph{Software.} Production: sPHENIX release ana.581 (\fpath{setup_env.sh} of the main analysis); skims: ROOT
+6.32.06 from the same release on SDCC (\fpath{/cvmfs/.../root-6.32.06}, read from the job environment paths); this note:
+local ROOT \input{logs/root_version.txt}\unskip{} (\fpath{logs/root_version.txt}), RDataFrame with 6 threads.

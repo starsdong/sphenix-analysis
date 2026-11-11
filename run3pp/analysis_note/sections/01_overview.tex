@@ -1,0 +1,51 @@
+\section{Overview}
+\label{sec:overview}
+
+\paragraph{Goal.} Prepare a reconstruction of the neutral strange hadrons \Ks{} and \Lam{} and
+of the \Dzero{} meson from the Run-3 p+p track DSTs, keep the topological pre-selection loose,
+store all topological information in a flat ntuple so that the final selection can be tuned
+offline, and verify on a test sample that the reconstruction behaves as expected, in
+particular with respect to the bunch-crossing assignment of each track in streaming readout.
+
+\paragraph{Main findings of the test (\nEvents{} events, run 79509).}
+\begin{itemize}\setlength\itemsep{1pt}
+\item The ntuples contain \candPerEvKs{} \Ks, \candPerEvLambda{} \Lam{} and \candPerEvDzero{}
+  \Dzero{} candidates per event; \nBranchKs{} branches; $\approx$\BPerCandKs{} bytes per
+  candidate on disk. Together \kBPerEvProd{}\,kB per event (Section~\ref{sec:ntuple}).
+\item Clear \Ks{} and \Lam{} peaks after offline QA cuts: \Ks{} $\mu=\meanKs\pm\emeanKs$\,MeV
+  ($\massShiftKs$\,MeV from the PDG value), $\sigma=\sigmaKs$\,MeV, S/B=\SBKs;
+  \Lam{} $\mu=\meanLambda\pm\emeanLambda$\,MeV, $\sigma=\sigmaLambda$\,MeV, S/B=\SBLambda{}
+  (Section~\ref{sec:v0}).
+\item Crossing logic: in the default sample every candidate has both daughters and the PV in the
+  same crossing (\checkXKs/\checkXLambda). Without any crossing requirement the \Ks{} signal
+  appears only in the same-crossing classes; for \Lam{} the yield in the
+  ``daughters in different crossings'' class is $\xclCLambda\pm\exclCLambda$, i.e.\ not
+  significant (Section~\ref{sec:crossing}).
+\item TPC-only tracks carry crossing 0 by construction (\trkTPConlyFrac\% of all tracks); they
+  can only form candidates with the vertex of crossing 0, which is present in
+  \evVtxXzeroFrac\% of the events.
+\item The same collision can be reconstructed in two consecutive streaming events:
+  \dupFracKs\% (\Ks) and \dupFracLambda\% (\Lam) of the candidates are such duplicates
+  (identified by \fcmd{Collision_BCO}).
+\item No \Dzero{} peak is visible in the test sample (Section~\ref{sec:d0}).
+\item Production configuration (Section~\ref{sec:trim}): \trimKBDira\,kB per event for the three
+  channels instead of \trimKBLoose{} (plus \trimEvInfoKB\,kB for \fcmd{EventInfo}), $\approx$\trimTBDira\,TB
+  for the full dataset; \Ks{} and \Lam{} QA-cut signal unchanged.
+\end{itemize}
+
+\paragraph{Choices in one line each.}
+\begin{itemize}\setlength\itemsep{1pt}
+\item Release ana.581, identical to the DST production (Section~\ref{sec:dataset}).
+\item No event-level selection (no trigger, vertex-$z$ or run-quality cut) at ntuple level.
+\item Primary vertices from \fcmd{SvtxVertexMap} (track vertices), not GlobalVertex/MBD.
+\item Daughters and PV must share one bunch crossing (default KFParticle behaviour, kept).
+\item Loose pre-cuts: no lifetime, decay-length, flight-distance or impact-parameter
+  requirements; DIRA$>0.8$ (V0) / $>0$ (\Dzero), DCA$_{12}<5$\,mm (V0) / 500\,$\mu$m (\Dzero),
+  vertex $\chi^2/{\rm ndf}<20$ (Table~\ref{tab:precuts}).
+\item No PID requirement; TPC d$E$/d$x$ stored for offline use.
+\item \Dzero{} daughters need $\geq2$ MVTX clusters and $p_T>0.2$\,GeV/$c$.
+\item Per-cluster detector vectors and all-PV vectors switched off to limit the ntuple size.
+\item A per-event companion tree records all processed events and the full vertex list.
+\item Production cut set: daughter DCA to PV $>0.05$\,cm (V0) / $>30\,\mu$m (\Dzero), DIRA$>0.9$, no
+  crossing-study output, slim format without trigger, redundant momentum and covariance branches.
+\end{itemize}

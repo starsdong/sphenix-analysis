@@ -1,0 +1,163 @@
+\section{DCA study with 100 segments}
+\label{sec:dca}
+
+\paragraph{Sample.} Run 79509, segments 0--99 (the first segment is the test segment of the previous
+sections): \sNJobs{} interactive jobs on \fcmd{sphnxuser01} (6 in parallel; the condor queue held
+$\sim$52k idle jobs), \sNJobsOK{} ended with \fcmd{All done}. Merged with \fcmd{hadd} into
+\fpath{ntuples/TrackQA_run79509_seg000-099.root} (version~2, \sSizeMB\,MB, \sSizekB\,kB/event; cluster copy in
+\fpath{trackqa/output/stat100_79509/merged/}, md5 checked): \sNEvents{} events and \sNTracks{}
+tracks, $100\times$ the test segment. Job summary: \fpath{logs/stat100_jobs.txt}; checks
+\fcmd{chkSJobs} (\chkSJobs) and \fcmd{chkSEntries} (\chkSEntries: merged entries = sum of the
+per-job module counts). Numbers, tables and figures: \fpath{scripts/dca_study.C}.
+
+\paragraph{Selection.} Tracks with MVTX\,$\geq3$, INTT\,$\geq1$, TPC\,$\geq20$ clusters and
+$p=p_T\cosh\eta>0.8$\,GeV/$c$ (\sNGoodP{} tracks). They are split by vertex association
+(Sec.~\ref{sec:vtxassoc}): \textbf{sample A} = used in the fit of their vertex (\fcmd{vtxMatch==1},
+\sNSelA{} tracks), \textbf{sample B} = carrying the vertex id but not used in the fit
+(\fcmd{vtxMatch==2}, \sNSelB). Only \sFracSelXzero\% of sample A are at crossing 0; the core widths
+at crossing 0 (\sSigXyXzero/\sSigZXzero\,$\mu$m for $xy$/$z$) and at other crossings
+(\sSigXyXother/\sSigZXother\,$\mu$m) agree, so all crossings are used.
+
+\paragraph{Method.} Core width $\sigma$ and mean $\mu$ from a Gaussian fitted iteratively in
+$\mu\pm2\sigma$ on 10-$\mu$m bins; uncertainties are fit errors (statistical). The DCA is
+computed by \fcmd{TrackAnalysisUtils::get_dca} from the track state stored on the DST, with respect
+to the vertex position from the DST.
+
+\caveat{Sample A tracks are part of their vertex, so its DCA is a biased residual, not the
+impact-parameter resolution. Fig.~\ref{fig:dcantrk} shows how strong the bias is for small
+vertices; for $\geq6$ tracks the widths are almost constant, so the binned results are shown for all
+vertices and for vertices with $\geq10$ tracks.}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_dca_incl}
+\caption{DCA$_{xy}$ (left) and DCA$_z$ (right) of sample A (black) and B (blue), each normalised to
+unit area, $\pm2$\,cm. Sample A: core $\sigma_{xy}=\sSigXyA\,\mu$m, $\sigma_z=\sSigZA\,\mu$m, means
+$\sMeanXyA\pm\sEMeanXyA$ and $\sMeanZA\pm\sEMeanZA\,\mu$m; \sTailXyA\% ($xy$) and \sTailZA\% ($z$) of the
+tracks lie beyond $5\sigma$ of the core (secondaries and badly measured tracks). Sample B has no
+prompt core: \sFarFracXyB\% have $|{\rm DCA}_{xy}|>0.5$\,cm and \sFarFracZB\% have $|{\rm DCA}_z|>0.5$\,cm,
+i.e.\ mostly tracks from other collisions in the same crossing, which carry the id of the wrong
+vertex.}
+\label{fig:dcaincl}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_dca_core}
+\caption{Core region of sample A with the Gaussian fit (red, solid in the fit range, dashed
+extrapolation). Non-Gaussian tails start at about $\pm3\sigma$ (by eye).}
+\label{fig:dcacore}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_dca_vs_ntrk}
+\caption{Sample A: core $\sigma$ (left) and mean (right) of DCA$_{xy}$ (circles) and DCA$_z$
+(squares) vs.\ the number of tracks in the vertex. Two-track vertices: $\sigma_{xy}=\sSigXyNlow\,\mu$m,
+$\sigma_z=\sSigZNlow\,\mu$m; highest bin: \sSigXyNhigh{} and \sSigZNhigh\,$\mu$m. The width first
+increases (vertex bias falling) and then decreases slowly (better vertex).}
+\label{fig:dcantrk}
+\end{figure}
+
+\subsection{Dependence on $p$, $\eta$ and $\phi$}
+
+In Figs.~\ref{fig:dcap}--\ref{fig:dcaphi} black full markers are sample A with all vertices, blue
+open markers sample A with vertices of $\geq10$ tracks; circles DCA$_{xy}$, squares DCA$_z$. All plots
+have $p>0.8$\,GeV/$c$. Values for $p$ and $\eta$ in Tables~\ref{tab:dcap} and~\ref{tab:dcaeta}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_dca_vs_p}
+\caption{Core $\sigma$ (left) and mean (right) vs.\ $p$. $\sigma_{xy}$ goes from \sSigXyAlowP{} to
+\sSigXyAhighP\,$\mu$m and $\sigma_z$ from \sSigZAlowP{} to \sSigZAhighP\,$\mu$m between the first
+(0.8--1\,GeV/$c$) and last (6--10\,GeV/$c$) bins: no $1/p$ multiple-scattering term is visible above
+0.8\,GeV/$c$, the width is dominated by a momentum-independent contribution.}
+\label{fig:dcap}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_dca_vs_eta}
+\caption{Core $\sigma$ and mean vs.\ $\eta$. $\sigma_z$ (sample A, all vertices) ranges from
+\sSigZEtaMin{} (central) to \sSigZEtaMax\,$\mu$m (edges), as expected from the longer extrapolation
+and shallower crossing angle at large $|\eta|$; $\sigma_{xy}$ is flat within
+\sSigXyEtaMin--\sSigXyEtaMax\,$\mu$m. The means vary within \sMeanZEtaMin{} to \sMeanZEtaMax\,$\mu$m
+($z$); the DCA$_{xy}$ mean changes sign from positive at $\eta<-0.5$ to negative at $\eta>0$ (by eye).}
+\label{fig:dcaeta}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_dca_vs_phi}
+\caption{Core $\sigma$ and mean vs.\ $\phi$ (36 bins). The mean DCA$_{xy}$ varies between
+\sMeanXyPhiMin{} and \sMeanXyPhiMax\,$\mu$m (all vertices; \sMeanXyPhiMinTen{} to
+\sMeanXyPhiMaxTen\,$\mu$m for $\geq10$ tracks), the mean DCA$_z$ between \sMeanZPhiMin{} and
+\sMeanZPhiMax\,$\mu$m, with errors of about 1\,$\mu$m. $\sigma_{xy}$ ranges over
+\sSigXyPhiMin--\sSigXyPhiMax\,$\mu$m and $\sigma_z$ over \sSigZPhiMin--\sSigZPhiMax\,$\mu$m, with
+narrow peaks in $\sigma_z$ at several $\phi$ values (e.g.\ near $-2.0$, $-1.4$ and 1.3\,rad, by eye).
+A first-harmonic fit $a_0+a_1\cos\phi+b_1\sin\phi$ to the DCA$_{xy}$ mean gives an amplitude of
+\sModAmpA\,$\mu$m with $\chi^2/{\rm ndf}=\sModChiA$: the structure is not a simple vertex/beam
+offset but has higher harmonics.}
+\label{fig:dcaphi}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{fig_dca_phi_charge}
+\caption{Core mean DCA$_{xy}$ vs.\ $\phi$ for negative (red, open) and positive (blue, full) tracks,
+sample A, all vertices (points shifted by $\pm0.02$\,rad for visibility). The pattern is the same for
+both charges: the largest difference in a bin is \sChargeMaxDiff\,$\mu$m
+($\chi^2/{\rm ndf}=\sChargeChiNdf$ for the difference over \sChargeNbins{} bins, so significant but small).
+A charge-independent pattern points to a geometric origin (silicon alignment), not to a
+momentum/field effect.}
+\label{fig:dcacharge}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_dca_2d}
+\caption{Sample A, log colour scale: DCA$_{xy}$ vs.\ $\phi$, DCA$_z$ vs.\ $\phi$ and DCA$_z$ vs.\
+$\eta$. The $\phi$ structure of Fig.~\ref{fig:dcaphi} is visible as steps of the band; DCA$_z$
+widens towards large $|\eta|$.}
+\label{fig:dca2d}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_dca_pull}
+\caption{DCA divided by its uncertainty from the track covariance, sample A (black) and B (blue),
+with a unit Gaussian (red dashed). Sample A core widths: \sPullXyA{} ($xy$) and \sPullZA{} ($z$);
+the stored uncertainties are smaller than the observed spread by these factors.}
+\label{fig:dcapull}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\input{tables/tab_dca_p.tex}
+\caption{Core $\sigma$ and mean $\mu$ ($\mu$m, fit errors) vs.\ $p$; sample A. Errors below 0.5 show as 0.}
+\label{tab:dcap}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\input{tables/tab_dca_eta.tex}
+\caption{As Table~\ref{tab:dcap}, vs.\ $\eta$.}
+\label{tab:dcaeta}
+\end{table}
+
+\subsection{Interpretation}
+\begin{itemize}\itemsep0pt
+\item The DCA core is $\phi$-dependent at the level of the core width itself: the mean offsets have
+  an RMS over $\phi$ of \sMeanXyPhiRMS\,$\mu$m ($xy$) and \sMeanZPhiRMS\,$\mu$m ($z$), the same for both
+  charges. Added in quadrature to per-$\phi$ widths of \sSigXyPhiMin--\sSigXyPhiMax\,$\mu$m this
+  explains a good part of the inclusive \sSigXyA\,$\mu$m and its flatness vs.\ $p$. This looks like
+  residual silicon misalignment in this production (not proven here).
+\item The track DCA uncertainties underestimate the observed spread by factors \sPullXyA{} ($xy$) and \sPullZA{} ($z$); a DCA
+  significance cut on these files would select far too many tracks as displaced.
+\item Sample B is not a prompt sample; the stored vertex id of a track that was not used in the
+  vertex fit should not be used for impact-parameter selections.
+\end{itemize}
+
+\caveat{All this is one run and biased residuals (sample A). The $\phi$ pattern is a statement about
+residuals; a refit of the vertex without the track (needs geometry) would turn it into a resolution
+and offset measurement. Statements marked \emph{(by eye)} are not computed.}

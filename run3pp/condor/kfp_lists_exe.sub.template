@@ -1,0 +1,11 @@
+universe       = vanilla
+executable     = @EXE@
+arguments      = -1 $(lst) @OUTDIR@ 0 0 @CHANNELS@ prod
+output         = @OUTDIR@/logs/condor_$Fn(lst).out
+error          = @OUTDIR@/logs/condor_$Fn(lst).err
+log            = /tmp/dongxs/condor_logs/kfp_@TAG@.log
+request_memory = 3GB
+getenv         = False
+PeriodicHold   = (NumJobStarts>=2 && JobStatus == 1)
+max_idle       = 3000
+queue lst from @JOBLISTS@

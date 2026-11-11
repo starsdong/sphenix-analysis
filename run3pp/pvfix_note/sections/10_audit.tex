@@ -1,0 +1,29 @@
+\section{Audit}
+\label{sec:audit}
+\subsection{Checks computed from the logs}
+PASS/FAIL computed by \fpath{scripts/make_numbers.py}:
+\begin{itemize}\small
+\input{tables/checks.tex}
+\end{itemize}
+Further checks, from the scripts named:
+\begin{itemize}\small
+\item DST track states are at the PCA to their vertex (\fpath{trkstate_check.C}, \tsVtxTracks{} tracks, one DST).
+\item Pair-refit closure with all tracks (\fpath{pv_shifts.C}, \psN\,M candidates, Table~\ref{tab:closure}).
+\item KF error scale from split-half vertices (\fpath{pv_splithalf.C}, \splitSel{} vertices, Table~\ref{tab:splithalf}).
+\item Recomputed uncorrected \Dzero{} mass vs stored mass: median \dmRcMed\mev, 68\% half-width \dmRcHw\mev{}
+  (\fpath{kc_stats.C}, all \kcN\,M skim candidates, $L<1$\,mm).
+\item Injected narrow peak recovered in all 72 configurations (6 variants $\times$ 12 selections, \fpath{pvfix_d0_v2.C}).
+\end{itemize}
+
+\subsection{Not verified (assumptions)}
+\begin{itemize}\small
+\item That the pair refit is the same algorithm as \texttt{PHSimpleVertexFinder} in all respects: the closure is
+  below 1\um{} for most candidates but has a 90\% tail of up to \cloPairManyNinety\um; the cause of the tail was not
+  isolated.
+\item The \pt{} and $\eta$ dependence of the KF error scale (a single factor 7 is used).
+\item The momentum-scale map for \Dzero{} daughters (only \Ks{} and $\Lambda$ checked, Sec.~\ref{sec:kappa}).
+\item Statements read by eye from figures: the falling $S/P$ in the tight selections (Sec.~\ref{sec:results}), the
+  two-bin bump in Fig.~\ref{fig:kcT}, the normalisation of Fig.~\ref{fig:effects}.
+\item The expected \Dzero{} yield and width (no simulation).
+\item Crossing and pair-cut fractions were measured in two runs (pair crossings) and on the skim (pair cuts), not per run.
+\end{itemize}

@@ -1,0 +1,48 @@
+\section{Variables, selections and fit procedures}
+\label{sec:method}
+
+All analysis code is one ROOT macro, \fpath{scripts/d0cutscan.C}, with one step per section
+(\fcmd{inputs, scan, grid, trial, ratio}); every number in this note is read from its logs (\fpath{logs/<step>.txt},
+\fpath{logs/<step>_values.txt}) by \fpath{scripts/make_numbers.py}.
+
+\paragraph{Variables.}
+\begin{itemize}
+\item DIRA: cosine of the angle between the \Dzero{} momentum and the PV$\to$decay-vertex direction (3D).
+\item \Ls: 3D decay length over its error (\fcmd{D0_decayLength/D0_decayLengthErr}).
+\item DCA$_{12}$: distance of closest approach between the daughters (\fcmd{track_1_track_2_DCA}, cm).
+\item min DCA significance: $\min(|\mathrm{DCA}_\mathrm{PV}/\sigma|)$ of the two daughters.
+\item $\cos\theta^*$: angle between the kaon in the \Dzero{} rest frame and the \Dzero{} flight direction, computed from the
+  daughter \pt, $\eta$, $\varphi$ with the PDG $K$ and $\pi$ masses.
+\item $d_1^{xy}d_2^{xy}$: product of the signed transverse daughter DCAs to the PV (negative for daughters on opposite sides).
+\item $z_K$, $z_\pi$: distance of the daughter $dE/dx$ from the pion band in units of the band width (Sec.~\ref{sec:pid}).
+\end{itemize}
+
+\paragraph{Selection building blocks} (used in Sec.~\ref{sec:scan}):
+\begin{itemize}
+\item A: DIRA$>0.99$, \Ls$>3$.
+\item B: DIRA$>0.995$, \Ls$>4$, DCA$_{12}<100\um$.
+\item C: DIRA$>0.999$, \Ls$>5$, DCA$_{12}<80\um$, min DCA significance $>2.5$.
+\item cts: $|\cos\theta^*|<0.8$.
+\item PID: ($p_K>0.9\gevc$ or $z_K>2$) and $|z_\pi|<3$; strict K PID: ($p_K<0.9$ and $z_K>2$) or ($0.9\le p_K<1.2$ and
+  $z_K>1$), i.e.\ kaons above 1.2\gevc{} rejected.
+\end{itemize}
+
+\paragraph{Fits to mass spectra (counts).} Histograms with 5\,MeV bins in 1.60--2.10\,GeV/$c^2$; binned likelihood fit in
+1.70--2.05\,GeV/$c^2$.
+\begin{itemize}
+\item \textbf{Fixed fit (main)}: Gaussian with mean fixed to $m_{\mathrm{D}^0}=1.86484$\,GeV/$c^2$ and width fixed
+  (15\,MeV; 10 and 22\,MeV in Sec.~\ref{sec:grid}) plus a free pol2; the amplitude is unbounded. $S$ is the Gaussian
+  integral, $z=S/\sigma_S$.
+\item \textbf{Free fit (cross-check)}: same function with mean in 1.845--1.885\,GeV/$c^2$, width in 6--35\,MeV and
+  amplitude $\ge0$. Fits ending at a limit are flagged ($\dagger$); their yields are not interpreted.
+\item \textbf{Sideband cross-check}: pol2 fitted with the window $m_{\mathrm{D}^0}\pm3\sigma$ excluded; $S$ = counts in
+  $\pm2\sigma$ minus the pol2 integral there, error $\sqrt{\text{counts}}$ (background-fit error neglected).
+\end{itemize}
+
+\choice{Mean and width are fixed and the amplitude may be negative so that each selection gives an unbiased significance
+at the \Dzero{} mass; free fits on a background of $10^4$--$10^6$ candidates find the largest fluctuation within their limits
+and produce fake yields (Sec.~\ref{sec:scan}).}
+
+\caveat{The \Dzero{} mass resolution is not known for this reconstruction (no simulation, no momentum calibration). The
+widths 10, 15, 22\,MeV are assumptions chosen to span a plausible range; they are not derived from a measurement or a
+simulation.}

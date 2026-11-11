@@ -1,0 +1,23 @@
+\section{Open issues and next steps}
+\label{sec:open}
+
+Ordered by importance; items for the analyser tagged [decision].
+\begin{enumerate}\itemsep2pt
+\item[{[decision]}] \textbf{Scope of a production.} At \sizeNtkB\,kB/event the full run3pp sample
+  ($\sim5\times10^8$ events, number from the KFParticle note) would need \projNtFullTB\,TB (1\,TB = $1024^4$\,B) and the trimmed DST \projTrimFullTB\,TB; a 10\%
+  sample (\texttt{seg \% 10 == 0}, as for KFParticle) \projNtTenPctTB\,TB of ntuples. Run 79509 is a
+  light run, so these are likely lower estimates. Options: per-run QA on a few
+  segments per run, the 10\% sample, or a \fcmd{minPt} cut.
+\decision{How many segments per run to process, and whether to write the trimmed DST
+(\sizeTrimkB\,kB/event, \ratioTrimNt\,$\times$ the ntuple) or only the ntuple.}
+\item \textbf{Unbiased DCA resolution and $\phi$-dependent offsets}: refit the vertex without the track
+  before quoting resolutions; map the $\phi$ (and $\eta$) dependent DCA means of Sec.~\ref{sec:dca} to
+  MVTX staves / INTT ladders and report them to the alignment group; check other runs.
+\item \textbf{DCA uncertainties} are \sPullXyA{}/\sPullZA{} ($xy$/$z$) times too small: do not use
+  DCA-significance cuts on these DSTs without a scale factor.
+\item \textbf{dE/dx and per-layer information}: need geometry and clusters (production DST, not
+  the trimmed one); could be added as an option with \fcmd{TrackingInit} as in the KFParticle macro.
+\item \textbf{Run-by-run trends}: add a small script that fills per-run summary histograms
+  (tracks per event by class, crossing-0 vertex fraction, $\phi$ holes) from many ntuples.
+\item Test the condor wrapper on a few segments of other runs, including a busy run.
+\end{enumerate}

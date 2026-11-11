@@ -1,0 +1,93 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-\do_\do.}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+\DeclareGraphicsExtensions{.pdf,.png}
+\graphicspath{{figures/}}
+\sloppy
+\emergencystretch=2em
+\captionsetup{font=small,labelfont=bf}
+
+% ---------------------------------------------------------------- macros
+\newcommand{\fpath}[1]{\nolinkurl{#1}}
+\newcommand{\fcmd}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\Ks}{K$^0_{\rm S}$}
+\newcommand{\Lam}{$\Lambda$}
+\newcommand{\aLam}{$\bar{\Lambda}$}
+\newcommand{\Dzero}{D$^0$}
+\newcommand{\Xc}{$X$}
+\newcommand{\pt}{\ensuremath{p_T}}
+\newtcolorbox{choicebox}{colback=blue!5,colframe=blue!60!black,fonttitle=\bfseries,title=Choice,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newtcolorbox{caveatbox}{colback=red!5,colframe=red!60!black,fonttitle=\bfseries,title=Caveat,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newtcolorbox{decisionbox}{colback=orange!7,colframe=orange!80!black,fonttitle=\bfseries,title=Decision needed,left=2pt,right=2pt,top=1pt,bottom=1pt}
+\newcommand{\choice}[1]{\begin{choicebox}\small #1\end{choicebox}}
+\newcommand{\caveat}[1]{\begin{caveatbox}\small #1\end{caveatbox}}
+\newcommand{\decision}[1]{\begin{decisionbox}\small #1\end{decisionbox}}
+
+% script-generated numbers (scripts/make_numbers.C, scripts/job_stats.py)
+\input{tables/numbers.tex}
+\input{tables/jobstats.tex}
+\input{tables/trim_numbers.tex}
+
+\title{KFParticle reconstruction of \Ks$\to\pi^+\pi^-$, \Lam$\to p\pi^-$ and \Dzero$\to K^-\pi^+$\\
+in sPHENIX Run-3 p+p \texttt{DST\_TRKR\_TRACKS} (ana581\_2026p005\_v001)\\[4pt]
+\large Analysis note: setup, pre-selection, ntuple content and first test}
+\author{X.~Dong (dongxs) \quad -- \quad draft prepared with Hermes}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This note documents a KFParticle-based reconstruction of \Ks, \Lam(\aLam) and \Dzero(\={D}$^0$)
+candidates on the Run-3 p+p track DSTs, with loose topological pre-cuts and all topological
+variables written to flat ntuples. It lists every event, track, pair, vertex and mother-level
+requirement, how the primary vertex (PV) and the bunch crossing of each track enter the
+reconstruction, the ntuple content and its size, and the result of a first test on
+\nEvents{} events of run 79509 (31 DST segments). With offline QA cuts the \Ks{} peak is at
+$\meanKs\pm\emeanKs$\,MeV with $\sigma=\sigmaKs$\,MeV ($\yieldKs\pm\eyieldKs$ signal) and
+the \Lam+\aLam{} peak at $\meanLambda\pm\emeanLambda$\,MeV with $\sigma=\sigmaLambda$\,MeV
+($\yieldLambda\pm\eyieldLambda$). A dedicated study without any crossing requirement shows
+that true \Ks{} and \Lam{} are found with both daughters and the PV in the same crossing,
+supporting the default crossing-matched reconstruction; candidates with a TPC-only daughter are
+only recoverable at crossing 0.
+For mass production a trimmed configuration (daughter impact-parameter cuts, DIRA$>0.9$, slim
+format without trigger, redundant momentum and covariance branches) reduces the candidate trees from
+\trimKBLoose{} to \trimKBDira\,kB per event without a measurable change of the \Ks{} and \Lam{}
+signal after the QA cuts.
+\textbf{Limitations:} one run, one test sample, no event or trigger selection, no
+efficiency correction, no systematic uncertainties; \Dzero{} shows no peak at this statistics.
+Boxes: \textcolor{blue!60!black}{blue} = choice made and why,
+\textcolor{red!60!black}{red} = caveat / open point,
+\textcolor{orange!80!black}{orange} = needs a decision by the analyser.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\input{sections/01_overview}
+\input{sections/02_dataset}
+\input{sections/03_reconstruction}
+\input{sections/04_ntuple}
+\input{sections/05_v0_results}
+\input{sections/06_crossing}
+\input{sections/07_d0}
+\input{sections/08_production}
+\input{sections/08b_trimming}
+\input{sections/09_audit}
+\input{sections/10_open_issues}
+
+\end{document}

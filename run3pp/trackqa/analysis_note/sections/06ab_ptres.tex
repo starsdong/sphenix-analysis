@@ -1,0 +1,84 @@
+\section{Why does the silicon efficiency drop at high $p_T$?}
+\label{sec:ptres}
+
+Inside the matching acceptance ($|z_{\rm PCA}|<10$\,cm, $|\eta|<1$, \rNAcc{} tracks; Sec.~\ref{sec:effdca})
+the silicon efficiency falls from $\approx$\rEffFullOneTwo\% at 1--2\,GeV/$c$ to \rEffFullFour\% at 4--6 and
+\rEffFullSix\% at 6--10\,GeV/$c$. Without the acceptance cut the drop was much larger (to $\approx$45\% at
+6--10\,GeV/$c$), mostly from TPC tracks outside the silicon $z$ acceptance or from other crossings (see the
+composition numbers below); the acceptance is now part of the definition. Two explanations are tested here on the same
+100 segments, with ntuple version~2 (adds the TPC-seed kinematics \fcmd{tpcSeedPt}, \fcmd{tpcSeedEta},
+\fcmd{tpcSeedPhi} for every track; same events and tracks as version~1, all other numbers of the note
+unchanged when re-run). Script: \fpath{scripts/ptres_study.C}; check \fcmd{chkRSeed} (\chkRSeed: every
+track has a TPC seed).
+
+\paragraph{(1) Momentum-resolution migration.} Numerator tracks are fitted with silicon + TPC, the
+TPC-only tracks in the denominator with the TPC alone. A worse resolution smears the steeply falling
+spectrum (local power law $p_T^{-\rSlope}$ for 1--10\,GeV/$c$) more, moving more tracks to high $p_T$, so
+the ratio drops even for a flat true efficiency. \emph{Test}: compute the efficiency with the \emph{same}
+TPC-only estimator for numerator and denominator, the pT of the TPC seed.
+
+\paragraph{(2) Denominator composition.} TPC tracks that cannot have silicon clusters (poorly fitted or
+fake tracks, residual out-of-time tracks) may make up a larger share at high $p_T$. \emph{Test}: add simple
+quality cuts (TPC\,$\geq30$ clusters, track $\chi^2$/ndf\,$<3$) to numerator and denominator.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig_ptres_eff}
+\caption{Left: silicon efficiency vs.\ $p_T$ ($|z_{\rm PCA}|<10$\,cm, $|\eta|<1$) with the final-fit $p_T$
+(black, as in Fig.~\ref{fig:effkin}), with the TPC-seed $p_T$ for numerator and denominator (red open), and with
+the TPC-seed $p_T$ and the quality cuts TPC\,$\geq30$, $\chi^2$/ndf\,$<3$ (blue squares). Points shifted by $\pm3$\% in $p_T$ for visibility.
+Right: $p_T$ spectra (same acceptance) of Si-matched (black/red) and TPC-only (blue/magenta) tracks with final-fit (solid) and
+TPC-seed (dashed) $p_T$, all normalised to the number of Si-matched tracks.}
+\label{fig:ptreseff}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_ptres_res}
+\caption{Same acceptance. Left: TPC-seed vs.\ final-fit $p_T$ of Si-matched tracks (log scales). Middle and right: core
+$\sigma$ and mean of $p_T/p_T^{\rm seed}-1$ (a curvature difference) vs.\ final-fit $p_T$, for Si-matched
+tracks (seed vs.\ Si+TPC fit, black) and TPC-only tracks (seed vs.\ TPC-only fit, blue). If the Si+TPC fit is
+much better than the seed, the black points are the TPC-seed resolution: \rResSiLow\% at 0.2--0.3 and
+\rResSiOne\% at 1--1.2\,GeV/$c$, growing to $\approx$15--20\% at 3--4\,GeV/$c$ (Table~\ref{tab:ptres}). The TPC-only fit differs from its seed by only
+\rResTpcOne\% at 1\,GeV/$c$, i.e.\ it has about the seed resolution. Above 4\,GeV/$c$ the Gaussian core fit is
+not meaningful (few tracks, broad non-Gaussian distribution with a tail to final-fit $p_T\gg$ seed $p_T$).}
+\label{fig:ptresres}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\input{tables/tab_ptres.tex}
+\caption{Per $p_T$ bin: core $\sigma$ and mean of $p_T/p_T^{\rm seed}-1$ for Si-matched and TPC-only tracks
+(\%, bins above 4\,GeV/$c$ unreliable); migration factor = Si-matched tracks counted with seed $p_T$ / with
+final-fit $p_T$; silicon efficiency with final-fit $p_T$, with seed $p_T$, and with seed $p_T$ and the quality
+denominator. Statistical uncertainties of the final-fit efficiencies in Table~\ref{tab:effpt}.}
+\label{tab:ptres}
+\end{table}
+
+\paragraph{Results} (all inside $|z_{\rm PCA}|<10$\,cm, $|\eta|<1$).
+\begin{itemize}\itemsep0pt
+\item \textbf{The resolution difference is real}: the TPC seed differs from the Si+TPC fit by a core
+  $\sigma$ of \rResSiLow\% at low $p_T$ growing with $p_T$ (Table~\ref{tab:ptres}), so the TPC-only resolution
+  is at least this if the Si+TPC fit is better (not verified without truth). The resulting migration of
+  Si-matched tracks (migration column) is a few \% up to 3\,GeV/$c$ and about 13\% at 4--6\,GeV/$c$.
+\item \textbf{It explains a small part of the drop}: with the seed $p_T$ for both, the efficiency is
+  \rEffSeedFour\% (instead of \rEffFullFour\%) at 4--6 and \rEffSeedSix\% (instead of \rEffFullSix\%) at
+  6--10\,GeV/$c$, against \rEffSeedOneTwo\% at 1--2\,GeV/$c$.
+\item \textbf{Most of the remaining drop is poorly fitted TPC tracks}: with TPC\,$\geq30$ and
+  $\chi^2$/ndf\,$<3$ the efficiency is \rEffQualOneTwo\% at 1--2, \rEffQualFour\% at 4--6 and \rEffQualSix\% at
+  6--10\,GeV/$c$. Each cut alone (seed $p_T$; 1--2 / 4--6 / 6--10\,GeV/$c$): $\chi^2$/ndf\,$<3$
+  \rEffCutChiOneTwo/\rEffCutChiFour/\rEffCutChiSix\%, TPC\,$\geq30$ \rEffCutNtpcOneTwo/\rEffCutNtpcFour/\rEffCutNtpcSix\%.
+\item Composition \emph{before} the acceptance cut (final-fit $p_T$ 1--2 vs.\ 4--10\,GeV/$c$): TPC-only tracks
+  have $|z_{\rm PCA}|>15$\,cm in \rCompZTpcOneTwo\% / \rCompZTpcFourTen\% of the cases (Si-matched:
+  \rCompZSiOneTwo\% / \rCompZSiFourTen\%) -- the acceptance issue that the $|z|<10$\,cm cut removes. Their mean
+  $\chi^2$/ndf rises from \rCompChiTpcOneTwo{} to \rCompChiTpcFourTen{} and their mean number of TPC clusters falls
+  from \rCompNtpcTpcOneTwo{} to \rCompNtpcTpcFourTen. Si-matched tracks at 4--10\,GeV/$c$ also have a large mean
+  $\chi^2$/ndf (\rCompChiSiFourTen, vs.\ \rCompChiSiOneTwo{} at 1--2).
+\end{itemize}
+
+\caveat{The seed-$p_T$ test assumes that the TPC seeds of Si-matched and TPC-only tracks have the same
+resolution. The quality cuts select in-time, well-measured tracks in both numerator and denominator, so the
+quality-selected efficiency is closer to a silicon matching efficiency for primary tracks but is itself a
+biased sample (e.g.\ the $\chi^2$ cut removes poorly matched Si+TPC tracks). The large $\chi^2$/ndf of
+high-$p_T$ Si-matched tracks and the tail to final-fit $p_T\gg$ seed $p_T$ (Fig.~\ref{fig:ptresres}, left)
+suggest wrong silicon--TPC matches or misalignment at high $p_T$; not studied further.}

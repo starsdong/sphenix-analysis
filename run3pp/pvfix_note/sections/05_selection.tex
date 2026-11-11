@@ -1,0 +1,104 @@
+\section{Candidate selection}
+\label{sec:selection}
+
+\subsection{Reconstruction (in the job)}
+\begin{table}[H]
+\centering\small
+\caption{\Dzero{} selection in the job (\fpath{macro/pvfix2/Fun4All_run3pp_KFP.C}, functions \fcmd{kfpCommon} and
+\fcmd{makeD0}, \texttt{prod} cut set). ``--'': deliberately not cut. Implicit framework behaviour read from source is
+marked (src).}
+\label{tab:injob}
+\begin{tabular}{@{}l p{6.0cm} p{6.6cm}@{}}
+\toprule
+level & cut & value \\
+\midrule
+event & PV source & \texttt{SvtxVertexMap} (no global vertex), all PVs tried \\
+track & \pt & $\geq0.2\gevc$ \\
+ & MVTX / INTT / TPC hits & $\geq2$ / -- / $\geq20$ \\
+ & track $\chi^2$/ndf, PID & -- / -- ($dE/dx$ stored only) \\
+ & track--PV DCA (min over PVs of the crossing) & $\geq10\um$ in job; $\geq30\um$ at fill time (Sec.~\ref{sec:fixes}) \\
+pair & same bunch crossing & required (\fcmd{requireBunchCrossingMatch}) \\
+ & daughter--daughter DCA & $\leq500\um$ \\
+ & vertex $\chi^2$/ndf & $\leq20$ \\
+mother & PV crossing = daughter crossing & required (\fcmd{requireTrackVertex}\-\fcmd{BunchCrossingMatch}) \\
+ & mass & 1.60--2.10\gevcc \\
+ & vertex volume & $\leq0.1$ \\
+ & DIRA & $\geq0.5$ in job; $\geq0.9$ at fill time (Sec.~\ref{sec:fixes}) \\
+ & flight-distance $\chi^2$, decay length, \Ls, \pt & -- \\
+ & candidate choice & one (mass assignment $\times$ PV) per track pair, smallest PV--DCA $\chi^2$ (src), among DIRA $\geq0.9$ if any (fix 5) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Track pairs: crossings and collisions}
+\label{sec:pairs}
+In a DST event the tracks span hundreds of bunch crossings; the crossing match is what restricts the pairing to one
+collision. Checked on one file each of two runs (\fpath{tools/pvfix/pair_crossing.C}): in run 79513 (\pcNA{} candidates)
+and run 81609 (\pcNB) the two daughters have the same crossing in \pcSameA\% / \pcSameB\% of the candidates, and the PV
+crossing equals it in \pcPvA\% / \pcPvB\%. The daughter crossings range from \pcXloA{} to \pcXhiA{} (5--95\%) within an
+event; a crossing contains a median of \pcTrkMedA{} tracks (\pcTrkLoA--\pcTrkHiA). \pcMultiPvA\% / \pcMultiPvB\% of the
+candidates come from crossings with more than one PV (pile-up or split vertices), and \pcInttA\% / \pcInttB\% have INTT
+hits on both daughters (otherwise the crossing is estimated from the tracking).
+
+Two pair requirements are studied offline (Table~\ref{tab:paircuts}, \fpath{tools/pvfix/pair_cuts_study.C}, stored PV,
+both $|{\rm DCA}|>60\um$, $L<1$\,mm):
+\begin{itemize}
+\item \emph{INTT}: both daughters have $\geq1$ INTT hit, so the crossing comes from INTT timing.
+\item \emph{same collision}: each daughter is attached to the candidate's PV or has $|\Delta z|<1$\,mm to it, with
+  $\Delta z=\sqrt{{\rm DCA}^2-{\rm DCA}_{xy}^2}$ w.r.t.\ the stored PV. 1\,mm is wide compared with \Dzero{} daughter
+  displacements ($\sim$100\um) and narrow compared with the cm-scale separation of collisions in one crossing.
+\end{itemize}
+
+\begin{table}[H]
+\centering\small
+\caption{Pass fractions of the pair requirements. Pointing: DIRA $>0.995$, $\Ls>2$; control: DIRA 0.95--0.98. Last
+two columns: $|\Delta z|$ of daughters not attached to the PV. Source: \fpath{logs/pair_cuts.txt}.}
+\label{tab:paircuts}
+\begin{tabular}{@{}l l r c c c c c@{}}
+\toprule
+sample & crossing & candidates & \hd{INTT}{(\%)} & \hd{same coll.}{(\%)} & \hd{both}{(\%)} & \hd{$|\Delta z|$ median}{(mm)} & \hd{90\%}{(mm)} \\
+\midrule
+\csname @@input\endcsname tables/paircuts.tex 
+\bottomrule
+\end{tabular}
+\end{table}
+
+The INTT requirement removes the same fraction of pointing and control candidates (\cutPtAllIntt\% vs \cutCtAllIntt\%
+kept). The same-collision requirement keeps \cutPtAllColl\% of the pointing candidates (rounded) and \cutCtMultiColl\% of
+the control candidates in multi-PV crossings. There, \cutCtMultiGt\% of the daughters not attached to the PV lie more
+than 1\,mm from it (median $|\Delta z|$ \cutCtMultiDmed\,mm): pairs across collisions exist in the control sample, but
+the pointing requirement already rejects them.
+
+\choice{Both pair requirements are applied in the main results (\extraFracBoth\% of the analysis base sample kept).
+The INTT requirement is kept for its cleaner crossing assignment; the same-collision requirement costs nothing.
+Results without them are given for comparison.}
+
+\subsection{Offline selection}
+\paragraph{Skim} (\fpath{tools/pvfix/skim_pvfix2.C}): both daughters $\pt>0.5\gevc$, and both $|{\rm DCA}|>60\um$ and
+DIRA $>0.95$ w.r.t.\ at least one PV version (the original only if \texttt{pvfix\_passOriginal}). \skimIn\,M $\to$
+\skimOut\,M candidates.
+
+\paragraph{Analysis base sample:} pair refit and KF fit both valid: \baseNone\,M candidates (\baseFracNone\% of the
+skim). Then, separately for each PV version $v$ (original, pair refit, KF fit):
+\begin{itemize}
+\item both daughters $|{\rm DCA}_v|>60\um$, decay length $L_v<1$\,mm (prompt-like); for the original PV also
+  \texttt{pvfix\_passOriginal} (the stock in-job selection), so that the original column is the stock analysis;
+\item \emph{pointing}: DIRA$_v>0.995$ and $\Ls{}_v>2$; \emph{tight}: DIRA$_v>0.999$ and $\Ls{}_v>5$;
+  \emph{control} (non-pointing): $0.95<{\rm DIRA}_v<0.98$;
+\item \Dzero{} $\pt>1.5\gevc$, or all \pt.
+\end{itemize}
+The three versions select overlapping but different candidates (Table~\ref{tab:counts}); they are not independent.
+
+\begin{table}[H]
+\centering\small
+\caption{Signal-region / control candidates per selection and PV version (no extra pair cut, uncorrected momenta).
+Source: \fpath{logs/d0cut_none.txt}.}
+\label{tab:counts}
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+selection & original PV & pair refit & KF fit \\
+\midrule
+\csname @@input\endcsname tables/d0_counts.tex 
+\bottomrule
+\end{tabular}
+\end{table}

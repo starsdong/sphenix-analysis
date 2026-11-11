@@ -1,0 +1,54 @@
+\section{Dataset, software and computing}
+\label{sec:dataset}
+
+\paragraph{Input.} Official Run-3 p+p track DSTs,
+\fpath{/sphenix/lustre01/sphnxpro/production/run3pp/physics/ana581_2026p005_v001/DST_TRKR_TRACKS/}.
+At the time of the test the area contained \nDSTfiles{} files in four run ranges
+(\fpath{logs/dataset_inventory.txt}); the production was still growing. Each segment holds
+$\approx$\evPerFile{} events. The DST nodes and their compressed size per event (segment
+79509-00000, \fpath{logs/inspect_dst_79509_00000.txt}) are: \fcmd{TRKR_CLUSTER_SEED} 144\,kB,
+\fcmd{SiliconTrackSeedContainer} 41\,kB, \fcmd{SvtxTrackMap} (\fcmd{SvtxTrack_v5}) 13\,kB,
+\fcmd{TpcTrackSeedContainer} 11\,kB, \fcmd{SvtxTrackSeedContainer} 4\,kB,
+\fcmd{SvtxVertexMap} 0.6\,kB, \fcmd{GL1RAWHIT}, \fcmd{EventHeader}, \fcmd{Sync}. There is no
+MBD vertex, no calorimeter information and no truth information.
+
+\paragraph{Test sample.} Run 79509, segments 00000--00030 (31 files,
+\fpath{logs/dst_list.txt}), \nEvents{} events. Segment 0 was processed interactively on
+sphnxuser01, segments 1--30 as HTCondor cluster 471173 (\nCondorOK/\nCondorJobs{} jobs with exit
+code 0, \fpath{logs/condor_471173.txt}); all \nKFPdone/\nKFPlogs{} job logs end with the macro's
+``All done'' line. Merged ntuples:
+\fpath{/gpfs02/sphenix/user/dongxs/run3pp/output/merged/KFP_<channel>_run79509_seg000-030.root},
+local copies in \fpath{~/Work/Hermes/sPHENIX/run3pp/ntuples/} (md5 verified).
+
+\caveat{A single run is used. Its trigger mix, luminosity and run-quality status were not
+checked. Two further single-segment tests (runs 80906 and 81600) were still running when this
+note was written and are not included.}
+
+\paragraph{Software.} sPHENIX release ana.581 (\fpath{logs/software.txt}):
+coresoftware \fcmd{3ae2baa290a3}, macros \fcmd{87f5cb5e2ba1}, acts \fcmd{2f27de2d0f02},
+calibrations \fcmd{476e33a37dc2}; ROOT 6.32.06, gcc 14.2.0. The KFParticle\_sPHENIX package is the
+one of this coresoftware commit; statements in this note about its internal logic were read from
+that source.
+
+\choice{ana.581 is used because the DSTs were produced with ana581; this keeps the track and
+vertex classes, the CDB tag logic and the field map consistent with the production. The
+environment is set by \fpath{setup_env.sh} (release + local install only; the login environment
+with an older private install is not used).}
+
+\paragraph{Code} (cluster: \fpath{/gpfs02/sphenix/user/dongxs/run3pp}, local mirror
+\fpath{~/Work/Hermes/sPHENIX/run3pp}):
+\begin{itemize}\setlength\itemsep{0pt}
+\item \fpath{macro/Fun4All_run3pp_KFP.C} -- Fun4All macro (all cuts of Section~\ref{sec:reco});
+  \fpath{macro/run_kfp.sh} -- wrapper (log, ``All done'' check).
+\item \fpath{src/EventInfoTree/} -- per-event companion module (library \fcmd{libeventinfotree}).
+\item \fpath{condor/} -- file lists and submission (\fcmd{submit.sh} refuses duplicate submissions).
+\item \fpath{analysis_note/scripts/make_numbers.C} -- every number, table and figure of this
+  note; \fpath{analysis_note/scripts/job_stats.py} -- job statistics.
+\end{itemize}
+
+\paragraph{Computing.} Per-event time of the KFParticle modules (mean over the
+\nKFPlogs{} jobs): \Ks{} \msPerEvKs\,ms, \Lam{} \msPerEvLambda\,ms, \Dzero{} \msPerEvDzero\,ms,
+i.e.\ \msPerEvProd\,ms for the three default channels ($\approx$\minPerFileProd\,min per DST
+segment); the two crossing-study channels add \msPerEvKsNoX{}+\msPerEvLambdaNoX\,ms. Condor
+wall time with all five channels: \condorWallMin\,min on average (max \condorWallMaxMin\,min);
+maximum resident memory \maxRSSGB\,GB.
